@@ -39,6 +39,33 @@ export function buscarPorCodigo(codigo) {
     return match || null;
 }
 
+// Busca por termo livre (parcial em SKU ou nome). Retorna até `limite` resultados.
+export function buscarPorTermo(termo, limite = 20) {
+    const t = termo.trim().toLowerCase();
+    if (!t) return [];
+    const itens = lerCatalogo();
+    const resultados = [];
+    for (const item of itens) {
+        const skuMatch = item.sku.toLowerCase().includes(t);
+        const nomeMatch = item.nome.toLowerCase().includes(t);
+        if (skuMatch || nomeMatch) {
+            resultados.push(item);
+            if (resultados.length >= limite) break;
+        }
+    }
+    return resultados;
+}
+
+// Atualiza um item específico do cache local (ex.: depois de associar GTIN na LI).
+export function atualizarItemCache(produtoId, alteracoes) {
+    const itens = lerCatalogo();
+    const idx = itens.findIndex(i => i.id === produtoId);
+    if (idx < 0) return false;
+    itens[idx] = { ...itens[idx], ...alteracoes };
+    salvarCatalogo(itens);
+    return true;
+}
+
 function getCredenciais() {
     const chaveApi = localStorage.getItem('chave_api');
     const chaveApp = localStorage.getItem('chave_aplicacao');

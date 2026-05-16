@@ -87,7 +87,88 @@
 
         <p id="scan-status" class="hint center">Aponte a câmera para o código de barras</p>
 
+        <button id="btn-iniciar-relatorio" class="btn-secondary">📋 Iniciar relatório de contagem</button>
         <button id="btn-ir-sync" class="btn-link center">sincronizar catálogo</button>
+    </section>
+
+    <!-- Tela: Modo relatório (bipagem em sessão) -->
+    <section id="tela-relatorio" class="tela hidden">
+        <header class="topbar">
+            <div class="topbar-info">
+                <h2>Relatório ativo</h2>
+                <small id="relatorio-info" class="user-info">—</small>
+            </div>
+            <button id="btn-finalizar-relatorio" class="btn-link">finalizar</button>
+        </header>
+
+        <div id="scanner-container-rel">
+            <video id="video-scanner-rel" playsinline></video>
+            <div class="scanner-overlay"></div>
+        </div>
+
+        <div class="manual-input">
+            <input id="input-sku-relatorio" type="text" inputmode="text" placeholder="digite SKU ou EAN">
+            <button id="btn-buscar-relatorio" class="btn-secondary">Buscar</button>
+        </div>
+
+        <div id="relatorio-feedback" class="feedback-bipe hidden"></div>
+
+        <div id="relatorio-lista" class="relatorio-lista"></div>
+
+        <button id="btn-sair-relatorio" class="btn-link center">cancelar sessão sem salvar</button>
+    </section>
+
+    <!-- Tela: Resumo do relatório -->
+    <section id="tela-resumo-relatorio" class="tela hidden">
+        <header class="topbar">
+            <button id="btn-voltar-relatorio" class="btn-link">← voltar</button>
+        </header>
+
+        <h1>Resumo do relatório</h1>
+        <p id="resumo-meta" class="hint">—</p>
+
+        <div id="resumo-itens" class="relatorio-lista"></div>
+        <div id="resumo-pendentes-box" class="hidden">
+            <h3>EANs sem produto associado</h3>
+            <div id="resumo-pendentes"></div>
+        </div>
+
+        <div class="acoes-resumo">
+            <button id="btn-exportar-csv" class="btn-secondary">📥 Exportar CSV</button>
+            <button id="btn-compartilhar" class="btn-secondary">📤 Compartilhar</button>
+            <button id="btn-gravar-estoque" class="btn-primary">💾 Gravar tudo como estoque</button>
+            <button id="btn-encerrar-relatorio" class="btn-link">encerrar sem salvar</button>
+        </div>
+    </section>
+
+    <!-- Tela: Associar EAN a produto -->
+    <section id="tela-associar-ean" class="tela hidden">
+        <header class="topbar">
+            <button id="btn-voltar-associar" class="btn-link">← voltar</button>
+        </header>
+
+        <h1>EAN não encontrado</h1>
+        <p class="hint">O código <strong id="ean-pendente">—</strong> não está cadastrado. Busque o produto pelo SKU ou nome pra associar.</p>
+
+        <label>Buscar produto
+            <input id="input-busca-produto" type="text" autocomplete="off" placeholder="SKU ou parte do nome">
+        </label>
+
+        <div id="resultados-busca" class="relatorio-lista"></div>
+
+        <p id="associar-erro" class="erro-msg hidden"></p>
+
+        <button id="btn-pular-associacao" class="btn-link center">pular este EAN por enquanto</button>
+    </section>
+
+    <!-- Tela: Progresso de gravação em lote -->
+    <section id="tela-gravando" class="tela hidden">
+        <h1>Gravando estoque</h1>
+        <p id="gravando-info" class="hint center">—</p>
+        <div class="progresso">
+            <div id="gravando-barra"></div>
+        </div>
+        <p id="gravando-mensagem" class="hint center">—</p>
     </section>
 
     <!-- Tela: Produto encontrado + ações -->

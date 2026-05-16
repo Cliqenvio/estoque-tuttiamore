@@ -80,6 +80,15 @@ export async function atualizarEstoqueProduto(produtoId, novaQuantidade, estoque
     });
 }
 
+// Atualiza o GTIN/EAN de um produto via PUT /produto/<id>/
+// PUT funciona como merge na Loja Integrada (não exige objeto inteiro).
+export async function atualizarGtinProduto(produtoId, novoGtin) {
+    return await requisitar(`/produto/${produtoId}/`, {
+        method: 'PUT',
+        body: { gtin: novoGtin },
+    });
+}
+
 export function calcularNovaQuantidade(atual, acao, valor) {
     const v = Number(valor);
     if (Number.isNaN(v) || v < 0) throw new Error('Quantidade inválida');

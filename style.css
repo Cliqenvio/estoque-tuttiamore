@@ -365,9 +365,175 @@ input[type="password"]:focus {
     overflow: hidden;
 }
 
-#sync-progresso-barra {
+#sync-progresso-barra,
+#gravando-barra {
     height: 100%;
     width: 0%;
     background: #4a9eff;
     transition: width 0.3s;
+}
+
+/* Modo relatório — scanner menor pra dar espaço pra lista */
+#scanner-container-rel {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 200px;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#video-scanner-rel {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feedback-bipe {
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    text-align: center;
+    transition: opacity 0.2s;
+}
+
+.feedback-bipe.sucesso {
+    background: rgba(92, 184, 92, 0.18);
+    color: #b6e8b6;
+    border: 1px solid rgba(92, 184, 92, 0.5);
+}
+
+.feedback-bipe.erro {
+    background: rgba(217, 83, 79, 0.18);
+    color: #f5a3a0;
+    border: 1px solid rgba(217, 83, 79, 0.5);
+}
+
+/* Lista de itens contados */
+.relatorio-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.rel-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1f1f1f;
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.rel-item-clicavel {
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.rel-item-clicavel:active {
+    background: #2a2a2a;
+}
+
+.rel-item-foto {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rel-item-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rel-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.rel-item-nome {
+    font-size: 0.9rem;
+    line-height: 1.2;
+    color: #fff;
+    margin-bottom: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.rel-item-sku {
+    font-size: 0.72rem;
+    color: #888;
+    font-family: monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rel-item-qtd {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.rel-item-qtd span {
+    min-width: 28px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #4a9eff;
+}
+
+.rel-qtd-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #2a2a2a;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rel-qtd-btn:active {
+    background: #3a3a3a;
+}
+
+.qtd-final {
+    background: #4a9eff;
+    color: #fff !important;
+    padding: 6px 12px;
+    border-radius: 8px;
+    min-width: 40px;
+}
+
+/* Acoes do resumo */
+.acoes-resumo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.pendente-ean {
+    background: #2a1f1f;
+    color: #f5a3a0;
+    border: 1px solid rgba(217, 83, 79, 0.3);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    font-family: monospace;
 }
