@@ -111,16 +111,29 @@ async function buscarPagina(url) {
 
 // Sincroniza o catálogo paginando a API. onProgress recebe { atual, total }.
 // Throttle: 700ms entre chamadas (~85 req/min, abaixo do limite de 100/min por loja).
-export async function sincronizarCatalogo(onProgress) {
+// opcoes:
+//   - incremental: true → usa data_modificacao__gt=<últimaSync> e faz merge com cache
+//                  false → baixa tudo e substitui (default se não tem cache anterior)
+export async function sincronizarCatalogo(onProgress, opcoes = {}) {
     const { chaveApi, chaveApp } = getCredenciais();
     const BASE = 'https://api.awsli.com.br/v1';
     const LIMIT = 100;
     const DELAY_ENTRE_REQS_MS = 700;
 
-    const montarUrl = (offset) =>
-        `${BASE}/produto/?chave_api=${chaveApi}&chave_aplicacao=${chaveApp}&limit=${LIMIT}&offset=${offset}`;
+    const incremental = !!opcoes.incremental;
+    const ultima = ultimaSync();
+    const podeIncremental = incremental && ultima && tamanhoCatalogo() > 0;
 
-    // Primeira chamada pra descobrir o total
+    let filtroData = '';
+    if (podeIncremental) {
+        // Subtrai 1 minuto pra evitar race condition (produto modificado segundos antes da última sync)
+        const desde = new Date(ultima.getTime() - 60_000).toISOString();
+        filtroData = `&data_modificacao__gt=${encodeURIComponent(desde)}`;
+    }
+
+    const montarUrl = (offset) =>
+        `${BASE}/produto/?chave_api=${chaveApi}&chave_aplicacao=${chaveApp}${filtroData}&limit=${LIMIT}&offset=${offset}`;
+
     const d0 = await buscarPagina(montarUrl(0));
     const total = d0.meta?.total_count ?? d0.objects.length;
     let coletados = [];
@@ -140,7 +153,6 @@ export async function sincronizarCatalogo(onProgress) {
     adicionar(d0.objects || []);
     if (onProgress) onProgress({ atual: coletados.length, total });
 
-    // Paginar o resto com pausa entre cada request
     let offset = LIMIT;
     while (offset < total) {
         await esperar(DELAY_ENTRE_REQS_MS);
@@ -150,8 +162,19 @@ export async function sincronizarCatalogo(onProgress) {
         if (onProgress) onProgress({ atual: coletados.length, total });
     }
 
-    salvarCatalogo(coletados);
-    return { total: coletados.length };
+    if (podeIncremental) {
+        // Merge: cache atual + atualizações/novos do incremental
+        const cacheAtual = lerCatalogo();
+        const mapa = new Map(cacheAtual.map(i => [i.id, i]));
+        for (const novo of coletados) {
+            mapa.set(novo.id, novo);
+        }
+        salvarCatalogo([...mapa.values()]);
+        return { total: mapa.size, novosOuAlterados: coletados.length, incremental: true };
+    } else {
+        salvarCatalogo(coletados);
+        return { total: coletados.length, incremental: false };
+    }
 }
 
 export function limparCatalogo() {

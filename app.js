@@ -164,6 +164,7 @@ const syncProgresso = document.getElementById('sync-progresso');
 const syncProgressoBarra = document.getElementById('sync-progresso-barra');
 const syncMensagem = document.getElementById('sync-mensagem');
 const btnIniciarSync = document.getElementById('btn-iniciar-sync');
+const btnSyncCompleto = document.getElementById('btn-sync-completo');
 const btnPularSync = document.getElementById('btn-pular-sync');
 
 function atualizarSyncInfo() {
@@ -171,37 +172,62 @@ function atualizarSyncInfo() {
     const sync = ultimaSync();
     if (total === 0) {
         syncInfo.textContent = 'Nenhum produto sincronizado ainda. Clique para baixar o catálogo.';
+        btnIniciarSync.textContent = 'Sincronizar agora';
         btnPularSync.classList.add('hidden');
+        btnSyncCompleto.classList.add('hidden');
     } else {
-        syncInfo.textContent = `Você tem ${total} produtos sincronizados (última sync ${formatarTempoDesde(sync)}).`;
+        syncInfo.textContent = `Você tem ${total.toLocaleString('pt-BR')} produtos no cache (última sync ${formatarTempoDesde(sync)}). Atualizar baixa só o que mudou desde então.`;
+        btnIniciarSync.textContent = '🔄 Atualizar (só mudanças)';
         btnPularSync.classList.remove('hidden');
+        btnSyncCompleto.classList.remove('hidden');
     }
     syncProgresso.classList.add('hidden');
     syncMensagem.textContent = '';
 }
 
-btnIniciarSync.addEventListener('click', async () => {
+async function executarSync({ incremental }) {
     btnIniciarSync.disabled = true;
+    btnSyncCompleto.disabled = true;
     btnPularSync.classList.add('hidden');
     syncProgresso.classList.remove('hidden');
     syncProgressoBarra.style.width = '0%';
-    syncMensagem.textContent = 'Iniciando…';
+    syncMensagem.textContent = incremental ? 'Buscando mudanças…' : 'Baixando catálogo completo…';
 
     try {
         const res = await sincronizarCatalogo(({ atual, total }) => {
-            const pct = total > 0 ? Math.round((atual / total) * 100) : 0;
+            const pct = total > 0 ? Math.round((atual / total) * 100) : 100;
             syncProgressoBarra.style.width = pct + '%';
-            syncMensagem.textContent = `${atual.toLocaleString('pt-BR')} / ${total.toLocaleString('pt-BR')} produtos`;
-        });
+            syncMensagem.textContent = total === 0
+                ? 'Nada a atualizar.'
+                : `${atual.toLocaleString('pt-BR')} / ${total.toLocaleString('pt-BR')}`;
+        }, { incremental });
         syncProgressoBarra.style.width = '100%';
-        syncMensagem.textContent = `Concluído: ${res.total.toLocaleString('pt-BR')} produtos.`;
+
+        if (res.incremental) {
+            syncMensagem.textContent = res.novosOuAlterados === 0
+                ? `Tudo em dia! Catálogo: ${res.total.toLocaleString('pt-BR')} produtos.`
+                : `Atualizado: ${res.novosOuAlterados.toLocaleString('pt-BR')} novos/alterados. Total no cache: ${res.total.toLocaleString('pt-BR')}.`;
+        } else {
+            syncMensagem.textContent = `Concluído: ${res.total.toLocaleString('pt-BR')} produtos.`;
+        }
         atualizarInfoTopbar();
-        setTimeout(() => irParaScan(), 800);
+        setTimeout(() => irParaScan(), 1200);
     } catch (err) {
         syncMensagem.textContent = `Erro: ${err.message}`;
         btnIniciarSync.disabled = false;
+        btnSyncCompleto.disabled = false;
         if (tamanhoCatalogo() > 0) btnPularSync.classList.remove('hidden');
     }
+}
+
+btnIniciarSync.addEventListener('click', () => {
+    const incremental = tamanhoCatalogo() > 0 && !!ultimaSync();
+    executarSync({ incremental });
+});
+
+btnSyncCompleto.addEventListener('click', () => {
+    if (!confirm('Refazer do zero?\n\nBaixa todos os 7000+ produtos novamente (~1 min). Use só se suspeitar que o cache está com produtos removidos ou desatualizado.')) return;
+    executarSync({ incremental: false });
 });
 
 btnPularSync.addEventListener('click', () => irParaScan());
