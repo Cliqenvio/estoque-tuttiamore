@@ -30,13 +30,14 @@ jobs:
           echo "Aplicando versão: $SHA"
 
           # index.html: src/href de arquivos locais (.js, .css, .json) — não toca em URLs com http(s)
-          sed -i -E 's|(src\|href)="([a-zA-Z0-9_.-]+\.(js|css|json))"|\1="\2?v='"$SHA"'"|g' index.html
+          # Usando # como separador pra evitar conflito com | do regex
+          sed -i -E 's#(src|href)="([a-zA-Z0-9_.-]+\.(js|css|json))"#\1="\2?v='"$SHA"'"#g' index.html
 
           # Imports relativos dentro de .js: from './X.js' ou from "./X.js"
           for f in *.js; do
             [ -f "$f" ] || continue
-            sed -i -E "s|from '\./([a-zA-Z0-9_.-]+\.js)'|from './\1?v=$SHA'|g" "$f"
-            sed -i -E "s|from \"\./([a-zA-Z0-9_.-]+\.js)\"|from \"./\1?v=$SHA\"|g" "$f"
+            sed -i -E "s#from '\./([a-zA-Z0-9_.-]+\.js)'#from './\1?v=$SHA'#g" "$f"
+            sed -i -E "s#from \"\./([a-zA-Z0-9_.-]+\.js)\"#from \"./\1?v=$SHA\"#g" "$f"
           done
 
           echo ""
