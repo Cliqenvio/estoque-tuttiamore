@@ -1,0 +1,59 @@
+name: Deploy com versionamento (cache busting)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Injetar versão (commit SHA) nas referências de arquivos
+        run: |
+          SHA="${GITHUB_SHA::8}"
+          echo "Aplicando versão: $SHA"
+
+          # index.html: src/href de arquivos locais (.js, .css, .json) — não toca em URLs com http(s)
+          sed -i -E 's|(src\|href)="([a-zA-Z0-9_.-]+\.(js|css|json))"|\1="\2?v='"$SHA"'"|g' index.html
+
+          # Imports relativos dentro de .js: from './X.js' ou from "./X.js"
+          for f in *.js; do
+            [ -f "$f" ] || continue
+            sed -i -E "s|from '\./([a-zA-Z0-9_.-]+\.js)'|from './\1?v=$SHA'|g" "$f"
+            sed -i -E "s|from \"\./([a-zA-Z0-9_.-]+\.js)\"|from \"./\1?v=$SHA\"|g" "$f"
+          done
+
+          echo ""
+          echo "=== index.html (pós-injeção) ==="
+          grep -E '(src|href)=' index.html || true
+          echo ""
+          echo "=== imports em app.js ==="
+          grep "from '\\./" app.js | head -10 || true
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
