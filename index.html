@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
+    <title>Estoque Bipagem</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Tela: Setup das credenciais da Loja (admin) -->
+    <section id="tela-setup" class="tela hidden">
+        <h1>Configurar loja</h1>
+        <p class="hint">Cole as credenciais da Loja Integrada. Uso restrito ao administrador.</p>
+
+        <label>Chave API
+            <input id="input-chave-api" type="text" autocomplete="off" placeholder="ex: d11a7a789f97...">
+        </label>
+
+        <label>Chave de Aplicação
+            <input id="input-chave-app" type="text" autocomplete="off" placeholder="ex: abc123xyz...">
+        </label>
+
+        <button id="btn-salvar-credenciais" class="btn-primary">Salvar e continuar</button>
+        <button id="btn-voltar-login" class="btn-link">voltar ao login</button>
+    </section>
+
+    <!-- Tela: Login -->
+    <section id="tela-login" class="tela hidden">
+        <h1>Acesso</h1>
+        <p class="hint">Entre com seu email e senha.</p>
+
+        <label>Email
+            <input id="input-email" type="email" autocomplete="email" placeholder="seu@email.com">
+        </label>
+
+        <label>Senha
+            <input id="input-senha" type="password" autocomplete="current-password" placeholder="••••••••">
+        </label>
+
+        <p id="login-erro" class="erro-msg hidden"></p>
+
+        <button id="btn-login" class="btn-primary">Entrar</button>
+
+        <button id="btn-ir-setup" class="btn-link">configurar loja (admin)</button>
+    </section>
+
+    <!-- Tela: Sincronização do catálogo -->
+    <section id="tela-sync" class="tela hidden">
+        <h1>Sincronizar catálogo</h1>
+        <p class="hint">Baixa a lista de produtos da Loja Integrada pra busca instantânea por código de barras. Faça quando cadastrar produtos novos.</p>
+
+        <div id="sync-status-box">
+            <p id="sync-info" class="hint">—</p>
+            <div id="sync-progresso" class="progresso hidden">
+                <div id="sync-progresso-barra"></div>
+            </div>
+            <p id="sync-mensagem" class="hint center"></p>
+        </div>
+
+        <button id="btn-iniciar-sync" class="btn-primary">Sincronizar agora</button>
+        <button id="btn-pular-sync" class="btn-link">continuar sem sincronizar</button>
+    </section>
+
+    <!-- Tela: Scan principal -->
+    <section id="tela-scan" class="tela hidden">
+        <header class="topbar">
+            <div class="topbar-info">
+                <h2>Bipar produto</h2>
+                <small id="usuario-info" class="user-info">—</small>
+                <small id="catalogo-info" class="user-info">—</small>
+            </div>
+            <button id="btn-sair" class="btn-link">sair</button>
+        </header>
+
+        <div id="scanner-container">
+            <video id="video-scanner" playsinline></video>
+            <div class="scanner-overlay"></div>
+        </div>
+
+        <div class="manual-input">
+            <input id="input-sku-manual" type="text" inputmode="text" placeholder="digite SKU ou código de barras">
+            <button id="btn-buscar-manual" class="btn-secondary">Buscar</button>
+        </div>
+
+        <p id="scan-status" class="hint center">Aponte a câmera para o código de barras</p>
+
+        <button id="btn-ir-sync" class="btn-link center">sincronizar catálogo</button>
+    </section>
+
+    <!-- Tela: Produto encontrado + ações -->
+    <section id="tela-produto" class="tela hidden">
+        <header class="topbar">
+            <button id="btn-voltar-scan" class="btn-link">← voltar</button>
+        </header>
+
+        <div id="produto-info" class="produto-card">
+            <div class="produto-foto">
+                <img id="produto-imagem" alt="">
+                <div id="produto-imagem-placeholder">sem foto</div>
+            </div>
+            <div class="produto-textos">
+                <h2 id="produto-nome">—</h2>
+                <p class="sku">SKU: <span id="produto-sku">—</span></p>
+                <p class="sku">EAN: <span id="produto-gtin">—</span></p>
+            </div>
+        </div>
+
+        <div class="estoque-atual">
+            <span class="label">Estoque atual</span>
+            <span id="produto-estoque" class="valor">—</span>
+        </div>
+
+        <div class="acoes">
+            <div class="acao-row">
+                <button data-acao="subtrair" class="btn-acao btn-sub">−</button>
+                <input id="input-quantidade" type="number" inputmode="numeric" value="1" min="0">
+                <button data-acao="somar" class="btn-acao btn-add">+</button>
+            </div>
+
+            <button data-acao="definir" class="btn-primary">Definir valor exato</button>
+        </div>
+    </section>
+
+    <!-- Tela: Mensagem -->
+    <section id="tela-mensagem" class="tela hidden">
+        <div id="mensagem-icone"></div>
+        <h2 id="mensagem-titulo">—</h2>
+        <p id="mensagem-detalhe">—</p>
+        <button id="btn-mensagem-continuar" class="btn-primary">Continuar bipando</button>
+    </section>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
