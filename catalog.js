@@ -27,16 +27,32 @@ export function ultimaSync() {
     return iso ? new Date(iso) : null;
 }
 
+// Normaliza variações de leading zeros (UPC-A 12 dígitos vs EAN-13 13 dígitos).
+// Ex: "070341129173" (UPC-A) e "0070341129173" (EAN-13) representam o mesmo produto.
+function variacoesCodigo(c) {
+    const vars = new Set([c]);
+    // Adiciona até 2 zeros à esquerda
+    vars.add('0' + c);
+    vars.add('00' + c);
+    // Remove zeros à esquerda (sem zerar tudo se for "0000")
+    let semZeros = c.replace(/^0+/, '');
+    if (semZeros) vars.add(semZeros);
+    return [...vars];
+}
+
 export function buscarPorCodigo(codigo) {
     const c = codigo.trim();
     if (!c) return null;
     const itens = lerCatalogo();
-    // Tenta GTIN exato primeiro (caso bipado)
-    let match = itens.find((i) => i.gtin === c);
-    if (match) return match;
-    // Depois SKU exato (caso digitado)
-    match = itens.find((i) => i.sku === c);
-    return match || null;
+    const candidatos = variacoesCodigo(c);
+
+    // Tenta GTIN com variações de zero à esquerda (caso bipado de leitor UPC-A vs EAN-13)
+    for (const cand of candidatos) {
+        const match = itens.find((i) => i.gtin === cand);
+        if (match) return match;
+    }
+    // Depois SKU exato (caso digitado — SKU não tem zero padding semântico)
+    return itens.find((i) => i.sku === c) || null;
 }
 
 // Busca por termo livre (parcial em SKU ou nome). Retorna até `limite` resultados.
