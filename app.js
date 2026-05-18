@@ -58,6 +58,7 @@ let scannerAtivoEm = null; // 'scan' ou 'relatorio'
 let ultimoCodigoLido = null;
 let ultimoCodigoTimestamp = 0;
 let eanPendenteAssociacao = null; // EAN que estamos tentando associar a um produto
+let origemAssociarEan = null;     // 'scan' (ajuste pontual) ou 'relatorio'
 
 // ============ Helpers ============
 function mostrarTela(nome) {
@@ -284,7 +285,10 @@ async function buscarEMostrarProduto(codigo) {
 
     const itemLocal = buscarPorCodigo(codigo);
     if (!itemLocal) {
-        mostrarMensagem('erro', 'Produto não encontrado', `Nenhum produto com código "${codigo}".\n\nSe é um produto novo, sincronize o catálogo.`);
+        // Código não está no cache — oferece associar a um produto existente
+        eanPendenteAssociacao = codigo;
+        origemAssociarEan = 'scan';
+        irParaAssociarEan();
         return;
     }
 
@@ -484,6 +488,7 @@ async function processarBipeRelatorio(codigo) {
         // EAN não encontrado: vai pra tela de associar
         adicionarPendente(codigo);
         eanPendenteAssociacao = codigo;
+        origemAssociarEan = 'relatorio';
         irParaAssociarEan();
         return;
     }
@@ -635,7 +640,16 @@ async function irParaAssociarEan() {
     document.getElementById('input-busca-produto').value = '';
     document.getElementById('resultados-busca').innerHTML = '<p class="hint center">Digite SKU ou nome pra buscar.</p>';
     document.getElementById('associar-erro').classList.add('hidden');
+
+    // Botão "pular" muda texto conforme a origem
+    const btnPular = document.getElementById('btn-pular-associacao');
+    btnPular.textContent = origemAssociarEan === 'relatorio'
+        ? 'pular este EAN por enquanto'
+        : 'voltar ao scanner sem associar';
+
     mostrarTela('associar-ean');
+    // Foca o input pra começar a digitar direto
+    setTimeout(() => document.getElementById('input-busca-produto').focus(), 100);
 }
 
 const inputBuscaProduto = document.getElementById('input-busca-produto');
@@ -667,9 +681,13 @@ inputBuscaProduto.addEventListener('input', () => {
 });
 
 async function confirmarAssociacao(item) {
+    const origem = origemAssociarEan;
+    const acaoFinal = origem === 'relatorio'
+        ? 'Vai gravar o EAN na Loja Integrada e contar +1 pra este produto na sessão.'
+        : 'Vai gravar o EAN na Loja Integrada e abrir a tela do produto pra você ajustar o estoque.';
+
     if (!confirm(
-        `Associar EAN ${eanPendenteAssociacao} ao produto:\n\n${item.nome}\nSKU: ${item.sku}\nEAN atual: ${item.gtin || '(vazio)'}\n\n` +
-        `Vai gravar na Loja Integrada e contar +1 pra este produto na sessão.`
+        `Associar EAN ${eanPendenteAssociacao} ao produto:\n\n${item.nome}\nSKU: ${item.sku}\nEAN atual: ${item.gtin || '(vazio)'}\n\n` + acaoFinal
     )) return;
 
     const erroEl = document.getElementById('associar-erro');
@@ -678,28 +696,54 @@ async function confirmarAssociacao(item) {
     try {
         await atualizarGtinProduto(item.id, eanPendenteAssociacao);
         atualizarItemCache(item.id, { gtin: eanPendenteAssociacao });
+        // Remove dos pendentes (caso tenha sido adicionado no modo relatório)
         removerPendente(eanPendenteAssociacao);
 
-        const itemAtualizado = { ...item, gtin: eanPendenteAssociacao };
-        contarProduto(itemAtualizado);
-
+        const eanAssociado = eanPendenteAssociacao;
         eanPendenteAssociacao = null;
-        irParaModoRelatorio();
+        origemAssociarEan = null;
+
+        if (origem === 'relatorio') {
+            // Conta +1 e volta pra sessão
+            const itemAtualizado = { ...item, gtin: eanAssociado };
+            contarProduto(itemAtualizado);
+            irParaModoRelatorio();
+        } else {
+            // Modo scan: abre tela do produto pro ajuste de estoque
+            await abrirProduto(item.id);
+        }
     } catch (err) {
         erroEl.textContent = `Falha ao gravar EAN: ${err.message}`;
         erroEl.classList.remove('hidden');
     }
 }
 
-document.getElementById('btn-voltar-associar').addEventListener('click', () => {
-    eanPendenteAssociacao = null;
-    irParaModoRelatorio();
-});
+// Busca detalhe do produto e vai pra tela de ajuste de estoque
+async function abrirProduto(produtoId) {
+    try {
+        const detalhe = await getDetalheProduto(produtoId);
+        if (!detalhe.estoqueGerenciado) {
+            mostrarMensagem('erro', 'Sem controle de estoque', `${detalhe.nome} não tem estoque gerenciado na Loja Integrada.`);
+            return;
+        }
+        itemAtual = detalhe;
+        renderizarProduto();
+        mostrarTela('produto');
+    } catch (err) {
+        mostrarMensagem('erro', 'Erro ao buscar detalhe', err.message);
+    }
+}
 
-document.getElementById('btn-pular-associacao').addEventListener('click', () => {
+function sairAssociarEan() {
+    const origem = origemAssociarEan;
     eanPendenteAssociacao = null;
-    irParaModoRelatorio();
-});
+    origemAssociarEan = null;
+    if (origem === 'relatorio') irParaModoRelatorio();
+    else irParaScan();
+}
+
+document.getElementById('btn-voltar-associar').addEventListener('click', sairAssociarEan);
+document.getElementById('btn-pular-associacao').addEventListener('click', sairAssociarEan);
 
 // ============ Inicialização ============
 if (estaLogado()) {
