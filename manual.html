@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1a1a">
+<title>Manual — App de Estoque Tuttiamore</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0e10;
+    --card: #1a1a1d;
+    --card2: #242428;
+    --accent: #4a9eff;
+    --accent2: #5cb85c;
+    --danger: #d9534f;
+    --warn: #f0ad4e;
+    --text: #f0f0f2;
+    --muted: #9a9aa2;
+    --border: #2e2e34;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Barra de progresso de leitura */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 4px; width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 1000; transition: width 0.1s;
+  }
+
+  /* Navegação */
+  nav {
+    position: sticky; top: 0; z-index: 900;
+    background: rgba(14,14,16,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto; white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav .nav-inner { display: flex; gap: 4px; padding: 10px 12px; max-width: 900px; margin: 0 auto; }
+  nav a {
+    color: var(--muted); text-decoration: none; font-size: 0.82rem;
+    padding: 7px 12px; border-radius: 8px; transition: all 0.15s; flex-shrink: 0;
+  }
+  nav a:hover, nav a.active { color: var(--text); background: var(--card2); }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+
+  /* Hero */
+  header.hero {
+    text-align: center; padding: 60px 16px 50px;
+    background: radial-gradient(ellipse at top, rgba(74,158,255,0.12), transparent 70%);
+  }
+  .hero .badge {
+    display: inline-block; background: var(--card2); color: var(--accent);
+    padding: 6px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+    margin-bottom: 18px; border: 1px solid var(--border);
+  }
+  .hero h1 { font-size: clamp(1.8rem, 6vw, 3rem); line-height: 1.15; margin-bottom: 14px; }
+  .hero h1 .grad {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p { color: var(--muted); font-size: 1.05rem; max-width: 560px; margin: 0 auto; }
+  .hero .cta {
+    display: inline-flex; gap: 8px; margin-top: 26px; flex-wrap: wrap; justify-content: center;
+  }
+  .hero .cta a {
+    text-decoration: none; padding: 13px 22px; border-radius: 12px; font-weight: 600;
+    font-size: 0.95rem; transition: transform 0.15s, opacity 0.15s;
+  }
+  .hero .cta a:active { transform: scale(0.97); }
+  .cta .primary { background: var(--accent); color: #fff; }
+  .cta .ghost { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+
+  /* Seções */
+  section { padding: 44px 0; border-top: 1px solid var(--border); }
+  .sec-head { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  .sec-icon {
+    font-size: 1.6rem; width: 50px; height: 50px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--card2); border-radius: 14px; border: 1px solid var(--border);
+  }
+  .sec-head h2 { font-size: 1.5rem; line-height: 1.2; }
+  .sec-sub { color: var(--muted); margin: 4px 0 22px 64px; font-size: 0.95rem; }
+  @media (max-width: 560px) { .sec-sub { margin-left: 0; } }
+
+  /* Cards */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 22px; margin-bottom: 16px;
+  }
+  .card h3 { font-size: 1.1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .card p { color: var(--muted); }
+  .card p strong { color: var(--text); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+
+  /* Passos numerados */
+  .steps { counter-reset: step; margin-top: 8px; }
+  .step {
+    position: relative; padding: 0 0 24px 56px; border-left: 2px solid var(--border);
+    margin-left: 18px;
+  }
+  .step:last-child { border-left: 2px solid transparent; padding-bottom: 0; }
+  .step::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; left: -19px; top: -4px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; font-size: 0.95rem;
+    box-shadow: 0 0 0 5px var(--bg);
+  }
+  .step h4 { font-size: 1.02rem; margin-bottom: 4px; }
+  .step p { color: var(--muted); font-size: 0.92rem; }
+
+  /* Badges/tags */
+  .tag {
+    display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 3px 10px;
+    border-radius: 999px; margin-left: 6px; vertical-align: middle;
+  }
+  .tag.admin { background: rgba(240,173,78,0.18); color: var(--warn); border: 1px solid rgba(240,173,78,0.35); }
+  .tag.user { background: rgba(74,158,255,0.18); color: var(--accent); border: 1px solid rgba(74,158,255,0.35); }
+  .tag.time { background: rgba(217,83,79,0.18); color: var(--danger); border: 1px solid rgba(217,83,79,0.35); }
+
+  /* Callouts */
+  .callout { border-radius: 12px; padding: 16px 18px; margin: 14px 0; border-left: 4px solid; font-size: 0.92rem; }
+  .callout.tip { background: rgba(92,184,92,0.1); border-color: var(--accent2); }
+  .callout.warn { background: rgba(240,173,78,0.1); border-color: var(--warn); }
+  .callout.danger { background: rgba(217,83,79,0.1); border-color: var(--danger); }
+  .callout strong { display: block; margin-bottom: 3px; }
+
+  /* Botões falsos (ilustração da UI) */
+  .ui-btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px;
+    font-weight: 600; font-size: 0.85rem; margin: 3px;
+  }
+  .ui-btn.blue { background: var(--accent); color: #fff; }
+  .ui-btn.green { background: var(--accent2); color: #fff; }
+  .ui-btn.red { background: var(--danger); color: #fff; }
+  .ui-btn.gray { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+
+  /* Modos comparados */
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .modes { grid-template-columns: 1fr; } }
+  .mode {
+    border-radius: 16px; padding: 22px; border: 1px solid var(--border);
+  }
+  .mode.adjust { background: linear-gradient(160deg, rgba(74,158,255,0.1), var(--card)); }
+  .mode.report { background: linear-gradient(160deg, rgba(92,184,92,0.1), var(--card)); }
+  .mode .big { font-size: 2rem; margin-bottom: 6px; }
+  .mode h3 { margin-bottom: 10px; }
+  .mode ul { list-style: none; margin-top: 10px; }
+  .mode li { color: var(--muted); padding: 5px 0 5px 22px; position: relative; font-size: 0.9rem; }
+  .mode li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+
+  /* FAQ accordion */
+  .faq-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+  .faq-q {
+    width: 100%; text-align: left; background: var(--card); color: var(--text);
+    border: none; padding: 16px 18px; font-size: 0.98rem; font-weight: 600; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px; font-family: inherit;
+  }
+  .faq-q:hover { background: var(--card2); }
+  .faq-q .chev { transition: transform 0.25s; color: var(--accent); flex-shrink: 0; }
+  .faq-q.open .chev { transform: rotate(180deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: var(--card); }
+  .faq-a .inner { padding: 0 18px 16px; color: var(--muted); font-size: 0.92rem; }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
+  .reveal.show { opacity: 1; transform: none; }
+
+  /* Voltar ao topo */
+  #top-btn {
+    position: fixed; bottom: 22px; right: 22px; z-index: 950;
+    width: 48px; height: 48px; border-radius: 50%; border: none;
+    background: var(--accent); color: #fff; font-size: 1.3rem; cursor: pointer;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  #top-btn.show { opacity: 1; pointer-events: auto; }
+
+  footer { text-align: center; padding: 40px 16px 60px; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  code { background: var(--card2); padding: 2px 7px; border-radius: 5px; font-size: 0.85em; color: #ffd479; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#inicio">Início</a>
+    <a href="#primeiro">1º acesso</a>
+    <a href="#login">Login</a>
+    <a href="#instalar">Instalar</a>
+    <a href="#sincronizar">Sincronizar</a>
+    <a href="#ajuste">Ajuste rápido</a>
+    <a href="#relatorio">Relatório</a>
+    <a href="#ean">EAN novo</a>
+    <a href="#dicas">Dicas</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="badge">📦 Tuttiamore · Manual do App</div>
+  <h1>Controle de estoque <span class="grad">bipando o código</span></h1>
+  <p>Consulte e atualize o estoque da sua loja direto do celular, lendo o código de barras dos produtos. Sem instalar nada, sem complicação.</p>
+  <div class="cta">
+    <a class="primary" href="https://cliqenvio.github.io/estoque-tuttiamore/" target="_blank">Abrir o app</a>
+    <a class="ghost" href="#primeiro">Como começar ↓</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- Visão geral -->
+  <section id="visao" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">✨</div>
+      <h2>O que dá pra fazer</h2>
+    </div>
+    <p class="sec-sub">O app tem dois jeitos de trabalhar. Escolha conforme a tarefa.</p>
+    <div class="modes">
+      <div class="mode adjust">
+        <div class="big">⚡</div>
+        <h3>Ajuste rápido</h3>
+        <p style="color:var(--muted);font-size:0.9rem">Pra mexer no estoque de um produto por vez.</p>
+        <ul>
+          <li>Bipa o produto</li>
+          <li>Vê o estoque atual</li>
+          <li>Soma, subtrai ou define o número exato</li>
+          <li>Grava na hora na Loja Integrada</li>
+        </ul>
+      </div>
+      <div class="mode report">
+        <div class="big">📋</div>
+        <h3>Relatório / Contagem</h3>
+        <p style="color:var(--muted);font-size:0.9rem">Pra contar vários produtos de uma vez.</p>
+        <ul>
+          <li>Bipa quantos quiser (cada bipe conta +1)</li>
+          <li>Vê a lista crescendo em tempo real</li>
+          <li>Exporta planilha, compartilha no WhatsApp</li>
+          <li>Grava tudo de uma vez como estoque</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Primeiro acesso -->
+  <section id="primeiro" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">🔑</div>
+      <h2>Primeiro acesso <span class="tag admin">só admin</span></h2>
+    </div>
+    <p class="sec-sub">Isso é feito <strong>uma única vez por celular</strong>, pelo administrador. Depois disso, o funcionário só faz login.</p>
+
+    <div class="steps">
+      <div class="step">
+        <h4>Abra o app no navegador do celular</h4>
+        <p>Use o Chrome (Android) ou Safari (iPhone). Endereço: <code>cliqenvio.github.io/estoque-tuttiamore</code></p>
+      </div>
+      <div class="step">
+        <h4>Toque em "configurar loja (admin)"</h4>
+        <p>O link fica abaixo do botão de login.</p>
+      </div>
+      <div class="step">
+        <h4>Cole as duas chaves da Loja Integrada</h4>
+        <p>São a <strong>Chave API</strong> e a <strong>Chave de Aplicação</strong>. Você pega no painel da Loja Integrada, em Configurações → API.</p>
+      </div>
+      <div class="step">
+        <h4>Salvar e continuar</h4>
+        <p>Pronto! As chaves ficam guardadas só naquele celular, com segurança. Não precisa repetir.</p>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <strong>💡 Por que cada celular precisa disso?</strong>
+      As chaves ficam salvas localmente no aparelho, nunca na internet. Então cada celular novo precisa ser configurado pelo admin uma vez.
+    </div>
+  </section>
+
+  <!-- Login -->
+  <section id="login" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">👤</div>
+      <h2>Fazer login</h2>
+    </div>
+    <p class="sec-sub">Cada pessoa entra com seu e-mail e a senha fornecida pelo administrador.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>🧑‍💼 Administrador <span class="tag user">qualquer horário</span></h3>
+        <p>E-mail: <code>joao@tuttiamore.com.br</code><br>Acesso liberado a qualquer momento, sem restrição de horário.</p>
+      </div>
+      <div class="card">
+        <h3>📦 Expedição <span class="tag time">08h às 18h</span></h3>
+        <p>E-mail: <code>expedicao@tuttiamore.com.br</code><br>Só funciona no horário comercial. Fora disso, o login é bloqueado automaticamente.</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <strong>⏰ Sobre o horário da expedição</strong>
+      Se passar das 18h durante o uso, qualquer ação de estoque é recusada na hora. É uma trava de segurança — não é erro do app.
+    </div>
+    <div class="callout danger">
+      <strong>🔒 A senha é compartilhada — cuide dela</strong>
+      Não mande a senha em grupos, não cole em prints. Se desconfiar de vazamento, avise o administrador pra trocar.
+    </div>
+  </section>
+
+  <!-- Instalar -->
+  <section id="instalar" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">📲</div>
+      <h2>Deixar como ícone de app</h2>
+    </div>
+    <p class="sec-sub">Pra não precisar digitar o endereço toda vez, adicione o atalho na tela inicial. Fica parecendo um app normal.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>🤖 Android (Chrome)</h3>
+        <p>Toque nos <strong>3 pontinhos</strong> (canto superior direito) → <strong>"Adicionar à tela inicial"</strong> → Adicionar.</p>
+      </div>
+      <div class="card">
+        <h3>🍎 iPhone (Safari)</h3>
+        <p>Toque no botão <strong>Compartilhar</strong> (quadrado com seta) → <strong>"Adicionar à Tela de Início"</strong> → Adicionar.</p>
+      </div>
+    </div>
+    <div class="callout tip">
+      <strong>✅ Vantagem</strong>
+      Abre em tela cheia, sem a barra do navegador, e a câmera de leitura funciona melhor.
+    </div>
+  </section>
+
+  <!-- Sincronizar -->
+  <section id="sincronizar" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">🔄</div>
+      <h2>Sincronizar o catálogo</h2>
+    </div>
+    <p class="sec-sub">O app guarda uma cópia da lista de produtos no celular pra encontrar tudo na hora que você bipa. É isso que torna a leitura instantânea.</p>
+
+    <div class="card">
+      <h3>Quando sincronizar?</h3>
+      <p>Sempre que você <strong>cadastrar produtos novos</strong> ou <strong>mudar SKU/código de barras</strong> de algum produto na Loja Integrada. No dia a dia normal, não precisa.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>🔄 Atualizar (só mudanças)</h3>
+        <p>O botão do dia a dia. Baixa <strong>só o que mudou</strong> desde a última vez. Leva poucos segundos.</p>
+      </div>
+      <div class="card">
+        <h3>♻️ Refazer do zero</h3>
+        <p>Baixa todos os produtos de novo (~1 minuto). Use só se você <strong>apagou produtos</strong> da loja e quer limpar eles da lista do app.</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <strong>📵 Não bipe enquanto sincroniza</strong>
+      Espere a barra de progresso terminar antes de começar a bipar, pra não sobrecarregar a conexão com a Loja Integrada.
+    </div>
+  </section>
+
+  <!-- Ajuste rápido -->
+  <section id="ajuste" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">⚡</div>
+      <h2>Ajuste rápido de estoque</h2>
+    </div>
+    <p class="sec-sub">O jeito mais usado: mexer no estoque de um produto.</p>
+
+    <div class="steps">
+      <div class="step">
+        <h4>Aponte a câmera para o código de barras</h4>
+        <p>O app lê automaticamente. Se a câmera não pegar, digite o código ou o SKU no campo abaixo e toque em <span class="ui-btn gray">Buscar</span>.</p>
+      </div>
+      <div class="step">
+        <h4>Confira o produto</h4>
+        <p>Aparece a foto, o nome, o SKU, o EAN e o <strong>estoque atual</strong>. Confirme que é o produto certo.</p>
+      </div>
+      <div class="step">
+        <h4>Escolha a ação</h4>
+        <p>
+          <span class="ui-btn green">+</span> soma à quantidade ·
+          <span class="ui-btn red">−</span> subtrai ·
+          <span class="ui-btn blue">Definir valor exato</span> coloca o número exato.
+        </p>
+      </div>
+      <div class="step">
+        <h4>Confirme</h4>
+        <p>Aparece um aviso mostrando "de X → Y". Confirme e o estoque é gravado na Loja Integrada na hora. ✅</p>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <strong>💡 Exemplo prático</strong>
+      Chegou uma caixa com 12 unidades de um produto? Bipa, toca em <span class="ui-btn green">+</span>, digita 12, confirma. Estoque atualizado.
+    </div>
+  </section>
+
+  <!-- Relatório -->
+  <section id="relatorio" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">📋</div>
+      <h2>Modo relatório (contagem)</h2>
+    </div>
+    <p class="sec-sub">Pra contar vários produtos de uma vez — tipo um balanço ou conferência de inventário.</p>
+
+    <div class="steps">
+      <div class="step">
+        <h4>Toque em "📋 Iniciar relatório de contagem"</h4>
+        <p>O botão fica na tela de leitura. Começa uma nova sessão.</p>
+      </div>
+      <div class="step">
+        <h4>Bipe os produtos</h4>
+        <p>Cada bipe soma <strong>+1</strong> no produto. Bipa 3 vezes o mesmo = conta 3. A lista aparece embaixo e cresce em tempo real.</p>
+      </div>
+      <div class="step">
+        <h4>Ajuste se precisar</h4>
+        <p>Na lista, use os botões <span class="ui-btn gray">−</span> <span class="ui-btn gray">+</span> de cada item pra corrigir a quantidade contada.</p>
+      </div>
+      <div class="step">
+        <h4>Toque em "finalizar"</h4>
+        <p>Abre o resumo com todos os produtos e quantidades contadas.</p>
+      </div>
+      <div class="step">
+        <h4>Escolha o que fazer com o resultado</h4>
+        <p>
+          <span class="ui-btn gray">📥 Exportar CSV</span> baixa planilha ·
+          <span class="ui-btn gray">📤 Compartilhar</span> manda no WhatsApp ·
+          <span class="ui-btn blue">💾 Gravar tudo como estoque</span> atualiza a loja de uma vez.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout danger">
+      <strong>⚠️ Cuidado com "Gravar tudo como estoque"</strong>
+      Essa opção <strong>substitui</strong> o estoque atual de cada produto pela quantidade que você contou. Use só num balanço de verdade, quando contou tudo. Pra entrada/saída pontual, use o Ajuste rápido.
+    </div>
+    <div class="callout tip">
+      <strong>💾 A contagem fica salva</strong>
+      Se fechar o app no meio, a contagem não some. Ao reabrir, ele pergunta se quer continuar a sessão.
+    </div>
+  </section>
+
+  <!-- EAN novo -->
+  <section id="ean" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">🏷️</div>
+      <h2>Código de barras não cadastrado</h2>
+    </div>
+    <p class="sec-sub">Bipou um produto e deu "não encontrado"? Pode ser que o código de barras dele ainda não esteja cadastrado na Loja Integrada. O app resolve isso na hora.</p>
+
+    <div class="steps">
+      <div class="step">
+        <h4>O app abre a tela "EAN não encontrado"</h4>
+        <p>Mostra o código que você bipou.</p>
+      </div>
+      <div class="step">
+        <h4>Procure o produto</h4>
+        <p>Digite o <strong>SKU</strong> ou parte do <strong>nome</strong> do produto. Aparece uma lista de resultados.</p>
+      </div>
+      <div class="step">
+        <h4>Toque no produto certo</h4>
+        <p>Confira nome e SKU, e confirme.</p>
+      </div>
+      <div class="step">
+        <h4>Pronto — o código é gravado na Loja Integrada</h4>
+        <p>O app associa aquele código de barras ao produto. Da próxima vez que bipar, vai encontrar direto. No modo ajuste, ele já abre a tela do produto pra você mexer no estoque.</p>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <strong>🎯 Por que isso é útil</strong>
+      Você cadastra o código de barras do produto <strong>bipando ele fisicamente</strong>, sem precisar digitar número nenhum nem entrar no painel da Loja Integrada.
+    </div>
+  </section>
+
+  <!-- Dicas -->
+  <section id="dicas" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">💡</div>
+      <h2>Dicas e cuidados</h2>
+    </div>
+    <p class="sec-sub">Pequenas coisas que evitam dor de cabeça.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>🔋 Câmera não abre?</h3>
+        <p>Permita o acesso à câmera quando o navegador pedir. Se negou sem querer, use o campo de digitar o código manualmente.</p>
+      </div>
+      <div class="card">
+        <h3>🌐 Precisa de internet</h3>
+        <p>O app fala com a Loja Integrada em tempo real. Sem internet, dá pra encontrar o produto, mas não atualizar estoque.</p>
+      </div>
+      <div class="card">
+        <h3>🔢 Código com zero na frente</h3>
+        <p>Não se preocupe: o app entende códigos com ou sem zero à esquerda (UPC-A e EAN-13) automaticamente.</p>
+      </div>
+      <div class="card">
+        <h3>👥 Vários celulares</h3>
+        <p>Cada um trabalha de forma independente. A contagem de um relatório fica só no celular onde foi feita.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="reveal">
+    <div class="sec-head">
+      <div class="sec-icon">❓</div>
+      <h2>Perguntas frequentes</h2>
+    </div>
+    <p class="sec-sub">Toque pra ver a resposta.</p>
+
+    <div class="faq-item">
+      <button class="faq-q">O app altera os dados da minha loja sozinho? <span class="chev">⌄</span></button>
+      <div class="faq-a"><div class="inner">Não. Nada é gravado sem você confirmar. Toda alteração de estoque mostra um aviso "de X → Y" antes de aplicar.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Bipei e mostrou o produto errado. O que faço? <span class="chev">⌄</span></button>
+      <div class="faq-a"><div class="inner">Toque em "← voltar" e bipe de novo. Se persistir, pode ser que dois produtos tenham o mesmo código de barras na loja — vale conferir o cadastro na Loja Integrada.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Cadastrei um produto novo e ele não aparece. <span class="chev">⌄</span></button>
+      <div class="faq-a"><div class="inner">Toque em "sincronizar catálogo" na tela de leitura e use "Atualizar (só mudanças)". Em segundos o produto novo entra na lista do app.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">A expedição não consegue entrar. <span class="chev">⌄</span></button>
+      <div class="faq-a"><div class="inner">Verifique o horário — o acesso da expedição é liberado só das 08h às 18h. Fora disso, o login é bloqueado de propósito.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Mudei de celular. Preciso configurar de novo? <span class="chev">⌄</span></button>
+      <div class="faq-a"><div class="inner">Sim. O administrador precisa configurar as chaves da loja no celular novo (uma vez). Depois é só fazer login e sincronizar.</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">A diferença entre somar e definir valor exato? <span class="chev">⌄</span></button>
+      <div class="faq-a"><div class="inner">"Somar/Subtrair" mexe a partir do estoque atual (ex: tinha 10, +5 = 15). "Definir valor exato" ignora o atual e coloca o número que você digitar (ex: define 15 = fica 15, não importa quanto tinha).</div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Atualizei o app mas não vejo mudanças. <span class="chev">⌄</span></button>
+      <div class="faq-a"><div class="inner">O navegador pode estar usando uma versão antiga em cache. Aguarde uns 10 minutos, ou feche e reabra o app. Em último caso, abra numa aba anônima pra forçar o carregamento da versão nova.</div></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>📦 <strong>App de Estoque · Tuttiamore</strong></p>
+  <p style="margin-top:6px">Dúvidas que não estão aqui? Fale com o administrador.</p>
+  <p style="margin-top:14px"><a href="https://cliqenvio.github.io/estoque-tuttiamore/">Abrir o app →</a></p>
+</footer>
+
+<button id="top-btn" aria-label="Voltar ao topo">↑</button>
+
+<script>
+  // Barra de progresso de leitura
+  const bar = document.getElementById('progress-bar');
+  const topBtn = document.getElementById('top-btn');
+  function onScroll() {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+    bar.style.width = pct + '%';
+    topBtn.classList.toggle('show', window.scrollY > 400);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const ans = btn.nextElementSibling;
+      const isOpen = btn.classList.contains('open');
+      // Fecha todos
+      document.querySelectorAll('.faq-q').forEach(b => { b.classList.remove('open'); b.nextElementSibling.style.maxHeight = null; });
+      if (!isOpen) {
+        btn.classList.add('open');
+        ans.style.maxHeight = ans.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // Nav ativo conforme a seção visível
+  const navLinks = [...document.querySelectorAll('nav a')];
+  const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const navIo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => navIo.observe(s));
+</script>
+
+</body>
+</html>
