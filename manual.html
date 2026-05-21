@@ -200,7 +200,6 @@
 <nav>
   <div class="nav-inner">
     <a href="#inicio">Início</a>
-    <a href="#primeiro">1º acesso</a>
     <a href="#login">Login</a>
     <a href="#instalar">Instalar</a>
     <a href="#sincronizar">Sincronizar</a>
@@ -218,7 +217,7 @@
   <p>Consulte e atualize o estoque da sua loja direto do celular, lendo o código de barras dos produtos. Sem instalar nada, sem complicação.</p>
   <div class="cta">
     <a class="primary" href="https://cliqenvio.github.io/estoque-tuttiamore/" target="_blank">Abrir o app</a>
-    <a class="ghost" href="#primeiro">Como começar ↓</a>
+    <a class="ghost" href="#login">Como começar ↓</a>
   </div>
 </header>
 
@@ -257,65 +256,26 @@
     </div>
   </section>
 
-  <!-- Primeiro acesso -->
-  <section id="primeiro" class="reveal">
-    <div class="sec-head">
-      <div class="sec-icon">🔑</div>
-      <h2>Primeiro acesso <span class="tag admin">só admin</span></h2>
-    </div>
-    <p class="sec-sub">Isso é feito <strong>uma única vez por celular</strong>, pelo administrador. Depois disso, o funcionário só faz login.</p>
-
-    <div class="steps">
-      <div class="step">
-        <h4>Abra o app no navegador do celular</h4>
-        <p>Use o Chrome (Android) ou Safari (iPhone). Endereço: <code>cliqenvio.github.io/estoque-tuttiamore</code></p>
-      </div>
-      <div class="step">
-        <h4>Toque em "configurar loja (admin)"</h4>
-        <p>O link fica abaixo do botão de login.</p>
-      </div>
-      <div class="step">
-        <h4>Cole as duas chaves da Loja Integrada</h4>
-        <p>São a <strong>Chave API</strong> e a <strong>Chave de Aplicação</strong>. Você pega no painel da Loja Integrada, em Configurações → API.</p>
-      </div>
-      <div class="step">
-        <h4>Salvar e continuar</h4>
-        <p>Pronto! As chaves ficam guardadas só naquele celular, com segurança. Não precisa repetir.</p>
-      </div>
-    </div>
-
-    <div class="callout tip">
-      <strong>💡 Por que cada celular precisa disso?</strong>
-      As chaves ficam salvas localmente no aparelho, nunca na internet. Então cada celular novo precisa ser configurado pelo admin uma vez.
-    </div>
-  </section>
-
   <!-- Login -->
   <section id="login" class="reveal">
     <div class="sec-head">
       <div class="sec-icon">👤</div>
       <h2>Fazer login</h2>
     </div>
-    <p class="sec-sub">Cada pessoa entra com seu e-mail e a senha fornecida pelo administrador.</p>
+    <p class="sec-sub">Entre com seu e-mail e a senha que o administrador te passou.</p>
 
-    <div class="grid">
-      <div class="card">
-        <h3>🧑‍💼 Administrador <span class="tag user">qualquer horário</span></h3>
-        <p>E-mail: <code>joao@tuttiamore.com.br</code><br>Acesso liberado a qualquer momento, sem restrição de horário.</p>
-      </div>
-      <div class="card">
-        <h3>📦 Expedição <span class="tag time">08h às 18h</span></h3>
-        <p>E-mail: <code>expedicao@tuttiamore.com.br</code><br>Só funciona no horário comercial. Fora disso, o login é bloqueado automaticamente.</p>
-      </div>
+    <div class="card">
+      <h3>📦 Seu acesso</h3>
+      <p>E-mail: <code>expedicao@tuttiamore.com.br</code><br>Senha: a que o administrador forneceu.</p>
     </div>
 
-    <div class="callout warn">
-      <strong>⏰ Sobre o horário da expedição</strong>
-      Se passar das 18h durante o uso, qualquer ação de estoque é recusada na hora. É uma trava de segurança — não é erro do app.
-    </div>
     <div class="callout danger">
-      <strong>🔒 A senha é compartilhada — cuide dela</strong>
-      Não mande a senha em grupos, não cole em prints. Se desconfiar de vazamento, avise o administrador pra trocar.
+      <strong>🔒 Cuide da senha</strong>
+      Não mande a senha em grupos nem deixe à vista. Se desconfiar de vazamento, avise o administrador.
+    </div>
+    <div class="callout tip">
+      <strong>🆘 Apareceu uma tela pedindo "chaves da loja"?</strong>
+      Isso é configuração do administrador. Não preencha nada — chame o responsável pra configurar o aparelho.
     </div>
   </section>
 
@@ -537,12 +497,12 @@
       <div class="faq-a"><div class="inner">Toque em "sincronizar catálogo" na tela de leitura e use "Atualizar (só mudanças)". Em segundos o produto novo entra na lista do app.</div></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">A expedição não consegue entrar. <span class="chev">⌄</span></button>
-      <div class="faq-a"><div class="inner">Verifique o horário — o acesso da expedição é liberado só das 08h às 18h. Fora disso, o login é bloqueado de propósito.</div></div>
+      <button class="faq-q">Não consigo entrar / deu erro no login. <span class="chev">⌄</span></button>
+      <div class="faq-a"><div class="inner">Confira se o e-mail e a senha estão certinhos (sem espaços a mais). Se ainda assim não entrar, chame o administrador.</div></div>
     </div>
     <div class="faq-item">
-      <button class="faq-q">Mudei de celular. Preciso configurar de novo? <span class="chev">⌄</span></button>
-      <div class="faq-a"><div class="inner">Sim. O administrador precisa configurar as chaves da loja no celular novo (uma vez). Depois é só fazer login e sincronizar.</div></div>
+      <button class="faq-q">Apareceu uma tela pedindo "chaves da loja". <span class="chev">⌄</span></button>
+      <div class="faq-a"><div class="inner">Essa tela é de configuração do administrador. Não preencha nada — chame o responsável pra configurar o aparelho.</div></div>
     </div>
     <div class="faq-item">
       <button class="faq-q">A diferença entre somar e definir valor exato? <span class="chev">⌄</span></button>
