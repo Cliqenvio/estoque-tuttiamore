@@ -23,10 +23,6 @@
             <input id="input-chave-app" type="text" autocomplete="off" placeholder="ex: abc123xyz...">
         </label>
 
-        <label>Chave API Claude <span class="hint" style="display:inline">(opcional — para leitura de etiquetas)</span>
-            <input id="input-claude-key" type="text" autocomplete="off" placeholder="sk-ant-api03-...">
-        </label>
-
         <button id="btn-salvar-credenciais" class="btn-primary">Salvar e continuar</button>
         <button id="btn-voltar-login" class="btn-link">voltar ao login</button>
     </section>
@@ -96,7 +92,6 @@
         <p id="scan-status" class="hint center">Aponte a câmera para o código de barras</p>
 
         <button id="btn-iniciar-relatorio" class="btn-secondary">📋 Iniciar relatório de contagem</button>
-        <button id="btn-registrar-devolucao" class="btn-secondary">📦 Registrar devolução</button>
         <button id="btn-ir-sync" class="btn-link center">sincronizar catálogo</button>
     </section>
 
@@ -220,71 +215,6 @@
         <h2 id="mensagem-titulo">—</h2>
         <p id="mensagem-detalhe">—</p>
         <button id="btn-mensagem-continuar" class="btn-primary">Continuar bipando</button>
-    </section>
-
-    <!-- Tela: Registrar Devolução -->
-    <section id="tela-devolucao" class="tela hidden">
-        <header class="topbar">
-            <button id="btn-voltar-devolucao" class="btn-link">← voltar</button>
-        </header>
-
-        <h1>📦 Registrar Devolução</h1>
-
-        <!-- Foto da etiqueta -->
-        <div class="dev-foto-wrap">
-            <input type="file" id="dev-input-foto" accept="image/*" capture="environment" class="hidden">
-            <img id="dev-foto-preview" class="dev-foto-preview hidden" alt="Foto da etiqueta">
-            <button id="dev-btn-tirar-foto" class="btn-secondary" style="width:100%">📷 Fotografar etiqueta</button>
-        </div>
-
-        <div id="dev-analisar-wrap" class="hidden">
-            <button id="dev-btn-analisar" class="btn-primary">🔍 Analisar etiqueta com IA</button>
-            <p id="dev-analisando" class="hint center hidden">⏳ Analisando imagem…</p>
-            <p id="dev-erro-analise" class="erro-msg hidden"></p>
-        </div>
-
-        <!-- Formulário (editável) -->
-        <div class="dev-form">
-            <label>Cliente
-                <input id="dev-cliente" type="text" placeholder="Nome do cliente">
-            </label>
-            <label>Número do Pedido
-                <input id="dev-pedido" type="text" placeholder="ex: 98765">
-            </label>
-            <label>Conta / Marketplace
-                <select id="dev-conta" class="dev-select">
-                    <option>Mercado Livre</option>
-                    <option>Shopee</option>
-                    <option>Site próprio</option>
-                    <option>Loja física</option>
-                    <option>Outro</option>
-                </select>
-            </label>
-            <label>Motivo da Devolução
-                <input id="dev-motivo" type="text" placeholder="ex: produto com defeito de fabricação">
-            </label>
-
-            <span class="dev-label">Itens devolvidos</span>
-            <div id="dev-itens-lista" class="dev-itens-lista"></div>
-            <div class="manual-input">
-                <input id="dev-input-item" type="text" autocomplete="off" placeholder="buscar produto ou digitar nome…">
-                <button id="dev-btn-add-item" class="btn-secondary">+</button>
-            </div>
-            <div id="dev-sugestoes" class="dev-sugestoes hidden"></div>
-
-            <button id="dev-btn-gerar" class="btn-primary">💬 Gerar mensagem WhatsApp</button>
-        </div>
-
-        <!-- Mensagem gerada -->
-        <div id="dev-msg-box" class="hidden">
-            <p class="hint">Mensagem pronta para enviar:</p>
-            <textarea id="dev-msg-texto" class="dev-msg-textarea" readonly rows="12"></textarea>
-            <div class="dev-msg-acoes">
-                <button id="dev-btn-copiar" class="btn-secondary">📋 Copiar</button>
-                <a id="dev-link-whatsapp" class="dev-btn-wpp" target="_blank" rel="noopener">📱 Abrir WhatsApp</a>
-            </div>
-            <button id="dev-btn-nova-devolucao" class="btn-link center">+ registrar outra devolução</button>
-        </div>
     </section>
 
     <script type="module" src="app.js"></script>

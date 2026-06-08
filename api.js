@@ -89,18 +89,6 @@ export async function atualizarGtinProduto(produtoId, novoGtin) {
     });
 }
 
-export function salvarClaudeApiKey(key) {
-    localStorage.setItem('claude_api_key', key.trim());
-}
-
-export function getClaudeApiKey() {
-    return localStorage.getItem('claude_api_key') || '';
-}
-
-export function temClaudeApiKey() {
-    return !!localStorage.getItem('claude_api_key');
-}
-
 export function calcularNovaQuantidade(atual, acao, valor) {
     const v = Number(valor);
     if (Number.isNaN(v) || v < 0) throw new Error('Quantidade inválida');

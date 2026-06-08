@@ -5,11 +5,7 @@ import {
     atualizarEstoqueProduto,
     atualizarGtinProduto,
     calcularNovaQuantidade,
-    salvarClaudeApiKey,
-    getClaudeApiKey,
 } from './api.js';
-
-import { analisarEtiqueta, gerarMensagemWhatsApp } from './devolucao.js';
 
 import { iniciarScanner, pararScanner } from './scanner.js';
 import { login, logout, usuarioAtual, estaLogado, checarHorarioPermitido } from './auth.js';
@@ -49,7 +45,6 @@ const telas = {
     'resumo-relatorio': document.getElementById('tela-resumo-relatorio'),
     'associar-ean': document.getElementById('tela-associar-ean'),
     gravando: document.getElementById('tela-gravando'),
-    devolucao: document.getElementById('tela-devolucao'),
 };
 
 const videoEl = document.getElementById('video-scanner');
@@ -109,15 +104,7 @@ document.getElementById('btn-salvar-credenciais').addEventListener('click', () =
     const app = document.getElementById('input-chave-app').value.trim();
     if (!api || !app) { alert('Preencha as duas chaves.'); return; }
     salvarCredenciais(api, app);
-    const claudeKey = document.getElementById('input-claude-key').value.trim();
-    if (claudeKey) salvarClaudeApiKey(claudeKey);
     mostrarTela('login');
-});
-
-// Preenche o campo da chave Claude se já estiver salva
-document.getElementById('tela-setup').addEventListener('show', () => {
-    const k = getClaudeApiKey();
-    if (k) document.getElementById('input-claude-key').value = k;
 });
 
 document.getElementById('btn-voltar-login').addEventListener('click', () => mostrarTela('login'));
@@ -771,189 +758,6 @@ function sairAssociarEan() {
 
 document.getElementById('btn-voltar-associar').addEventListener('click', sairAssociarEan);
 document.getElementById('btn-pular-associacao').addEventListener('click', sairAssociarEan);
-
-// ============ Registrar Devolução ============
-document.getElementById('btn-registrar-devolucao').addEventListener('click', () => irParaDevolucao());
-document.getElementById('btn-voltar-devolucao').addEventListener('click', () => irParaScan());
-
-function irParaDevolucao() {
-    if (!estaLogado()) { mostrarTela('login'); return; }
-    resetarFormDevolucao();
-    mostrarTela('devolucao');
-}
-
-function resetarFormDevolucao() {
-    document.getElementById('dev-foto-preview').classList.add('hidden');
-    document.getElementById('dev-btn-tirar-foto').classList.remove('hidden');
-    document.getElementById('dev-analisar-wrap').classList.add('hidden');
-    document.getElementById('dev-analisando').classList.add('hidden');
-    document.getElementById('dev-erro-analise').classList.add('hidden');
-    document.getElementById('dev-cliente').value = '';
-    document.getElementById('dev-pedido').value = '';
-    document.getElementById('dev-motivo').value = '';
-    document.getElementById('dev-conta').value = 'Mercado Livre';
-    document.getElementById('dev-input-item').value = '';
-    document.getElementById('dev-sugestoes').classList.add('hidden');
-    document.getElementById('dev-msg-box').classList.add('hidden');
-    devItens = [];
-    renderizarItensDevoluao();
-}
-
-let devItens = [];
-
-function renderizarItensDevoluao() {
-    const lista = document.getElementById('dev-itens-lista');
-    lista.innerHTML = '';
-    devItens.forEach((nome, i) => {
-        const tag = document.createElement('div');
-        tag.className = 'dev-item-tag';
-        tag.innerHTML = `<span class="dev-item-nome">${escapeHtml(nome)}</span><button class="dev-item-remove" data-i="${i}">×</button>`;
-        lista.appendChild(tag);
-    });
-    lista.querySelectorAll('.dev-item-remove').forEach(btn => {
-        btn.addEventListener('click', () => {
-            devItens.splice(Number(btn.dataset.i), 1);
-            renderizarItensDevoluao();
-        });
-    });
-}
-
-// Foto
-document.getElementById('dev-btn-tirar-foto').addEventListener('click', () => {
-    document.getElementById('dev-input-foto').click();
-});
-
-document.getElementById('dev-input-foto').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    const preview = document.getElementById('dev-foto-preview');
-    preview.src = url;
-    preview.classList.remove('hidden');
-    document.getElementById('dev-btn-tirar-foto').textContent = '📷 Trocar foto';
-    document.getElementById('dev-analisar-wrap').classList.remove('hidden');
-    document.getElementById('dev-erro-analise').classList.add('hidden');
-});
-
-// Análise por IA
-document.getElementById('dev-btn-analisar').addEventListener('click', async () => {
-    const file = document.getElementById('dev-input-foto').files[0];
-    if (!file) return;
-
-    const btnAnalisar = document.getElementById('dev-btn-analisar');
-    const analisando = document.getElementById('dev-analisando');
-    const erroEl = document.getElementById('dev-erro-analise');
-
-    btnAnalisar.disabled = true;
-    analisando.classList.remove('hidden');
-    erroEl.classList.add('hidden');
-
-    try {
-        const base64 = await fileParaBase64(file);
-        const dados = await analisarEtiqueta(base64, file.type);
-
-        if (dados.cliente) document.getElementById('dev-cliente').value = dados.cliente;
-        if (dados.pedido) document.getElementById('dev-pedido').value = dados.pedido;
-        if (dados.marketplace) {
-            const sel = document.getElementById('dev-conta');
-            const opt = [...sel.options].find(o => o.value.toLowerCase().includes(dados.marketplace.toLowerCase()));
-            if (opt) sel.value = opt.value;
-        }
-    } catch (err) {
-        erroEl.textContent = err.message;
-        erroEl.classList.remove('hidden');
-    } finally {
-        btnAnalisar.disabled = false;
-        analisando.classList.add('hidden');
-    }
-});
-
-function fileParaBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
-
-// Busca de itens
-const devInputItem = document.getElementById('dev-input-item');
-const devSugestoes = document.getElementById('dev-sugestoes');
-
-devInputItem.addEventListener('input', () => {
-    const t = devInputItem.value.trim();
-    if (t.length < 2) { devSugestoes.classList.add('hidden'); return; }
-    const resultados = buscarPorTermo(t, 8);
-    devSugestoes.innerHTML = '';
-    if (resultados.length > 0) {
-        resultados.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'dev-sugestao-item';
-            div.textContent = item.nome;
-            div.addEventListener('click', () => {
-                adicionarItemDevolucao(item.nome);
-                devInputItem.value = '';
-                devSugestoes.classList.add('hidden');
-            });
-            devSugestoes.appendChild(div);
-        });
-        devSugestoes.classList.remove('hidden');
-    } else {
-        devSugestoes.classList.add('hidden');
-    }
-});
-
-document.getElementById('dev-btn-add-item').addEventListener('click', () => {
-    const t = devInputItem.value.trim();
-    if (!t) return;
-    adicionarItemDevolucao(t);
-    devInputItem.value = '';
-    devSugestoes.classList.add('hidden');
-});
-
-devInputItem.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') document.getElementById('dev-btn-add-item').click();
-});
-
-function adicionarItemDevolucao(nome) {
-    devItens.push(nome);
-    renderizarItensDevoluao();
-}
-
-// Gerar mensagem
-document.getElementById('dev-btn-gerar').addEventListener('click', () => {
-    const cliente = document.getElementById('dev-cliente').value.trim();
-    const pedido = document.getElementById('dev-pedido').value.trim();
-    const conta = document.getElementById('dev-conta').value;
-    const motivo = document.getElementById('dev-motivo').value.trim();
-
-    if (!cliente) { alert('Informe o nome do cliente.'); return; }
-    if (devItens.length === 0) { alert('Adicione ao menos um item devolvido.'); return; }
-
-    const msg = gerarMensagemWhatsApp({ cliente, pedido, conta, itens: devItens, motivo });
-    document.getElementById('dev-msg-texto').value = msg;
-
-    const encoded = encodeURIComponent(msg);
-    document.getElementById('dev-link-whatsapp').href = `https://wa.me/?text=${encoded}`;
-
-    document.getElementById('dev-msg-box').classList.remove('hidden');
-    document.getElementById('dev-msg-box').scrollIntoView({ behavior: 'smooth' });
-});
-
-document.getElementById('dev-btn-copiar').addEventListener('click', async () => {
-    const texto = document.getElementById('dev-msg-texto').value;
-    try {
-        await navigator.clipboard.writeText(texto);
-        const btn = document.getElementById('dev-btn-copiar');
-        btn.textContent = '✓ Copiado!';
-        setTimeout(() => { btn.textContent = '📋 Copiar'; }, 2000);
-    } catch {
-        alert('Não foi possível copiar. Selecione o texto manualmente.');
-    }
-});
-
-document.getElementById('dev-btn-nova-devolucao').addEventListener('click', () => resetarFormDevolucao());
 
 // ============ Inicialização ============
 if (estaLogado()) {
