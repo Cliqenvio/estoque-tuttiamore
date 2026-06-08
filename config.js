@@ -1,6 +1,6 @@
 // Senha compartilhada entre todos os usuários autorizados.
 // Pra trocar: gere uma nova string longa e substitua aqui.
-export const SENHA_MASTER = 'Tt9PmKx3LqWnRz8vBsJg5cFhYd2W';
+export const SENHA_MASTER = '/Tuttiamore1';
 
 // Lista de emails autorizados.
 // restricaoHorario = null  → pode acessar qualquer hora
