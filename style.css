@@ -153,9 +153,16 @@ button {
     font-size: 0.9rem;
 }
 
-input[type="password"] {
+.input-senha-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+input[type="password"],
+input[type="text"].senha-visivel {
     width: 100%;
-    padding: 14px;
+    padding: 14px 48px 14px 14px;
     font-size: 1rem;
     background: #1f1f1f;
     color: #fff;
@@ -164,8 +171,22 @@ input[type="password"] {
     outline: none;
 }
 
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="text"].senha-visivel:focus {
     border-color: #4a9eff;
+}
+
+.btn-olho {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    color: #888;
+    font-size: 1.1rem;
+    padding: 4px;
+    line-height: 1;
+    border: none;
+    cursor: pointer;
+    user-select: none;
 }
 
 /* Scanner */
@@ -536,4 +557,146 @@ input[type="password"]:focus {
     padding: 8px 10px;
     margin-bottom: 6px;
     font-family: monospace;
+}
+
+/* ===== Devolução ===== */
+.dev-foto-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.dev-foto-preview {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+}
+
+.dev-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.dev-select {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+    background: #1f1f1f;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 10px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.dev-select:focus {
+    border-color: #4a9eff;
+}
+
+.dev-label {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.dev-itens-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dev-item-tag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1a2a1a;
+    border: 1px solid rgba(92, 184, 92, 0.35);
+    color: #b6e8b6;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    gap: 8px;
+}
+
+.dev-item-nome {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dev-item-remove {
+    background: transparent;
+    color: #888;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: 0 4px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.dev-sugestoes {
+    background: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.dev-sugestao-item {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.dev-sugestao-item:last-child {
+    border-bottom: none;
+}
+
+.dev-sugestao-item:active {
+    background: #2a2a2a;
+}
+
+.dev-msg-textarea {
+    width: 100%;
+    background: #1a2a1a;
+    color: #e0f7e0;
+    border: 1px solid rgba(92, 184, 92, 0.3);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    line-height: 1.55;
+    resize: none;
+}
+
+.dev-msg-acoes {
+    display: flex;
+    gap: 10px;
+}
+
+.dev-msg-acoes .btn-secondary {
+    flex: 1;
+}
+
+.dev-btn-wpp {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #25d366;
+    color: #fff;
 }

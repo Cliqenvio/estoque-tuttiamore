@@ -142,6 +142,20 @@ document.getElementById('btn-sair').addEventListener('click', () => {
     mostrarTela('login');
 });
 
+document.getElementById('btn-toggle-senha').addEventListener('click', () => {
+    const input = document.getElementById('input-senha');
+    const btn = document.getElementById('btn-toggle-senha');
+    if (input.type === 'password') {
+        input.type = 'text';
+        input.classList.add('senha-visivel');
+        btn.textContent = '🙈';
+    } else {
+        input.type = 'password';
+        input.classList.remove('senha-visivel');
+        btn.textContent = '👁';
+    }
+});
+
 function irAposLogin() {
     if (tamanhoCatalogo() === 0) {
         mostrarTela('sync');
