@@ -21,7 +21,9 @@ export function checarHorarioPermitido(usuario) {
 export function login(email, senha) {
     const user = buscarUsuario(email);
     if (!user) throw new Error('Email não autorizado.');
-    if (senha !== SENHA_MASTER) throw new Error('Senha incorreta.');
+    // Usuário com senha própria usa ela; senão vale a senha padrão
+    const senhaEsperada = user.senha || SENHA_MASTER;
+    if (senha !== senhaEsperada) throw new Error('Senha incorreta.');
     checarHorarioPermitido(user);
     localStorage.setItem(KEY_USUARIO, user.email);
     return user;
