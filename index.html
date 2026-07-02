@@ -84,6 +84,11 @@
             <div class="scanner-overlay"></div>
         </div>
 
+        <div id="leitor-box-scan" class="leitor-fisico-box hidden">
+            🔌 <strong>Leitor físico ativo</strong><br>
+            <small>Bipe um código de barras — a leitura entra sozinha</small>
+        </div>
+
         <div class="manual-input">
             <input id="input-sku-manual" type="text" inputmode="text" placeholder="digite SKU ou código de barras">
             <button id="btn-buscar-manual" class="btn-secondary">Buscar</button>
@@ -91,12 +96,15 @@
 
         <p id="scan-status" class="hint center">Aponte a câmera para o código de barras</p>
 
+        <button class="btn-link btn-modo-leitura center"></button>
+
         <button id="btn-iniciar-relatorio" class="btn-secondary">📋 Iniciar relatório de contagem</button>
+        <button id="btn-iniciar-recebimento" class="btn-secondary">📦 Receber mercadoria (conferência)</button>
         <button id="btn-ir-sync" class="btn-link center">sincronizar catálogo</button>
     </section>
 
     <!-- Tela: Modo relatório (bipagem em sessão) -->
-    <section id="tela-relatorio" class="tela hidden">
+    <section id="tela-relatorio" class="tela tela-larga hidden">
         <header class="topbar">
             <div class="topbar-info">
                 <h2>Relatório ativo</h2>
@@ -105,25 +113,37 @@
             <button id="btn-finalizar-relatorio" class="btn-link">finalizar</button>
         </header>
 
-        <div id="scanner-container-rel">
-            <video id="video-scanner-rel" playsinline></video>
-            <div class="scanner-overlay"></div>
+        <div class="sessao-layout">
+            <div class="sessao-col-esq">
+                <div id="scanner-container-rel">
+                    <video id="video-scanner-rel" playsinline></video>
+                    <div class="scanner-overlay"></div>
+                </div>
+
+                <div id="leitor-box-rel" class="leitor-fisico-box hidden">
+                    🔌 <strong>Leitor físico ativo</strong><br>
+                    <small>Bipe um código — entra sozinho na contagem</small>
+                </div>
+
+                <div class="manual-input">
+                    <input id="input-sku-relatorio" type="text" inputmode="text" placeholder="digite SKU ou EAN">
+                    <button id="btn-buscar-relatorio" class="btn-secondary">Buscar</button>
+                </div>
+
+                <button class="btn-link btn-modo-leitura center"></button>
+
+                <div id="relatorio-feedback" class="feedback-bipe hidden"></div>
+            </div>
+
+            <div class="sessao-col-dir">
+                <div id="relatorio-lista" class="relatorio-lista"></div>
+                <button id="btn-sair-relatorio" class="btn-link center">cancelar sessão sem salvar</button>
+            </div>
         </div>
-
-        <div class="manual-input">
-            <input id="input-sku-relatorio" type="text" inputmode="text" placeholder="digite SKU ou EAN">
-            <button id="btn-buscar-relatorio" class="btn-secondary">Buscar</button>
-        </div>
-
-        <div id="relatorio-feedback" class="feedback-bipe hidden"></div>
-
-        <div id="relatorio-lista" class="relatorio-lista"></div>
-
-        <button id="btn-sair-relatorio" class="btn-link center">cancelar sessão sem salvar</button>
     </section>
 
     <!-- Tela: Resumo do relatório -->
-    <section id="tela-resumo-relatorio" class="tela hidden">
+    <section id="tela-resumo-relatorio" class="tela tela-larga hidden">
         <header class="topbar">
             <button id="btn-voltar-relatorio" class="btn-link">← voltar</button>
         </header>
@@ -143,6 +163,85 @@
             <button id="btn-gravar-estoque" class="btn-primary">💾 Gravar tudo como estoque</button>
             <button id="btn-encerrar-relatorio" class="btn-link">encerrar sem salvar</button>
         </div>
+    </section>
+
+    <!-- Tela: Recebimento de mercadoria (conferência — só relatório, não altera estoque) -->
+    <section id="tela-recebimento" class="tela tela-larga hidden">
+        <header class="topbar">
+            <div class="topbar-info">
+                <h2>📦 Recebimento ativo</h2>
+                <small id="recebimento-info" class="user-info">—</small>
+            </div>
+            <button id="btn-finalizar-recebimento" class="btn-link">finalizar</button>
+        </header>
+
+        <div class="sessao-layout">
+            <div class="sessao-col-esq">
+                <div id="scanner-container-rec">
+                    <video id="video-scanner-rec" playsinline></video>
+                    <div class="scanner-overlay"></div>
+                </div>
+
+                <div id="leitor-box-rec" class="leitor-fisico-box hidden">
+                    🔌 <strong>Leitor físico ativo</strong><br>
+                    <small>Bipe um código — entra sozinho na conferência</small>
+                </div>
+
+                <div class="manual-input">
+                    <input id="input-sku-recebimento" type="text" inputmode="text" placeholder="digite SKU ou EAN">
+                    <button id="btn-buscar-recebimento" class="btn-secondary">Buscar</button>
+                </div>
+
+                <button class="btn-link btn-modo-leitura center"></button>
+
+                <div id="recebimento-feedback" class="feedback-bipe hidden"></div>
+
+                <!-- Card do último produto bipado: foto da LI + marcar EAN pra corrigir -->
+                <div id="rec-produto-card" class="produto-bipado-card hidden">
+                    <div class="produto-bipado-foto">
+                        <img id="rec-produto-img" class="hidden" alt="">
+                        <div id="rec-produto-img-ph">—</div>
+                    </div>
+                    <div class="produto-bipado-textos">
+                        <div id="rec-produto-nome" class="produto-bipado-nome">—</div>
+                        <div id="rec-produto-sku" class="sku">—</div>
+                        <div id="rec-produto-qtd" class="produto-bipado-qtd">—</div>
+                        <button id="btn-rec-ajustar-ean" class="btn-ajustar-ean">⚠️ Ajustar código de barras</button>
+                    </div>
+                </div>
+
+                <p class="hint center">Só conferência — o estoque não é alterado.</p>
+            </div>
+
+            <div class="sessao-col-dir">
+                <div id="recebimento-lista" class="relatorio-lista"></div>
+                <button id="btn-sair-recebimento" class="btn-link center">cancelar recebimento sem salvar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tela: Resumo do recebimento -->
+    <section id="tela-resumo-recebimento" class="tela tela-larga hidden">
+        <header class="topbar">
+            <button id="btn-voltar-recebimento" class="btn-link">← voltar</button>
+        </header>
+
+        <h1>Resumo do recebimento</h1>
+        <p id="resumo-rec-meta" class="hint">—</p>
+
+        <div id="resumo-rec-itens" class="relatorio-lista"></div>
+        <div id="resumo-rec-pendentes-box" class="hidden">
+            <h3>EANs sem produto associado</h3>
+            <div id="resumo-rec-pendentes"></div>
+        </div>
+
+        <div class="acoes-resumo">
+            <button id="btn-rec-exportar-csv" class="btn-secondary">📥 Exportar CSV</button>
+            <button id="btn-rec-compartilhar" class="btn-secondary">📤 Compartilhar</button>
+            <button id="btn-rec-encerrar" class="btn-primary">✅ Concluir recebimento</button>
+        </div>
+
+        <p class="hint center">O recebimento só gera relatório — o estoque na Loja Integrada não é alterado.</p>
     </section>
 
     <!-- Tela: Associar EAN a produto -->

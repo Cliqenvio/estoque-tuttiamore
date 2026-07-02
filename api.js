@@ -69,6 +69,16 @@ export async function getDetalheProduto(produtoId) {
     };
 }
 
+// Busca só os dados básicos do produto (1 request, sem estoque).
+// Usado pra foto do card de bipagem — mais leve que getDetalheProduto (que faz 2 requests).
+export async function getFotoProduto(produtoId) {
+    const p = await requisitar(`/produto/${produtoId}/`);
+    return {
+        imagemPequenaUrl: p.imagem_principal?.pequena || p.imagem_principal?.media || null,
+        imagemGrandeUrl: p.imagem_principal?.grande || p.imagem_principal?.media || p.imagem_principal?.pequena || null,
+    };
+}
+
 // Atualiza o estoque via PUT /produto_estoque/<id_do_produto>/
 // PUT exige o objeto completo. Recebe `estoqueAnterior` (que veio de getDetalheProduto.estoqueRaw)
 // e reenvia tudo trocando só a quantidade.

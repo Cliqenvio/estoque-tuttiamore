@@ -394,8 +394,9 @@ input[type="text"].senha-visivel:focus {
     transition: width 0.3s;
 }
 
-/* Modo relatório — scanner menor pra dar espaço pra lista */
-#scanner-container-rel {
+/* Modo relatório/recebimento — scanner menor pra dar espaço pra lista */
+#scanner-container-rel,
+#scanner-container-rec {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -405,7 +406,8 @@ input[type="text"].senha-visivel:focus {
     overflow: hidden;
 }
 
-#video-scanner-rel {
+#video-scanner-rel,
+#video-scanner-rec {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -557,4 +559,195 @@ input[type="text"].senha-visivel:focus {
     padding: 8px 10px;
     margin-bottom: 6px;
     font-family: monospace;
+}
+
+/* ============ Leitor físico (USB/Bluetooth em modo teclado) ============ */
+.leitor-fisico-box {
+    border: 2px dashed #4a9eff;
+    border-radius: 12px;
+    padding: 24px 16px;
+    text-align: center;
+    color: #cfe6ff;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    background: rgba(74, 158, 255, 0.07);
+}
+
+.leitor-fisico-box small {
+    color: #7fa8cc;
+    font-size: 0.8rem;
+}
+
+.btn-modo-leitura {
+    align-self: center;
+}
+
+/* ============ Card do produto bipado no recebimento ============ */
+.produto-bipado-card {
+    background: #1f1f1f;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.produto-bipado-foto {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.produto-bipado-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#rec-produto-img-ph {
+    color: #666;
+    font-size: 0.75rem;
+    text-align: center;
+    padding: 8px;
+}
+
+.produto-bipado-textos {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    flex: 1;
+}
+
+.produto-bipado-nome {
+    font-size: 1rem;
+    line-height: 1.3;
+}
+
+.produto-bipado-qtd {
+    color: #4a9eff;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.btn-ajustar-ean {
+    margin-top: 4px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: rgba(240, 173, 78, 0.15);
+    color: #f0ad4e;
+    border: 1px solid rgba(240, 173, 78, 0.5);
+}
+
+.btn-ajustar-ean.marcado {
+    background: #f0ad4e;
+    color: #1a1a1a;
+}
+
+/* Itens marcados pra corrigir EAN — destaque âmbar */
+.rel-item-ajuste {
+    border: 1px solid rgba(240, 173, 78, 0.6);
+    background: rgba(240, 173, 78, 0.08);
+}
+
+.badge-ajuste {
+    display: inline-block;
+    background: #f0ad4e;
+    color: #1a1a1a;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 6px;
+    vertical-align: middle;
+    margin-left: 4px;
+    text-transform: uppercase;
+}
+
+/* ============ Layout das telas de sessão (relatório/recebimento) ============ */
+.sessao-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+    min-height: 0;
+}
+
+.sessao-col-esq,
+.sessao-col-dir {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+/* ============ Tablet / telas largas ============ */
+@media (min-width: 700px) {
+    .tela {
+        max-width: 720px;
+        padding: 28px 32px;
+    }
+
+    .tela-larga {
+        max-width: 1100px;
+    }
+
+    /* Painel de bipagem à esquerda, lista à direita */
+    .sessao-layout {
+        display: grid;
+        grid-template-columns: 360px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+
+    .sessao-col-esq {
+        position: sticky;
+        top: 20px;
+    }
+
+    .sessao-col-dir .relatorio-lista {
+        max-height: calc(100vh - 200px);
+    }
+
+    /* Itens e botões maiores pra toque no tablet */
+    .rel-item {
+        padding: 12px 16px;
+    }
+
+    .rel-item-nome {
+        font-size: 1rem;
+    }
+
+    .rel-item-sku {
+        font-size: 0.8rem;
+    }
+
+    .rel-qtd-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.3rem;
+    }
+
+    /* Ações dos resumos lado a lado */
+    .acoes-resumo {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .acoes-resumo .btn-primary,
+    .acoes-resumo .btn-secondary {
+        width: auto;
+        flex: 1 1 220px;
+    }
+
+    .acoes-resumo .btn-link {
+        flex-basis: 100%;
+    }
 }
