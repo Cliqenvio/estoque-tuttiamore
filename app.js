@@ -552,16 +552,16 @@ async function processarBipeSessao(origem, codigo) {
     try { checarHorarioPermitido(usuarioAtual()); }
     catch (err) { logout(); mostrarMensagem('erro', 'Fora do horário', err.message); return; }
 
-    const { store, feedbackEl, atualizarInfo, aoEncontrar, aoNaoEncontrar } = uiSessao[origem];
+    const { store, feedbackEl, atualizarInfo, aoNaoEncontrar, aoEncontrar } = uiSessao[origem];
 
     const item = buscarPorCodigo(codigo);
     if (!item) {
-        // EAN não encontrado: som de erro + tela de associar
+        // EAN não encontrado: NÃO interrompe a bipagem — anota (com quantidade),
+        // avisa com som/feedback e segue. A associação fica pro resumo final.
         aoNaoEncontrar?.(codigo);
-        store.adicionarPendente(codigo);
-        eanPendenteAssociacao = codigo;
-        origemAssociarEan = origem;
-        irParaAssociarEan();
+        const p = store.adicionarPendente(codigo);
+        mostrarFeedbackEm(feedbackEl, 'erro', `✕ ${codigo} não encontrado — anotado (${p.quantidade || 1}x). Associe no resumo final.`);
+        atualizarInfo();
         return;
     }
 
@@ -643,7 +643,9 @@ function atualizarInfoRelatorio() {
     const el = document.getElementById('relatorio-info');
     if (!s) { el.textContent = ''; return; }
     const itens = relatorio.listarItens();
-    el.textContent = `${itens.length} produtos · ${relatorio.totalUnidades()} unidades · por ${s.criadoPor?.nome || ''}`;
+    const nPend = relatorio.listarPendentes().length;
+    const pend = nPend > 0 ? ` · ${nPend} não encontrado(s)` : '';
+    el.textContent = `${itens.length} produtos · ${relatorio.totalUnidades()} unidades${pend} · por ${s.criadoPor?.nome || ''}`;
 }
 
 function onCodigoBipadoRelatorio(codigo) {
@@ -674,6 +676,35 @@ document.getElementById('btn-sair-relatorio').addEventListener('click', () => {
     }
 });
 
+// ============ Resumo: EANs não encontrados (com botão de associar) ============
+// origem: 'relatorio' ou 'recebimento' — define pra qual resumo voltar após associar
+function renderizarPendentesResumo(origem, boxEl, listaEl) {
+    const store = uiSessao[origem].store;
+    const pendentes = store.listarPendentes();
+    if (pendentes.length === 0) {
+        boxEl.classList.add('hidden');
+        listaEl.innerHTML = '';
+        return;
+    }
+    boxEl.classList.remove('hidden');
+    listaEl.innerHTML = '';
+    for (const p of pendentes) {
+        const row = document.createElement('div');
+        row.className = 'pendente-ean';
+        row.innerHTML = `
+            <span class="pendente-ean-cod">${escapeHtml(p.ean)}</span>
+            <span class="pendente-ean-qtd">${p.quantidade || 1}x</span>
+            <button class="btn-associar-pendente">associar</button>
+        `;
+        row.querySelector('.btn-associar-pendente').addEventListener('click', () => {
+            eanPendenteAssociacao = p.ean;
+            origemAssociarEan = origem === 'relatorio' ? 'resumo-relatorio' : 'resumo-recebimento';
+            irParaAssociarEan();
+        });
+        listaEl.appendChild(row);
+    }
+}
+
 // ============ Resumo do relatório ============
 function renderizarResumoItens(itens, listaEl) {
     listaEl.innerHTML = '';
@@ -701,21 +732,14 @@ function irParaResumoRelatorio() {
     if (!s) { irParaScan(); return; }
 
     const itens = relatorio.listarItens();
-    const pendentes = relatorio.listarPendentes();
 
     document.getElementById('resumo-meta').textContent =
         `${itens.length} produtos · ${relatorio.totalUnidades()} unidades · iniciado ${new Date(s.criadoEm).toLocaleString('pt-BR')} por ${s.criadoPor?.nome || ''}`;
 
     renderizarResumoItens(itens, document.getElementById('resumo-itens'));
-
-    const pendBox = document.getElementById('resumo-pendentes-box');
-    const pendLista = document.getElementById('resumo-pendentes');
-    if (pendentes.length > 0) {
-        pendBox.classList.remove('hidden');
-        pendLista.innerHTML = pendentes.map(p => `<div class="pendente-ean">${escapeHtml(p.ean)}</div>`).join('');
-    } else {
-        pendBox.classList.add('hidden');
-    }
+    renderizarPendentesResumo('relatorio',
+        document.getElementById('resumo-pendentes-box'),
+        document.getElementById('resumo-pendentes'));
 
     mostrarTela('resumo-relatorio');
 }
@@ -892,7 +916,9 @@ function atualizarInfoRecebimento() {
     const el = document.getElementById('recebimento-info');
     if (!s) { el.textContent = ''; return; }
     const ref = s.referencia ? ` · ref: ${s.referencia}` : '';
-    el.textContent = `${recebimento.listarItens().length} produtos · ${recebimento.totalUnidades()} unidades${ref}`;
+    const nPend = recebimento.listarPendentes().length;
+    const pend = nPend > 0 ? ` · ${nPend} não encontrado(s)` : '';
+    el.textContent = `${recebimento.listarItens().length} produtos · ${recebimento.totalUnidades()} unidades${pend}${ref}`;
 }
 
 function onCodigoBipadoRecebimento(codigo) {
@@ -929,22 +955,15 @@ function irParaResumoRecebimento() {
     if (!s) { irParaScan(); return; }
 
     const itens = recebimento.listarItens();
-    const pendentes = recebimento.listarPendentes();
     const ref = s.referencia ? ` · ref: ${s.referencia}` : '';
 
     document.getElementById('resumo-rec-meta').textContent =
         `${itens.length} produtos · ${recebimento.totalUnidades()} unidades${ref} · iniciado ${new Date(s.criadoEm).toLocaleString('pt-BR')} por ${s.criadoPor?.nome || ''}`;
 
     renderizarResumoItens(itens, document.getElementById('resumo-rec-itens'));
-
-    const pendBox = document.getElementById('resumo-rec-pendentes-box');
-    const pendLista = document.getElementById('resumo-rec-pendentes');
-    if (pendentes.length > 0) {
-        pendBox.classList.remove('hidden');
-        pendLista.innerHTML = pendentes.map(p => `<div class="pendente-ean">${escapeHtml(p.ean)}</div>`).join('');
-    } else {
-        pendBox.classList.add('hidden');
-    }
+    renderizarPendentesResumo('recebimento',
+        document.getElementById('resumo-rec-pendentes-box'),
+        document.getElementById('resumo-rec-pendentes'));
 
     mostrarTela('resumo-recebimento');
 }
@@ -979,7 +998,9 @@ async function irParaAssociarEan() {
     const btnPular = document.getElementById('btn-pular-associacao');
     btnPular.textContent = origemAssociarEan === 'scan'
         ? 'voltar ao scanner sem associar'
-        : 'pular este EAN por enquanto';
+        : origemAssociarEan?.startsWith('resumo-')
+            ? 'voltar ao resumo sem associar'
+            : 'pular este EAN por enquanto';
 
     mostrarTela('associar-ean');
     // Foca o input pra começar a digitar direto
@@ -1014,13 +1035,26 @@ inputBuscaProduto.addEventListener('input', () => {
     }
 });
 
+// Config por origem da associação: qual sessão usar e pra onde voltar depois
+const destinosAssociacao = {
+    'relatorio': { store: () => relatorio, voltar: () => irParaModoRelatorio() },
+    'recebimento': { store: () => recebimento, voltar: (item) => irParaRecebimento().then(() => mostrarCardRecebimento(item.id)) },
+    'resumo-relatorio': { store: () => relatorio, voltar: () => irParaResumoRelatorio() },
+    'resumo-recebimento': { store: () => recebimento, voltar: (item) => irParaResumoRecebimento() },
+};
+
 async function confirmarAssociacao(item) {
     const origem = origemAssociarEan;
-    const acaoFinal = origem === 'relatorio'
-        ? 'Vai gravar o EAN na Loja Integrada e contar +1 pra este produto na sessão.'
-        : origem === 'recebimento'
-            ? 'Vai gravar o EAN na Loja Integrada e contar +1 na conferência do recebimento.'
-            : 'Vai gravar o EAN na Loja Integrada e abrir a tela do produto pra você ajustar o estoque.';
+    const destino = destinosAssociacao[origem] || null;
+    const store = destino?.store();
+
+    // Quantidade que foi bipada desse código (se veio da lista de não encontrados)
+    const pendente = store?.listarPendentes().find(p => p.ean === eanPendenteAssociacao);
+    const qtd = pendente?.quantidade || 1;
+
+    const acaoFinal = destino
+        ? `Vai gravar o EAN na Loja Integrada e somar ${qtd} unidade(s) deste produto na lista.`
+        : 'Vai gravar o EAN na Loja Integrada e abrir a tela do produto pra você ajustar o estoque.';
 
     if (!confirm(
         `Associar EAN ${eanPendenteAssociacao} ao produto:\n\n${item.nome}\nSKU: ${item.sku}\nEAN atual: ${item.gtin || '(vazio)'}\n\n` + acaoFinal
@@ -1032,21 +1066,15 @@ async function confirmarAssociacao(item) {
     try {
         await atualizarGtinProduto(item.id, eanPendenteAssociacao);
         atualizarItemCache(item.id, { gtin: eanPendenteAssociacao });
-        // Remove dos pendentes da sessão de origem (se houver)
-        if (origem === 'relatorio') relatorio.removerPendente(eanPendenteAssociacao);
-        if (origem === 'recebimento') recebimento.removerPendente(eanPendenteAssociacao);
 
         const eanAssociado = eanPendenteAssociacao;
         eanPendenteAssociacao = null;
         origemAssociarEan = null;
 
-        if (origem === 'relatorio') {
-            // Conta +1 e volta pra sessão
-            relatorio.contarProduto({ ...item, gtin: eanAssociado }, eanAssociado);
-            irParaModoRelatorio();
-        } else if (origem === 'recebimento') {
-            recebimento.contarProduto({ ...item, gtin: eanAssociado }, eanAssociado);
-            irParaRecebimento().then(() => mostrarCardRecebimento(item.id));
+        if (destino) {
+            store.removerPendente(eanAssociado);
+            store.contarProduto({ ...item, gtin: eanAssociado }, eanAssociado, qtd);
+            destino.voltar(item);
         } else {
             // Modo scan: abre tela do produto pro ajuste de estoque
             await abrirProduto(item.id);
@@ -1079,6 +1107,8 @@ function sairAssociarEan() {
     origemAssociarEan = null;
     if (origem === 'relatorio') irParaModoRelatorio();
     else if (origem === 'recebimento') irParaRecebimento();
+    else if (origem === 'resumo-relatorio') irParaResumoRelatorio();
+    else if (origem === 'resumo-recebimento') irParaResumoRecebimento();
     else irParaScan();
 }
 

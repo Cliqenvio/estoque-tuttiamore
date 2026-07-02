@@ -43,14 +43,15 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
         localStorage.removeItem(chave);
     }
 
-    // Conta um produto encontrado (soma +1, ou cria entrada se for o primeiro bipe).
+    // Conta um produto encontrado (soma quantidade, ou cria entrada se for o primeiro bipe).
     // codigoBipado: o código que foi lido fisicamente (útil pra corrigir EAN depois).
-    function contarProduto(produto, codigoBipado = '') {
+    // quantidade: quanto somar (default 1; usado ao associar um pendente bipado N vezes).
+    function contarProduto(produto, codigoBipado = '', quantidade = 1) {
         const s = ler();
         if (!s) throw new Error('Nenhuma sessão ativa');
         const existente = s.itens[produto.id];
         if (existente) {
-            existente.quantidade += 1;
+            existente.quantidade += quantidade;
             if (codigoBipado) existente.codigoBipado = codigoBipado;
         } else {
             s.itens[produto.id] = {
@@ -59,7 +60,7 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
                 gtin: produto.gtin || '',
                 nome: produto.nome || '',
                 imagemUrl: produto.imagemUrl || null,
-                quantidade: 1,
+                quantidade,
                 ajustarEan: false,
                 codigoBipado: codigoBipado || '',
             };
@@ -99,14 +100,19 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
         salvar(s);
     }
 
-    // Marca um EAN como pendente (não encontrado no cache)
+    // Registra um EAN não encontrado no catálogo (soma a quantidade a cada bipe)
     function adicionarPendente(ean) {
         const s = ler();
         if (!s) throw new Error('Nenhuma sessão ativa');
-        if (!s.pendentes.some(p => p.ean === ean)) {
-            s.pendentes.push({ ean, ts: new Date().toISOString() });
-            salvar(s);
+        let p = s.pendentes.find(x => x.ean === ean);
+        if (p) {
+            p.quantidade = (p.quantidade || 1) + 1;
+        } else {
+            p = { ean, ts: new Date().toISOString(), quantidade: 1 };
+            s.pendentes.push(p);
         }
+        salvar(s);
+        return p;
     }
 
     function removerPendente(ean) {
@@ -149,9 +155,9 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
         }
         if (s.pendentes.length > 0) {
             linhas.push('');
-            linhas.push('# EANs pendentes (não associados a produto):');
+            linhas.push('# EANs não encontrados (código,quantidade bipada):');
             for (const p of s.pendentes) {
-                linhas.push(`"${p.ean}"`);
+                linhas.push(`"${p.ean}",${p.quantidade || 1}`);
             }
         }
         if (s.referencia) {
@@ -184,8 +190,8 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
         }
         if (s.pendentes.length > 0) {
             linhas.push('');
-            linhas.push(`EANs pendentes (${s.pendentes.length}):`);
-            linhas.push(...s.pendentes.map(p => `· ${p.ean}`));
+            linhas.push(`EANs não encontrados (${s.pendentes.length}):`);
+            linhas.push(...s.pendentes.map(p => `· ${p.ean} (${p.quantidade || 1}x)`));
         }
         return linhas.join('\n');
     }

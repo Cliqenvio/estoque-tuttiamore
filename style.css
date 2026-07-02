@@ -559,6 +559,31 @@ input[type="text"].senha-visivel:focus {
     padding: 8px 10px;
     margin-bottom: 6px;
     font-family: monospace;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pendente-ean-cod {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pendente-ean-qtd {
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.btn-associar-pendente {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: #4a9eff;
+    color: #fff;
 }
 
 /* ============ Leitor físico (USB/Bluetooth em modo teclado) ============ */
