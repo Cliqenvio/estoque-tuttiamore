@@ -16,6 +16,6 @@ export const USUARIOS_AUTORIZADOS = [
         email: 'expedicao@tuttiamore.com.br',
         nome: 'Expedição',
         senha: '//Tuttiamore2',
-        restricaoHorario: { inicio: 8, fim: 18 },
+        restricaoHorario: null,
     },
 ];
