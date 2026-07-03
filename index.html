@@ -100,6 +100,7 @@
 
         <button id="btn-iniciar-relatorio" class="btn-secondary">📋 Iniciar relatório de contagem</button>
         <button id="btn-iniciar-recebimento" class="btn-secondary">📦 Receber mercadoria (conferência)</button>
+        <button id="btn-continuar-codigo" class="btn-link center">☁️ continuar recebimento por código (outro aparelho)</button>
         <button id="btn-ir-sync" class="btn-link center">sincronizar catálogo</button>
     </section>
 
@@ -174,6 +175,20 @@
             </div>
             <button id="btn-finalizar-recebimento" class="btn-link">finalizar</button>
         </header>
+
+        <!-- Barra da nuvem: código pra continuar em outro aparelho + status do salvamento -->
+        <div id="rec-nuvem-barra" class="nuvem-barra hidden">
+            <div class="nuvem-codigo-box">
+                <span class="nuvem-label">Código p/ continuar em outro aparelho</span>
+                <span id="rec-nuvem-codigo" class="nuvem-codigo">—</span>
+            </div>
+            <span id="rec-nuvem-status" class="nuvem-status">—</span>
+        </div>
+
+        <div id="rec-nuvem-conflito" class="nuvem-conflito hidden">
+            ⚠️ Outro aparelho assumiu este recebimento. Pra não sobrescrever, veja a versão mais recente.
+            <button id="btn-nuvem-puxar" class="btn-secondary">Puxar versão mais recente</button>
+        </div>
 
         <div class="sessao-layout">
             <div class="sessao-col-esq">

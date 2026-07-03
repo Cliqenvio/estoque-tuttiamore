@@ -26,16 +26,24 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
     }
 
     // extra.referencia: texto livre opcional (ex.: nota fiscal/fornecedor no recebimento)
+    // extra.codigo: código da sessão na nuvem (pra continuar em outro aparelho)
     function iniciarSessao(usuarioEmail, usuarioNome, extra = {}) {
         const sessao = {
             id: `sessao_${Date.now()}`,
             criadoEm: new Date().toISOString(),
             criadoPor: { email: usuarioEmail, nome: usuarioNome },
             referencia: extra.referencia || '',
+            codigo: extra.codigo || '',
             itens: {},     // { [produtoId]: { id, sku, gtin, nome, imagemUrl, quantidade, ordem } }
             pendentes: [], // [{ ean, ts, quantidade }] — EANs bipados sem produto cadastrado
             seq: 0,        // contador crescente: define a ordem "último bipado primeiro"
         };
+        salvar(sessao);
+        return sessao;
+    }
+
+    // Substitui a sessão local inteira (ex.: ao continuar um recebimento vindo da nuvem).
+    function substituirSessao(sessao) {
         salvar(sessao);
         return sessao;
     }
@@ -245,6 +253,7 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
         sessaoAtiva,
         temSessao,
         iniciarSessao,
+        substituirSessao,
         encerrarSessao,
         contarProduto,
         marcarAjusteEan,

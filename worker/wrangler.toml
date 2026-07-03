@@ -1,0 +1,8 @@
+name = "estoque-tuttiamore-sync"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# Banco chave-valor onde ficam as sessões de recebimento (uma por código).
+[[kv_namespaces]]
+binding = "SESSOES"
+id = "a9557dd04b99468db7f77c341a7f9915"

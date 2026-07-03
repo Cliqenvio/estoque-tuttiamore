@@ -21,6 +21,12 @@ import {
     ultimaSync,
 } from './catalog.js';
 import { relatorio, recebimento } from './reports.js';
+import {
+    nuvemDisponivel,
+    gerarCodigo,
+    enviarSessaoNuvem,
+    baixarSessaoNuvem,
+} from './cloud.js';
 
 // ============ Refs de telas ============
 const telas = {
@@ -569,6 +575,7 @@ function renderizarListaSessao(origem) {
             store.ajustarQuantidade(id, item.quantidade + d);
             renderizarListaSessao(origem);
             atualizarInfo();
+            if (origem === 'recebimento') agendarSyncNuvem();
         });
     });
     if (origem === 'recebimento') sincronizarCardRecebimento();
@@ -589,6 +596,7 @@ async function processarBipeSessao(origem, codigo) {
         const p = store.adicionarPendente(codigo);
         mostrarFeedbackEm(feedbackEl, 'erro', `✕ ${codigo} não encontrado — anotado (${p.quantidade || 1}x). Associe no resumo final.`);
         atualizarInfo();
+        if (origem === 'recebimento') agendarSyncNuvem();
         return;
     }
 
@@ -598,6 +606,7 @@ async function processarBipeSessao(origem, codigo) {
     renderizarListaSessao(origem);
     atualizarInfo();
     aoEncontrar?.(item, contado, codigo);
+    if (origem === 'recebimento') agendarSyncNuvem();
 
     buscarFotoComCache(item.id).then(f => {
         if (f?.imagemPequenaUrl) {
@@ -898,6 +907,123 @@ document.getElementById('btn-rec-ajustar-ean').addEventListener('click', () => {
     recebimento.marcarAjusteEan(recProdutoFocoId, !item.ajustarEan);
     atualizarBotaoAjusteCard();
     renderizarListaSessao('recebimento');
+    agendarSyncNuvem();
+});
+
+// ============ Sincronização do recebimento na nuvem ============
+let syncTimer = null;
+let syncEmAndamento = false;
+let conflitoNuvem = false;
+
+function getCloudRev() {
+    const v = localStorage.getItem('recebimento_cloudrev');
+    return v === null ? null : Number(v);
+}
+function setCloudRev(rev) {
+    if (rev === null || rev === undefined) localStorage.removeItem('recebimento_cloudrev');
+    else localStorage.setItem('recebimento_cloudrev', String(rev));
+}
+
+function atualizarBarraNuvem() {
+    const barra = document.getElementById('rec-nuvem-barra');
+    const s = recebimento.sessaoAtiva();
+    if (!nuvemDisponivel() || !s || !s.codigo) { barra.classList.add('hidden'); return; }
+    barra.classList.remove('hidden');
+    document.getElementById('rec-nuvem-codigo').textContent = s.codigo;
+    document.getElementById('rec-nuvem-conflito').classList.toggle('hidden', !conflitoNuvem);
+    if (!conflitoNuvem) {
+        setStatusNuvem(getCloudRev() ? 'ok' : 'pendente', getCloudRev() ? '☁️ salvo' : '⏳ salvando…');
+    }
+}
+
+function setStatusNuvem(estado, texto) {
+    const el = document.getElementById('rec-nuvem-status');
+    if (!el) return;
+    el.className = 'nuvem-status ' + estado;
+    el.textContent = texto;
+}
+
+// Junta bipes rápidos num só envio (~1,5s depois do último)
+function agendarSyncNuvem() {
+    const s = recebimento.sessaoAtiva();
+    if (!nuvemDisponivel() || !s || !s.codigo || conflitoNuvem) return;
+    setStatusNuvem('pendente', '⏳ salvando…');
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(sincronizarNuvemAgora, 1500);
+}
+
+async function sincronizarNuvemAgora() {
+    const s = recebimento.sessaoAtiva();
+    if (!nuvemDisponivel() || !s || !s.codigo || syncEmAndamento) return;
+    syncEmAndamento = true;
+    try {
+        const r = await enviarSessaoNuvem(s.codigo, s, getCloudRev());
+        if (r.conflito) {
+            conflitoNuvem = true;
+            document.getElementById('rec-nuvem-conflito').classList.remove('hidden');
+            setStatusNuvem('erro', '⚠️ outro aparelho assumiu');
+        } else {
+            setCloudRev(r.rev);
+            const hora = new Date(r.atualizadoEm).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            setStatusNuvem('ok', `☁️ salvo ${hora}`);
+        }
+    } catch (e) {
+        setStatusNuvem('erro', '⚠️ sem conexão — tentando de novo');
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(sincronizarNuvemAgora, 5000);
+    } finally {
+        syncEmAndamento = false;
+    }
+}
+
+// Carrega uma sessão vinda da nuvem e abre o recebimento
+async function continuarRecebimentoDaNuvem(codigo) {
+    const doc = await baixarSessaoNuvem(codigo);
+    if (!doc) { alert(`Nenhum recebimento encontrado com o código ${codigo}.`); return false; }
+    const sessao = doc.sessao;
+    sessao.codigo = codigo; // garante o código correto na sessão local
+    recebimento.substituirSessao(sessao);
+    setCloudRev(doc.rev);
+    conflitoNuvem = false;
+    document.getElementById('rec-nuvem-conflito').classList.add('hidden');
+    recProdutoFocoId = null;
+    await irParaRecebimento();
+    return true;
+}
+
+// Botão "puxar versão mais recente" (resolve o conflito adotando a versão do outro aparelho)
+document.getElementById('btn-nuvem-puxar').addEventListener('click', async () => {
+    const s = recebimento.sessaoAtiva();
+    if (!s || !s.codigo) return;
+    if (!confirm('Puxar a versão mais recente do outro aparelho?\n\nO que você bipou AQUI depois do aviso será substituído pela versão do outro aparelho.')) return;
+    try {
+        await continuarRecebimentoDaNuvem(s.codigo);
+    } catch (e) {
+        alert('Erro ao puxar da nuvem: ' + e.message);
+    }
+});
+
+// Botão "continuar recebimento por código" (na tela inicial)
+document.getElementById('btn-continuar-codigo').addEventListener('click', async () => {
+    destravarAudio();
+    if (!nuvemDisponivel()) { alert('Sincronização na nuvem indisponível no momento.'); return; }
+    const u = usuarioAtual();
+    if (!u) { mostrarTela('login'); return; }
+    if (relatorio.temSessao()) {
+        alert('Você tem um relatório de contagem em andamento. Finalize (ou cancele) antes de continuar um recebimento.');
+        return;
+    }
+    const codigo = (prompt('Digite o código do recebimento (ex.: R7K2):', '') || '').trim().toUpperCase();
+    if (!codigo) return;
+    const local = recebimento.sessaoAtiva();
+    if (local && local.codigo && local.codigo !== codigo) {
+        if (!confirm(`Você já tem um recebimento aberto (código ${local.codigo}) neste aparelho.\n\nSubstituir pelo recebimento ${codigo} da nuvem?`)) return;
+    }
+    try {
+        await continuarRecebimentoDaNuvem(codigo);
+    } catch (e) {
+        alert('Erro ao buscar na nuvem: ' + e.message);
+    }
 });
 
 // ============ Modo recebimento (conferência — só relatório, não altera estoque) ============
@@ -916,7 +1042,11 @@ document.getElementById('btn-iniciar-recebimento').addEventListener('click', () 
     if (!recebimento.temSessao()) {
         const ref = prompt('Referência do recebimento (nota fiscal, fornecedor...) — opcional:', '');
         if (ref === null) return; // cancelou
-        recebimento.iniciarSessao(u.email, u.nome, { referencia: ref.trim() });
+        const codigo = nuvemDisponivel() ? gerarCodigo() : '';
+        recebimento.iniciarSessao(u.email, u.nome, { referencia: ref.trim(), codigo });
+        setCloudRev(null);
+        conflitoNuvem = false;
+        agendarSyncNuvem(); // já cria o código na nuvem
     }
     irParaRecebimento();
 });
@@ -925,6 +1055,7 @@ async function irParaRecebimento() {
     if (!estaLogado()) { mostrarTela('login'); return; }
     destravarAudio();
     atualizarInfoRecebimento();
+    atualizarBarraNuvem();
     renderizarListaSessao('recebimento');
     mostrarTela('recebimento');
     document.getElementById('input-sku-recebimento').value = '';
@@ -979,6 +1110,7 @@ document.getElementById('btn-salvar-recebimento').addEventListener('click', () =
 document.getElementById('btn-sair-recebimento').addEventListener('click', () => {
     if (confirm('Cancelar o recebimento? Tudo que foi conferido será perdido.')) {
         recebimento.encerrarSessao();
+        limparEstadoNuvem();
         irParaScan();
     }
 });
@@ -1017,9 +1149,18 @@ document.getElementById('btn-rec-encerrar').addEventListener('click', () => {
     const prods = recebimento.listarItens().length;
     const unidades = recebimento.totalUnidades();
     recebimento.encerrarSessao();
+    limparEstadoNuvem();
     mostrarMensagem('sucesso', 'Recebimento concluído',
         `${prods} produtos · ${unidades} unidades conferidas.\nO estoque na Loja Integrada não foi alterado.`);
 });
+
+// Limpa o estado local de sincronização (ao cancelar/concluir um recebimento)
+function limparEstadoNuvem() {
+    clearTimeout(syncTimer);
+    setCloudRev(null);
+    conflitoNuvem = false;
+    document.getElementById('rec-nuvem-conflito').classList.add('hidden');
+}
 
 // ============ Associar EAN não encontrado ============
 async function irParaAssociarEan() {
@@ -1108,6 +1249,7 @@ async function confirmarAssociacao(item) {
         if (destino) {
             store.removerPendente(eanAssociado);
             store.contarProduto({ ...item, gtin: eanAssociado }, eanAssociado, qtd);
+            if (store === recebimento) agendarSyncNuvem();
             destino.voltar(item);
         } else {
             // Modo scan: abre tela do produto pro ajuste de estoque
