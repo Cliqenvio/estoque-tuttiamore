@@ -121,6 +121,14 @@ button {
     padding: 8px;
 }
 
+/* Botão de sessão em andamento (continuar relatório/recebimento) */
+.btn-sessao-ativa {
+    background: rgba(92, 184, 92, 0.18);
+    color: #b6e8b6;
+    border: 1px solid rgba(92, 184, 92, 0.6);
+    font-weight: 600;
+}
+
 /* Topbar */
 .topbar {
     display: flex;

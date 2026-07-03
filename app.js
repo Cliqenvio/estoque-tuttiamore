@@ -323,26 +323,53 @@ document.getElementById('btn-ir-sync').addEventListener('click', () => {
     atualizarSyncInfo();
 });
 
+// Atualiza os botões de sessão na tela inicial: mostra "Continuar…" quando há
+// uma sessão de relatório/recebimento salva em andamento.
+function atualizarBotoesSessaoScan() {
+    const btnRec = document.getElementById('btn-iniciar-recebimento');
+    if (recebimento.temSessao()) {
+        const n = recebimento.listarItens().length;
+        const u = recebimento.totalUnidades();
+        btnRec.textContent = `📦 Continuar recebimento (${n} produtos · ${u} un.)`;
+        btnRec.classList.add('btn-sessao-ativa');
+    } else {
+        btnRec.textContent = '📦 Receber mercadoria (conferência)';
+        btnRec.classList.remove('btn-sessao-ativa');
+    }
+
+    const btnRel = document.getElementById('btn-iniciar-relatorio');
+    if (relatorio.temSessao()) {
+        const n = relatorio.listarItens().length;
+        btnRel.textContent = `📋 Continuar relatório (${n} produtos)`;
+        btnRel.classList.add('btn-sessao-ativa');
+    } else {
+        btnRel.textContent = '📋 Iniciar relatório de contagem';
+        btnRel.classList.remove('btn-sessao-ativa');
+    }
+}
+
 // ============ Scan (modo ajuste pontual) ============
-async function irParaScan() {
+async function irParaScan(statusCustom) {
     if (!estaLogado()) { mostrarTela('login'); return; }
     atualizarInfoTopbar();
+    atualizarBotoesSessaoScan();
     mostrarTela('scan');
     document.getElementById('input-sku-manual').value = '';
 
     const container = document.getElementById('scanner-container');
     const leitorBox = document.getElementById('leitor-box-scan');
+    const statusPadrao = tamanhoCatalogo() > 0 ? null : 'Catálogo vazio. Sincronize primeiro.';
 
     if (modoLeitura() === 'fisico') {
         container.classList.add('hidden');
         leitorBox.classList.remove('hidden');
-        setStatus(tamanhoCatalogo() > 0 ? 'Leitor pronto — bipe um código' : 'Catálogo vazio. Sincronize primeiro.');
+        setStatus(statusCustom || statusPadrao || 'Leitor pronto — bipe um código');
         return;
     }
 
     container.classList.remove('hidden');
     leitorBox.classList.add('hidden');
-    setStatus(tamanhoCatalogo() > 0 ? 'Aponte a câmera ou cole o código' : 'Catálogo vazio. Sincronize primeiro.');
+    setStatus(statusCustom || statusPadrao || 'Aponte a câmera ou cole o código');
 
     try {
         scannerAtivo = true;
@@ -941,6 +968,13 @@ document.getElementById('input-sku-recebimento').addEventListener('keydown', (e)
 });
 
 document.getElementById('btn-finalizar-recebimento').addEventListener('click', () => irParaResumoRecebimento());
+
+// Salvar e continuar depois: a sessão já fica gravada no aparelho automaticamente,
+// então basta voltar pra tela inicial sem encerrar. Retoma pelo botão "Continuar recebimento".
+document.getElementById('btn-salvar-recebimento').addEventListener('click', () => {
+    const n = recebimento.listarItens().length;
+    irParaScan(`✅ Recebimento salvo (${n} produtos). Toque em "Continuar recebimento" quando quiser retomar.`);
+});
 
 document.getElementById('btn-sair-recebimento').addEventListener('click', () => {
     if (confirm('Cancelar o recebimento? Tudo que foi conferido será perdido.')) {

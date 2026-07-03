@@ -32,8 +32,9 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
             criadoEm: new Date().toISOString(),
             criadoPor: { email: usuarioEmail, nome: usuarioNome },
             referencia: extra.referencia || '',
-            itens: {},     // { [produtoId]: { id, sku, gtin, nome, imagemUrl, quantidade } }
-            pendentes: [], // [{ ean, ts }] — EANs bipados sem produto cadastrado
+            itens: {},     // { [produtoId]: { id, sku, gtin, nome, imagemUrl, quantidade, ordem } }
+            pendentes: [], // [{ ean, ts, quantidade }] — EANs bipados sem produto cadastrado
+            seq: 0,        // contador crescente: define a ordem "último bipado primeiro"
         };
         salvar(sessao);
         return sessao;
@@ -49,9 +50,11 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
     function contarProduto(produto, codigoBipado = '', quantidade = 1) {
         const s = ler();
         if (!s) throw new Error('Nenhuma sessão ativa');
+        s.seq = (s.seq || 0) + 1; // marca este bipe como o mais recente
         const existente = s.itens[produto.id];
         if (existente) {
             existente.quantidade += quantidade;
+            existente.ordem = s.seq; // sobe pro topo — foi o último bipado
             if (codigoBipado) existente.codigoBipado = codigoBipado;
         } else {
             s.itens[produto.id] = {
@@ -63,6 +66,7 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
                 quantidade,
                 ajustarEan: false,
                 codigoBipado: codigoBipado || '',
+                ordem: s.seq,
             };
         }
         salvar(s);
@@ -122,10 +126,15 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
         salvar(s);
     }
 
-    function listarItens() {
+    // ordem: 'recente' (default) → último bipado no topo; 'nome' → alfabético
+    function listarItens(ordem = 'recente') {
         const s = ler();
         if (!s) return [];
-        return Object.values(s.itens).sort((a, b) => a.nome.localeCompare(b.nome));
+        const itens = Object.values(s.itens);
+        if (ordem === 'nome') {
+            return itens.sort((a, b) => a.nome.localeCompare(b.nome));
+        }
+        return itens.sort((a, b) => (b.ordem || 0) - (a.ordem || 0));
     }
 
     function listarPendentes() {
@@ -145,7 +154,7 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
             ? `SKU,EAN,Nome,${colunaQtd},Corrigir EAN,Código bipado`
             : `SKU,EAN,Nome,${colunaQtd}`;
         const linhas = [cabecalho];
-        for (const item of listarItens()) {
+        for (const item of listarItens('nome')) {
             const nome = String(item.nome).replace(/"/g, '""');
             if (detalheAjuste) {
                 linhas.push(`"${item.sku}","${item.gtin}","${nome}",${item.quantidade},${item.ajustarEan ? 'SIM' : ''},"${item.codigoBipado || ''}"`);
@@ -170,7 +179,7 @@ function criarStoreSessao({ chave, titulo, colunaQtd, prefixoArquivo, detalheAju
     function gerarResumoTexto() {
         const s = ler();
         if (!s) return '';
-        const itens = listarItens();
+        const itens = listarItens('nome');
         const linhas = [
             `${titulo} — ${new Date(s.criadoEm).toLocaleString('pt-BR')}`,
             `Por: ${s.criadoPor?.nome || s.criadoPor?.email}`,
