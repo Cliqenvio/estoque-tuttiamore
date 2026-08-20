@@ -1,0 +1,199 @@
+/* ===== Do zero ao app — sistema visual ===== */
+:root{
+  --ink:#191614; --ink-soft:#3A342E; --muted:#6E645A; --faint:#9A9089;
+  --rule:#E4DCD1; --rule-soft:#F0EAE2;
+  --paper:#FFFFFF; --cream:#FBF7F1; --cream-deep:#F4EDE3;
+  --accent:#B8431C; --accent-deep:#7C2B0F; --accent-wash:#FBEDE6;
+  --green:#2C6149; --green-wash:#E9F1EC;
+  --night:#191614;
+}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+body{
+  margin:0; font-family:'Inter',system-ui,sans-serif;
+  font-size:10.4pt; line-height:1.58; color:var(--ink);
+  font-feature-settings:"kern" 1,"liga" 1,"calt" 1;
+  orphans:3; widows:3; text-rendering:optimizeLegibility;
+}
+p{margin:0 0 .78em}
+strong{font-weight:650; color:var(--ink)}
+em{font-style:italic}
+a{color:var(--accent-deep); text-decoration:none; border-bottom:.5px solid var(--rule)}
+
+/* ---------- títulos ---------- */
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:700; color:var(--ink);
+  line-height:1.12; margin:0; letter-spacing:-.012em; break-after:avoid;}
+h2{font-size:18.5pt; margin:1.9em 0 .5em; font-weight:900; letter-spacing:-.018em;}
+h3{font-size:13pt; margin:1.5em 0 .38em; font-weight:700;}
+h4{font-family:'Inter',sans-serif; font-size:9.4pt; font-weight:700; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--accent-deep); margin:1.5em 0 .4em;}
+h2+p,h3+p,h4+p{margin-top:0}
+
+/* ---------- listas ---------- */
+ul,ol{margin:0 0 .85em; padding-left:1.15em}
+li{margin-bottom:.3em; padding-left:.12em}
+li::marker{color:var(--accent)}
+ol li::marker{font-weight:700; font-size:.92em}
+ul.limpa{list-style:none; padding-left:0}
+ul.limpa li{padding-left:0}
+
+/* ---------- código ---------- */
+code{font-family:'JetBrains Mono',ui-monospace,monospace; font-size:.855em;
+  background:var(--cream-deep); padding:.1em .34em; border-radius:3px; color:var(--accent-deep);
+  font-weight:500;}
+pre{font-family:'JetBrains Mono',monospace; font-size:8.3pt; line-height:1.5;
+  background:var(--cream); border:.5pt solid var(--rule); border-left:2.5pt solid var(--accent);
+  border-radius:0 4px 4px 0; padding:.72em .9em; margin:.5em 0 1em; overflow:hidden;
+  white-space:pre-wrap; word-break:break-word; break-inside:avoid; color:var(--ink-soft);}
+pre code{background:none; padding:0; color:inherit; font-size:inherit; font-weight:400}
+
+/* ---------- tabelas ---------- */
+table{width:100%; border-collapse:collapse; margin:.6em 0 1.15em; font-size:9.1pt;
+  break-inside:avoid;}
+thead th{font-family:'Inter',sans-serif; font-weight:700; font-size:8.1pt;
+  text-transform:uppercase; letter-spacing:.075em; color:var(--muted);
+  text-align:left; padding:0 .6em .42em; border-bottom:1.2pt solid var(--ink);}
+td{padding:.46em .6em; border-bottom:.5pt solid var(--rule-soft); vertical-align:top;
+  line-height:1.42;}
+tbody tr:last-child td{border-bottom:.5pt solid var(--rule)}
+td code{font-size:.9em}
+table.compacta{font-size:8.6pt}
+
+/* ---------- caixas ---------- */
+.caixa{break-inside:avoid; margin:1.1em 0; padding:.85em 1em .9em;
+  border-radius:5px; font-size:9.5pt; line-height:1.52;}
+.caixa p:last-child,.caixa ul:last-child,.caixa ol:last-child{margin-bottom:0}
+.caixa .rotulo{font-family:'Inter',sans-serif; font-size:7.6pt; font-weight:700;
+  letter-spacing:.11em; text-transform:uppercase; display:block; margin-bottom:.4em;}
+
+.prompt{background:var(--night); color:#EFE8DF; border-radius:5px;}
+.prompt .rotulo{color:#D89A72}
+.prompt p{font-family:'JetBrains Mono',monospace; font-size:8.6pt; line-height:1.62;
+  color:#EFE8DF; margin-bottom:.6em;}
+.prompt code{background:rgba(255,255,255,.1); color:#F3C9AE}
+.prompt strong{color:#fff}
+
+.armadilha{background:var(--accent-wash); border-left:2.5pt solid var(--accent);}
+.armadilha .rotulo{color:var(--accent-deep)}
+
+.checklist{background:var(--green-wash); border-left:2.5pt solid var(--green);}
+.checklist .rotulo{color:var(--green)}
+.checklist ul{list-style:none; padding-left:0; margin:0}
+.checklist li{padding-left:1.35em; position:relative; margin-bottom:.34em}
+.checklist li::before{content:"☐"; position:absolute; left:0; color:var(--green);
+  font-size:1.05em; top:-.04em;}
+
+.caso{background:var(--cream); border:.5pt solid var(--rule); border-top:2.5pt solid var(--ink);}
+.caso .rotulo{color:var(--ink)}
+
+.nota{background:var(--cream); border-left:2.5pt solid var(--faint);}
+.nota .rotulo{color:var(--muted)}
+
+/* ---------- destaque tipográfico ---------- */
+.lead{font-size:12.4pt; line-height:1.5; color:var(--ink-soft); font-weight:400;
+  margin-bottom:1.1em;}
+.lead strong{font-weight:600; color:var(--ink)}
+blockquote{margin:1.1em 0; padding:0 0 0 1em; border-left:2.5pt solid var(--accent);
+  font-family:'Fraunces',Georgia,serif; font-size:12pt; line-height:1.42;
+  color:var(--ink); font-weight:600; break-inside:avoid;}
+blockquote p{margin-bottom:.35em}
+.regra{font-family:'Fraunces',serif; font-size:13.5pt; font-weight:700; line-height:1.3;
+  color:var(--accent-deep); margin:1.1em 0; padding:.55em 0;
+  border-top:1.2pt solid var(--rule); border-bottom:1.2pt solid var(--rule);
+  break-inside:avoid;}
+hr{border:0; border-top:.5pt solid var(--rule); margin:1.6em 0}
+.certo{color:var(--green); font-weight:650}
+.errado{color:var(--accent); font-weight:650}
+
+/* ---------- páginas ---------- */
+.pagina{break-before:page}
+.pagina:first-child{break-before:auto}
+.sem-quebra{break-inside:avoid}
+
+/* ---------- abertura de capítulo ---------- */
+.abertura{break-before:page; padding-top:6mm; margin-bottom:2.1em;}
+.abertura .faixa{display:flex; align-items:baseline; gap:.7em;
+  border-bottom:1.4pt solid var(--ink); padding-bottom:.35em; margin-bottom:1.1em;}
+.abertura .num{font-family:'Fraunces',serif; font-size:46pt; font-weight:900;
+  line-height:.82; color:var(--accent); letter-spacing:-.04em;}
+.abertura .fase{font-family:'Inter',sans-serif; font-size:7.8pt; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-left:auto;}
+.abertura h2{font-size:27pt; font-weight:900; margin:0 0 .12em; letter-spacing:-.026em;}
+.abertura .skillname{font-family:'JetBrains Mono',monospace; font-size:9.2pt;
+  color:var(--accent-deep); font-weight:700; display:block; margin-bottom:1em;}
+.abertura .resumo{font-size:11.4pt; line-height:1.5; color:var(--ink-soft);}
+
+/* ---------- capa ---------- */
+.capa{page:capa; width:210mm; height:297mm; background:var(--night); color:#F5EFE7;
+  padding:26mm 22mm 20mm; display:flex; flex-direction:column; position:relative;
+  break-after:page; overflow:hidden;}
+.capa .selo{font-family:'Inter',sans-serif; font-size:8pt; font-weight:700;
+  letter-spacing:.22em; text-transform:uppercase; color:#C97A4E;}
+.capa .dez{font-family:'Fraunces',serif; font-size:150pt; font-weight:900; line-height:.78;
+  letter-spacing:-.06em; color:#B8431C; margin:14mm 0 0;}
+.capa h1{font-family:'Fraunces',serif; font-size:44pt; font-weight:900; line-height:1.02;
+  letter-spacing:-.03em; color:#FBF7F1; margin:4mm 0 0; max-width:150mm;}
+.capa .sub{font-size:12.5pt; line-height:1.5; color:#B8ADA2; margin-top:7mm; max-width:130mm;}
+.capa .rodape{margin-top:auto; border-top:.75pt solid #3A342E; padding-top:5mm;
+  display:flex; justify-content:space-between; align-items:flex-end; font-size:8.6pt;
+  color:#8D827A; letter-spacing:.03em;}
+.capa .rodape strong{color:#F5EFE7; font-weight:600; display:block; font-size:9.6pt;}
+.capa .linhas{position:absolute; right:-30mm; top:-30mm; width:150mm; height:150mm;
+  border-radius:50%; border:1px solid #2B2521;}
+.capa .linhas2{position:absolute; right:-60mm; bottom:-50mm; width:170mm; height:170mm;
+  border-radius:50%; border:1px solid #241F1B;}
+
+/* ---------- ficha ---------- */
+.ficha{page:capa; width:210mm; height:297mm; background:var(--cream);
+  padding:30mm 26mm; display:flex; flex-direction:column; font-size:9.6pt;
+  line-height:1.6; color:var(--ink-soft);}
+.ficha h2{font-size:15pt; margin:0 0 1em; font-weight:900}
+.ficha .bloco{margin-bottom:1.7em}
+.ficha .bloco h4{margin-top:0}
+.ficha .fim{margin-top:auto; border-top:.75pt solid var(--rule); padding-top:5mm;
+  font-size:8.4pt; color:var(--muted);}
+
+/* ---------- sumário ---------- */
+.sumario h2{margin-top:0}
+.toc{list-style:none; padding:0; margin:1.4em 0 0}
+.toc li{display:flex; align-items:baseline; gap:.5em; margin-bottom:.62em;
+  font-size:10.2pt;}
+.toc .n{font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--accent);
+  min-width:2.1em; font-size:9.3pt;}
+.toc .t{font-weight:550; color:var(--ink)}
+.toc .d{flex:1; border-bottom:.5pt dotted var(--rule); margin:0 .35em; transform:translateY(-.18em)}
+.toc .p{font-family:'JetBrains Mono',monospace; font-size:9pt; color:var(--muted); font-weight:500}
+.toc .sec{margin-top:1.5em; margin-bottom:.7em; font-family:'Inter',sans-serif;
+  font-size:7.8pt; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--muted); display:block; border-bottom:.5pt solid var(--rule); padding-bottom:.3em;}
+.toc .sec:first-child{margin-top:0}
+
+/* ---------- grades ---------- */
+.grade2{display:grid; grid-template-columns:1fr 1fr; gap:.8em 1.3em; margin:1em 0}
+.grade2 .cel{break-inside:avoid}
+.grade2 h4{margin-top:0}
+.mapa{width:100%; border-collapse:collapse; font-size:8.8pt; margin:1em 0}
+.mapa td{padding:.5em .55em; border-bottom:.5pt solid var(--rule-soft)}
+.mapa .mn{font-family:'JetBrains Mono',monospace; color:var(--accent); font-weight:700;
+  width:2.4em; font-size:8.6pt}
+.mapa .ms{font-family:'JetBrains Mono',monospace; font-size:8.4pt; font-weight:600;
+  color:var(--ink); white-space:nowrap}
+
+/* ---------- contracapa ---------- */
+.contracapa{page:capa; width:210mm; height:297mm; background:var(--night); color:#F5EFE7;
+  padding:34mm 26mm 22mm; display:flex; flex-direction:column;}
+.contracapa h2{font-size:24pt; color:#FBF7F1; font-weight:900; margin:0 0 .6em;
+  letter-spacing:-.02em;}
+.contracapa p{color:#B8ADA2; font-size:11pt; line-height:1.6}
+.contracapa .fim{margin-top:auto; border-top:.75pt solid #3A342E; padding-top:5mm;
+  font-size:8.6pt; color:#8D827A}
+.contracapa strong{color:#F5EFE7}
+
+@page{size:A4; margin:20mm 18mm 22mm;}
+@page capa{size:A4; margin:0;}
+
+/* primeira coluna estreita de rótulos */
+table.rotulos td:first-child{white-space:nowrap; width:1%; padding-right:1.1em}
+.toc a{color:inherit; text-decoration:none; border:0}
+
+.folga{break-after:page; height:1px}

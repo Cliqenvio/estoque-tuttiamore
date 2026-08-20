@@ -1,0 +1,1578 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<title>Do zero ao app — 10 skills</title>
+<link rel="stylesheet" href="fontes.css"><link rel="stylesheet" href="estilo.css">
+</head><body>
+
+<div class="folga"></div><div class="folga"></div>
+
+<!-- ======================= SUMÁRIO ======================= -->
+<section class="sumario">
+<h2>Sumário</h2>
+<ul class="toc">
+  <li class="sec">Antes de começar</li>
+  <li><span class="n"></span><a href="#tese" class="t">Por que agora — o app de uso interno</a><span class="d"></span><span class="p" data-alvo="tese">4</span></li>
+  <li><span class="n"></span><a href="#regras" class="t">Como falar com o assistente: 7 regras</a><span class="d"></span><span class="p" data-alvo="regras">6</span></li>
+  <li><span class="n"></span><a href="#mapa" class="t">O mapa das 10 skills</a><span class="d"></span><span class="p" data-alvo="mapa">8</span></li>
+
+  <li class="sec">Parte I · Descobrir</li>
+  <li><span class="n">01</span><a href="#cap1" class="t">Escopo de uma página</a><span class="d"></span><span class="p" data-alvo="cap1">10</span></li>
+  <li><span class="n">02</span><a href="#cap2" class="t">Ambiente zero</a><span class="d"></span><span class="p" data-alvo="cap2">13</span></li>
+  <li><span class="n">03</span><a href="#cap3" class="t">Stack mínima</a><span class="d"></span><span class="p" data-alvo="cap3">15</span></li>
+
+  <li class="sec">Parte II · Construir</li>
+  <li><span class="n">04</span><a href="#cap4" class="t">Modelo de dados</a><span class="d"></span><span class="p" data-alvo="cap4">18</span></li>
+  <li><span class="n">05</span><a href="#cap5" class="t">Primeira tela viva</a><span class="d"></span><span class="p" data-alvo="cap5">21</span></li>
+  <li><span class="n">06</span><a href="#cap6" class="t">Fluxo completo</a><span class="d"></span><span class="p" data-alvo="cap6">24</span></li>
+
+  <li class="sec">Parte III · Confiar</li>
+  <li><span class="n">07</span><a href="#cap7" class="t">Quem entra e quem vê</a><span class="d"></span><span class="p" data-alvo="cap7">27</span></li>
+  <li><span class="n">08</span><a href="#cap8" class="t">Dados que já existem</a><span class="d"></span><span class="p" data-alvo="cap8">30</span></li>
+  <li><span class="n">09</span><a href="#cap9" class="t">Não quebra</a><span class="d"></span><span class="p" data-alvo="cap9">33</span></li>
+
+  <li class="sec">Parte IV · Entregar</li>
+  <li><span class="n">10</span><a href="#cap10" class="t">No ar e vivo</a><span class="d"></span><span class="p" data-alvo="cap10">36</span></li>
+
+  <li class="sec">Fechamento</li>
+  <li><span class="n"></span><a href="#caso" class="t">Estudo de caso: um app de estoque de verdade</a><span class="d"></span><span class="p" data-alvo="caso">39</span></li>
+  <li><span class="n">A</span><a href="#apA" class="t">Instalar as 10 skills</a><span class="d"></span><span class="p" data-alvo="apA">42</span></li>
+  <li><span class="n">B</span><a href="#apB" class="t">Skills públicas que combinam com cada etapa</a><span class="d"></span><span class="p" data-alvo="apB">44</span></li>
+  <li><span class="n">C</span><a href="#apC" class="t">Os 30 dias — plano de execução</a><span class="d"></span><span class="p" data-alvo="apC">45</span></li>
+  <li><span class="n">D</span><a href="#apD" class="t">Glossário sem jargão</a><span class="d"></span><span class="p" data-alvo="apD">46</span></li>
+</ul>
+</section>
+
+<!-- ======================= TESE ======================= -->
+<section class="abertura" id="tese">
+  <div class="faixa"><span class="num">·</span><span class="fase">Antes de começar</span></div>
+  <h2>Por que agora</h2>
+  <p class="resumo">O app de uso interno é o lugar onde construir com IA deixa de ser
+  demonstração e vira dinheiro. Vale entender por quê antes de abrir o terminal.</p>
+</section>
+
+<p class="lead">Toda empresa tem um pedaço do trabalho que roda em planilha, caderno,
+grupo de WhatsApp e memória de alguém. Não é desleixo — é economia. O sistema que
+resolveria custa quarenta mil reais e seis meses, e ninguém gasta isso para economizar
+duas horas por semana.</p>
+
+<p>Então a planilha fica. E junto com ela ficam os custos invisíveis: a conferência que
+demora duas horas, o produto que sumiu e ninguém sabe quando, o pedido faturado errado, a
+pessoa nova que leva três semanas para aprender "como a gente faz aqui". Some tudo e o
+software que não valia quarenta mil reais estava, na verdade, custando bem mais que isso.</p>
+
+<p>O que mudou não foi a economia — foi o preço da construção. Um assistente de código
+transforma descrição em software funcionando. E, de repente, a conta vira a favor de
+qualquer processo que doa um pouco.</p>
+
+<div class="regra">Software interno não precisa ser bom para todo mundo.<br>
+Precisa ser certo para seis pessoas.</div>
+
+<h3>Onde o software de prateleira perde</h3>
+
+<p>Um ERP é feito para servir dez mil empresas. Por isso ele tem 400 campos, dos quais você
+usa 12, e não tem exatamente o campo que o seu negócio precisa. Ele resolve 80% e o resto
+vira planilha paralela — que é onde mora o seu problema.</p>
+
+<p>O app interno não compete com o ERP. Ele mora no buraco que o ERP deixou:</p>
+
+<table>
+<thead><tr><th>O que o ERP faz bem</th><th>O que sobra para o app interno</th></tr></thead>
+<tbody>
+<tr><td>Guardar o cadastro, emitir nota, fechar o mês</td><td>A conferência física da mercadoria que chegou</td></tr>
+<tr><td>Registrar o pedido</td><td>A separação na rua, no celular, sem sinal</td></tr>
+<tr><td>Controlar o financeiro</td><td>A prestação de contas do vendedor no fim do dia</td></tr>
+<tr><td>Manter o catálogo</td><td>A conferência de preço na gôndola pelo código de barras</td></tr>
+</tbody>
+</table>
+
+<p>Repare no padrão: tudo que sobra acontece <strong>fora da mesa</strong> — em pé, com uma
+caixa na mão, no corredor, na rua. É exatamente o tipo de coisa que software genérico não
+cobre e que quem trabalha ali sabe descrever em três frases.</p>
+
+<h3>A vantagem que você tem e o programador não tem</h3>
+
+<p>Existe um mal-entendido caro: achar que a parte difícil de fazer software é escrever
+código. A parte difícil sempre foi <em>saber o que construir</em>. Quantas casas tem o
+código. Se o conferente pode bipar duas vezes o mesmo item. O que fazer quando chega
+mercadoria sem nota. Por que a coluna "obs" tem três significados diferentes.</p>
+
+<p>Um programador contratado leva semanas descobrindo isso e ainda entende errado. Você
+já sabe. Com um assistente de código, essa passa a ser a parte que importa — e é a sua.</p>
+
+<div class="caixa nota">
+<span class="rotulo">O que não mudou</span>
+<p>A IA escreve o código; ela não decide o que vale a pena. Ela também não sabe que o
+depósito não pega Wi-Fi, que a Dona Marli não usa celular com tela pequena, e que a
+conferência tem que acabar antes das 17h porque o caminhão sai. Essas decisões continuam
+sendo suas — e são elas que separam um app usado de um app abandonado.</p>
+</div>
+
+<h3>O que este material entrega</h3>
+
+<p>Dez etapas, dez skills. Uma skill é um arquivo de instruções que você instala no
+assistente; a partir daí, quando você descreve o problema, ele conduz a etapa do jeito
+certo — faz as perguntas que precisam ser feitas, produz o documento que precisa existir,
+evita a armadilha que derruba a maioria dos projetos.</p>
+
+<p>É a diferença entre pedir ajuda a alguém que já fez isso vinte vezes e pedir ajuda a
+alguém muito inteligente que nunca fez.</p>
+
+<!-- ======================= REGRAS ======================= -->
+<section class="abertura" id="regras">
+  <div class="faixa"><span class="num">·</span><span class="fase">Antes de começar</span></div>
+  <h2>Como falar com o assistente</h2>
+  <p class="resumo">Sete regras que separam quem tira duas horas de trabalho da IA
+  de quem tira duas semanas de retrabalho. Vale para Claude, Codex, Gemini ou qualquer
+  outro.</p>
+</section>
+
+<h3>1. Descreva o problema, não a solução</h3>
+<p>A tentação é pedir a implementação: <em>"crie uma tabela com paginação e um modal de
+edição"</em>. Você acabou de decidir a solução — e você é quem menos sabe sobre soluções
+técnicas nessa conversa.</p>
+<p>Peça o problema: <em>"o conferente precisa ver o que já bipou hoje e corrigir uma
+quantidade errada sem perder o resto"</em>. O assistente propõe a forma. Se não gostar,
+aí sim você dirige.</p>
+
+<h3>2. Uma coisa por vez</h3>
+<p>Pedido grande gera código grande, que ninguém revisa, que esconde três erros. Pedido
+pequeno gera código que cabe na tela, que você lê, que você entende.</p>
+<p>Regra prática: se o pedido tem mais de um "e depois", quebre em dois.</p>
+
+<h3>3. Diga o que não fazer</h3>
+<p>Assistentes são generosos por padrão: você pede uma tela e recebe um framework. As
+frases que mais economizam tempo são as de restrição.</p>
+<div class="caixa prompt">
+<span class="rotulo">Cole isso no fim dos seus pedidos</span>
+<p>Sem instalar biblioteca nova. Siga o padrão dos arquivos que já existem. Não refatore
+o que não pedi. Se precisar de uma decisão que eu não dei, pergunte antes de escrever
+código.</p>
+</div>
+
+<h3>4. Exija o "por quê" antes do "como"</h3>
+<p>Quando o assistente propõe um conserto, pergunte <strong>por que quebrou</strong>. Se a
+explicação não fizer sentido para você, provavelmente o conserto está escondendo o
+sintoma — e o problema volta em duas semanas, disfarçado.</p>
+
+<h3>5. Nunca aceite "deve funcionar"</h3>
+<p>Rode. Abra. Clique. Bipe o código que não existe. Se você não viu com os próprios olhos,
+não funciona — e essa regra vale independentemente de quão convincente foi a explicação.</p>
+
+<h3>6. Trate erro como informação, não como fracasso</h3>
+<p>Cole a mensagem de erro inteira, sem editar, junto com o que você fez antes dela.
+A mensagem que parece um monte de letras embaralhadas costuma dizer o arquivo e a linha
+exatos. Editar o erro para "ficar mais limpo" é remover a informação útil.</p>
+
+<h3>7. Commit antes de tentar algo grande</h3>
+<p>Antes de pedir uma mudança arriscada, salve um ponto de restauração:</p>
+<pre><code>git add . &amp;&amp; git commit -m "antes de mexer na conferencia"</code></pre>
+<p>Com isso, "tentar" fica barato. Sem isso, toda tentativa é uma aposta — e você começa
+a evitar mudanças por medo, que é como projetos morrem sem ninguém perceber.</p>
+
+<div class="caixa armadilha">
+<span class="rotulo">A armadilha central</span>
+<p><strong>Código gerado por IA parece pronto.</strong> É bem formatado, comentado, com
+nomes bonitos — e às vezes está errado de um jeito que só aparece com dado real, na
+segunda-feira, com um funcionário parado na sua frente. A aparência de acabamento não é
+evidência de correção. É por isso que existe o capítulo 9.</p>
+</div>
+
+<!-- ======================= MAPA ======================= -->
+<section class="abertura" id="mapa">
+  <div class="faixa"><span class="num">·</span><span class="fase">Antes de começar</span></div>
+  <h2>O mapa das 10 skills</h2>
+  <p class="resumo">A jornada inteira em uma página. Cada linha é um capítulo, uma skill
+  instalável e um entregável concreto.</p>
+</section>
+
+<table class="mapa">
+<thead><tr><th></th><th>Skill</th><th>O que ela faz</th><th>Você termina com</th></tr></thead>
+<tbody>
+<tr><td class="mn">01</td><td class="ms">escopo-de-uma-pagina</td><td>Vira o processo manual em escopo, e corta o que não é v1</td><td><code>ESCOPO.md</code></td></tr>
+<tr><td class="mn">02</td><td class="ms">ambiente-zero</td><td>Instala tudo na sua máquina e valida com um teste real</td><td>Máquina pronta + repositório</td></tr>
+<tr><td class="mn">03</td><td class="ms">stack-minima</td><td>Escolhe a tecnologia mais simples que aguenta, e registra o porquê</td><td><code>DECISOES.md</code></td></tr>
+<tr><td class="mn">04</td><td class="ms">modelo-de-dados</td><td>Transforma o processo em entidades, eventos e regras</td><td><code>MODELO.md</code></td></tr>
+<tr><td class="mn">05</td><td class="ms">primeira-tela-viva</td><td>Põe no ar uma tela que faz uma coisa real com dado real</td><td>App publicado fazendo uma coisa</td></tr>
+<tr><td class="mn">06</td><td class="ms">fluxo-completo</td><td>Cresce fatia por fatia e cobre vazio, erro, offline e desfazer</td><td>O processo inteiro funcionando</td></tr>
+<tr><td class="mn">07</td><td class="ms">quem-entra-e-quem-ve</td><td>Login proporcional, papéis e segredos fora do navegador</td><td>App seguro o suficiente</td></tr>
+<tr><td class="mn">08</td><td class="ms">dados-que-ja-existem</td><td>Importa planilha e ERP com validação, quarentena e relatório</td><td>Dados reais dentro do app</td></tr>
+<tr><td class="mn">09</td><td class="ms">nao-quebra</td><td>Teste de fumaça, revisão adversarial e rollback barato</td><td>Rede de segurança</td></tr>
+<tr><td class="mn">10</td><td class="ms">no-ar-e-vivo</td><td>Publica, instala no celular, faz backup e controla custo</td><td>Ferramenta que a equipe usa</td></tr>
+</tbody>
+</table>
+
+<h3>A ordem importa (mas não é um trilho)</h3>
+<p>As dez etapas estão em ordem de dependência: o modelo de dados apoia na decisão de
+stack, que apoia no escopo. Pular para trás custa retrabalho, e o retrabalho fica mais
+caro conforme se avança — trocar o modelo de dados no capítulo 4 é um arquivo de texto;
+trocar no capítulo 10 é uma migração com o app no ar.</p>
+
+<p>Mas ninguém começa exatamente no zero. Se o app já existe, entre pela dor:</p>
+
+<div class="grade2">
+<div class="cel"><h4>"Ninguém sabe dizer o que ele faz"</h4><p>Capítulo 1 — escreva o escopo do que já existe.</p></div>
+<div class="cel"><h4>"Quebra a cada mudança"</h4><p>Capítulo 9 — instale a rede de segurança antes de continuar.</p></div>
+<div class="cel"><h4>"O número não fecha"</h4><p>Capítulo 4 — o modelo guarda saldo em vez de guardar eventos.</p></div>
+<div class="cel"><h4>"Tenho a planilha e não sei como entra"</h4><p>Capítulo 8 — importação com quarentena.</p></div>
+<div class="cel"><h4>"Está no ar e não tem backup"</h4><p>Capítulo 10 — pare tudo e resolva hoje.</p></div>
+<div class="cel"><h4>"A equipe não usa"</h4><p>Capítulo 5 — a validação com o usuário real foi pulada.</p></div>
+</div>
+
+<!-- ======================= CAP 1 ======================= -->
+<section class="abertura" id="cap1">
+  <div class="faixa"><span class="num">01</span><span class="fase">Parte I · Descobrir</span></div>
+  <h2>Escopo de uma página</h2>
+  <span class="skillname">skill: escopo-de-uma-pagina</span>
+  <p class="resumo">Antes de existir uma linha de código, precisa existir uma página que
+  qualquer pessoa da empresa lê em dois minutos e concorda.</p>
+</section>
+
+<h3>O problema</h3>
+<p>Quase todo app interno que morre pela metade morreu do mesmo jeito: começou pela tela.
+Alguém pediu "um sistema de estoque", o assistente gerou catorze telas bonitas, e três
+dias depois ninguém sabia dizer qual problema aquilo resolvia.</p>
+
+<p>O custo não foi o código — foi a decisão que ninguém tomou. E o sintoma é sempre o
+mesmo: o projeto cresce em telas e não cresce em utilidade.</p>
+
+<div class="regra">Se você não consegue dizer o que o app faz em uma frase,<br>
+o assistente também não consegue.</div>
+
+<h3>Como a skill conduz</h3>
+<p>Ela não te deixa começar pela tela. Ela faz cinco blocos de perguntas, três por vez, e
+não avança enquanto o bloco anterior não fechar:</p>
+
+<table class="rotulos">
+<thead><tr><th>Bloco</th><th>O que ela arranca de você</th></tr></thead>
+<tbody>
+<tr><td><strong>A dor</strong></td><td>A tarefa manual, quem faz, quantas vezes, quanto tempo, e <em>um erro concreto que já aconteceu</em></td></tr>
+<tr><td><strong>O usuário</strong></td><td>O cargo (não "a equipe"), o aparelho e o ambiente — em pé no depósito é outro app que sentado no escritório</td></tr>
+<tr><td><strong>O fluxo</strong></td><td>O caminho feliz em no máximo 7 passos, como receita</td></tr>
+<tr><td><strong>Os dados</strong></td><td>O que precisa sobreviver ao fechar o app, de onde vem hoje, e quanto</td></tr>
+<tr><td><strong>Pronto</strong></td><td>Uma frase mensurável de como você saberá que a v1 funcionou</td></tr>
+</tbody>
+</table>
+
+<p>Duas dessas perguntas fazem quase todo o trabalho. A primeira é <strong>"que erro
+concreto já aconteceu?"</strong> — se você não consegue citar um, o problema não dói o
+bastante para virar software, e a skill vai te dizer isso na cara. A segunda é
+<strong>"em que aparelho, em que lugar?"</strong>, porque ela decide metade da
+arquitetura antes de qualquer discussão técnica.</p>
+
+<div class="caixa prompt">
+<span class="rotulo">Como começar</span>
+<p>Quero parar de controlar a conferência de mercadoria na planilha e fazer um app que a
+expedição usa no celular. Me ajuda a escrever o escopo antes de a gente escrever código.</p>
+</div>
+
+<h3>O entregável</h3>
+<p>Um arquivo <code>ESCOPO.md</code> na raiz do projeto com sete seções: a dor, usuário e
+contexto, o caminho feliz, dados que precisam sobreviver, pronto é quando, riscos — e a
+seção que decide o destino do projeto.</p>
+
+<h3>A seção mais importante é a que lista o que NÃO entra</h3>
+<p>Ela precisa ter no mínimo três itens, e eles precisam ser coisas que você
+<em>realmente quer</em>. Se tudo que ficou de fora for palha que ninguém pediu, o corte
+não foi feito — só foi encenado.</p>
+
+<p>Candidatos clássicos a ficar de fora de uma v1:</p>
+<ul>
+<li>Relatórios e gráficos (a v1 exporta CSV; o gráfico vem quando alguém sentir falta)</li>
+<li>Notificação automática por WhatsApp ou e-mail</li>
+<li>Perfis de permissão granulares — na v1 bastam dois: quem administra e quem opera</li>
+<li>App nativo na loja de aplicativos: um site que abre no celular resolve</li>
+<li>Integração de mão dupla com o ERP — comece lendo; escrever de volta é outro projeto</li>
+<li>Histórico de auditoria completo</li>
+</ul>
+
+<div class="caixa armadilha">
+<span class="rotulo">Armadilhas</span>
+<ul>
+<li><strong>Escopo que é lista de telas.</strong> "Tela de cadastro, tela de listagem, tela
+de relatório" não é escopo, é chute de implementação. Escopo é fluxo e dado.</li>
+<li><strong>O app para todo mundo.</strong> Se serve a três cargos diferentes, escolha o
+que sofre mais e escreva para ele.</li>
+<li><strong>Substituir o ERP.</strong> Ninguém substitui o ERP num fim de semana. O app
+interno ganha onde o ERP é ruim: o pedaço manual que ninguém automatizou.</li>
+<li><strong>Escopo escrito sozinho.</strong> Se a pessoa que vai usar o app todo dia não
+leu o <code>ESCOPO.md</code>, ele não está validado.</li>
+</ul>
+</div>
+
+<div class="caixa caso">
+<span class="rotulo">Do mundo real</span>
+<p>Num app de conferência de recebimento, o escopo cabia em uma frase: <em>"o conferente
+bipa o código de barras de cada item que chegou e o app diz na hora qual produto é e
+quanto já foi contado"</em>.</p>
+<p>Fora da v1 ficaram: cadastro de produtos (vem sincronizado do e-commerce), registro de
+devolução, relatório gerencial, e integração de escrita com o ERP. Três desses quatro
+foram pedidos com convicção na primeira conversa. Nenhum deles era necessário para
+resolver as duas horas de conferência — e o app ficou pronto porque ficaram de fora.</p>
+</div>
+
+<div class="caixa checklist">
+<span class="rotulo">Só avance quando</span>
+<ul>
+<li>Existe um <code>ESCOPO.md</code> com as sete seções preenchidas</li>
+<li>O caminho feliz tem no máximo 7 passos</li>
+<li>A seção "FORA da v1" tem pelo menos 3 itens que você queria de verdade</li>
+<li>"Pronto é quando" é uma frase mensurável, com número</li>
+<li>A pessoa que vai usar o app leu e disse "sim, isso resolve"</li>
+</ul>
+</div>
+
+<!-- ======================= CAP 2 ======================= -->
+<section class="abertura" id="cap2">
+  <div class="faixa"><span class="num">02</span><span class="fase">Parte I · Descobrir</span></div>
+  <h2>Ambiente zero</h2>
+  <span class="skillname">skill: ambiente-zero</span>
+  <p class="resumo">A maior taxa de desistência não está no código. Está nos primeiros
+  quarenta minutos, no terminal preto que responde <code>command not found</code>.</p>
+</section>
+
+<h3>O problema</h3>
+<p>Quem nunca programou não sabe que erro no terminal é normal. Acha que quebrou o
+computador, e para. É a etapa com maior abandono do processo inteiro — e a mais fácil de
+resolver, porque é só sequência.</p>
+
+<p>O objetivo aqui não é "instalar coisas". É chegar a um estado verificável:
+<strong>você digita um comando, algo acontece, e você entende o que aconteceu.</strong></p>
+
+<h3>Como a skill conduz</h3>
+<p>Um comando por vez. Nunca um bloco de seis. Ela diz o que vai acontecer antes de você
+apertar Enter — "esse comando baixa uns 80 MB, demora dois minutos e no fim imprime um
+número de versão" — e pede a saída antes de mandar o próximo.</p>
+
+<p>São quatro instalações e um teste:</p>
+
+<table>
+<thead><tr><th>O quê</th><th>Para quê</th><th>Como conferir</th></tr></thead>
+<tbody>
+<tr><td><strong>Node.js</strong> (versão LTS)</td><td>É onde o assistente roda</td><td><code>node -v</code> responde um número</td></tr>
+<tr><td><strong>Git</strong></td><td>É o "salvar com histórico" e o desfazer do projeto</td><td><code>git --version</code></td></tr>
+<tr><td><strong>O assistente</strong></td><td>Claude Code, Codex CLI ou Gemini CLI</td><td>abre e responde</td></tr>
+<tr><td><strong>GitHub</strong></td><td>Backup, histórico e publicação</td><td>repositório <em>privado</em> com 1 commit</td></tr>
+</tbody>
+</table>
+
+<pre><code>npm install -g @anthropic-ai/claude-code    # Claude Code
+npm install -g @openai/codex                # Codex CLI
+npm install -g @google/gemini-cli           # Gemini CLI</code></pre>
+
+<div class="caixa nota">
+<span class="rotulo">Os dois erros que pegam todo mundo</span>
+<p><strong>"Instalei e continua dizendo que não existe."</strong> O terminal só enxerga
+programas novos depois de ser fechado e aberto de novo. Feche a janela inteira e reabra.</p>
+<p><strong><code>EACCES: permission denied</code> no <code>npm install -g</code>.</strong>
+Não resolva com <code>sudo</code> — isso instala como administrador e cria problemas piores
+depois. Mude a pasta global do npm:</p>
+<pre><code>mkdir -p ~/.npm-global &amp;&amp; npm config set prefix ~/.npm-global
+echo 'export PATH=~/.npm-global/bin:$PATH' &gt;&gt; ~/.zshrc &amp;&amp; source ~/.zshrc</code></pre>
+</div>
+
+<h3>O teste que prova que funciona</h3>
+<p>A skill não deixa a etapa fechar sem isso. Dentro da pasta do projeto, você pede:</p>
+
+<div class="caixa prompt">
+<span class="rotulo">O primeiro pedido de todos</span>
+<p>Crie um arquivo <strong>index.html</strong> com uma página que mostre "Funciona" em
+letras grandes e a data de hoje. Depois me diga como abrir no navegador.</p>
+</div>
+
+<p>Quando a página abrir, você não instalou um ambiente — você viu o ciclo inteiro
+funcionar: <strong>pedir → gerar → ver acontecer</strong>. Todo o resto do material é esse
+ciclo repetido com pedidos maiores.</p>
+
+<h3>As três coisas que você precisa saber usar</h3>
+<p>Só isso, por enquanto. O resto vem quando doer.</p>
+<ol>
+<li><code>cd pasta</code> — entrar numa pasta (<code>cd ..</code> volta uma)</li>
+<li><code>git add . &amp;&amp; git commit -m "o que mudou"</code> — salvar ponto de restauração</li>
+<li><code>git push</code> — mandar para o GitHub</li>
+</ol>
+<p>E as duas de emergência: <code>git log --oneline</code> mostra o histórico,
+<code>git restore .</code> joga fora as mudanças não salvas quando algo der muito errado.</p>
+
+<div class="caixa checklist">
+<span class="rotulo">Só avance quando</span>
+<ul>
+<li><code>node -v</code> e <code>git --version</code> respondem com números</li>
+<li><code>git config user.email</code> mostra o seu e-mail</li>
+<li>O assistente abre e responde</li>
+<li>Existe um repositório <strong>privado</strong> no GitHub com pelo menos um commit</li>
+<li>Você abriu, no seu navegador, uma página que você mandou criar</li>
+</ul>
+</div>
+
+<!-- ======================= CAP 3 ======================= -->
+<section class="abertura" id="cap3">
+  <div class="faixa"><span class="num">03</span><span class="fase">Parte I · Descobrir</span></div>
+  <h2>Stack mínima</h2>
+  <span class="skillname">skill: stack-minima</span>
+  <p class="resumo">Complexidade não é gratuita. Ela é paga depois, sozinho,
+  no dia em que quebra.</p>
+</section>
+
+<h3>O problema</h3>
+<p>Assistentes de código têm um viés previsível: eles geram o que mais apareceu no treino.
+Para "app de estoque", isso costuma significar uma stack que uma equipe de cinco pessoas
+manteria com esforço — entregue a uma pessoa que abriu o terminal semana passada.</p>
+
+<p>Não é má-fé nem burrice do modelo. É que o material do mundo foi escrito por e para
+empresas de software, e você não é uma.</p>
+
+<div class="regra">Escolha a coisa mais simples que aguenta o volume do seu escopo —<br>
+não a mais simples que existe.</div>
+
+<p>Simples demais também cobra: uma planilha compartilhada com oito pessoas editando ao
+mesmo tempo é um problema pior que um banco de dados.</p>
+
+<h3>As seis perguntas que decidem tudo</h3>
+<ol>
+<li>Quantas pessoas usam ao mesmo tempo?</li>
+<li>Em que aparelho — celular, desktop, os dois?</li>
+<li>Precisa funcionar sem internet?</li>
+<li>Os dados podem ficar só no aparelho, ou várias pessoas precisam ver o mesmo dado?</li>
+<li>Existe sistema que já tem esses dados?</li>
+<li><strong>Quem vai mexer nisso daqui a seis meses?</strong></li>
+</ol>
+
+<p>A sexta é a que mais gente ignora e a que mais cobra. Se a resposta é "ninguém", a stack
+precisa ser algo que continue funcionando <em>parado</em> — sem atualização de dependência,
+sem certificado expirando, sem servidor para reiniciar.</p>
+
+<h3>A tabela de decisão</h3>
+<table class="compacta">
+<thead><tr><th>Situação</th><th>Stack</th><th>Por quê</th></tr></thead>
+<tbody>
+<tr><td>1–3 pessoas, dados de leitura, roda no celular</td><td>HTML + CSS + JS puro no GitHub Pages</td><td>Zero build, zero servidor, zero custo</td></tr>
+<tr><td>4–20 pessoas veem o mesmo dado</td><td>Front simples + Supabase</td><td>Banco e login prontos sem administrar servidor</td></tr>
+<tr><td>Pouco estado compartilhado</td><td>Front + Cloudflare Workers e KV</td><td>Um arquivo de servidor, custo quase zero</td></tr>
+<tr><td>Muitas telas, +20 pessoas</td><td>Next.js + Postgres gerenciado</td><td>Aguenta crescer — aceite o custo de manutenção</td></tr>
+<tr><td>O dado vive numa planilha e vai continuar</td><td>App que lê e escreve na planilha</td><td>Não migre o que ninguém pediu para migrar</td></tr>
+<tr><td>Só transformar dado e cuspir relatório</td><td><strong>Não faça um app.</strong> Script + planilha</td><td>Nem todo problema é app</td></tr>
+</tbody>
+</table>
+
+<h3>O default quando você ainda não sabe</h3>
+<p>Se a resposta honesta às seis perguntas for "não sei ainda", comece por: HTML, CSS e
+JavaScript sem framework e sem passo de build; dados no próprio aparelho; hospedagem no
+GitHub Pages; e um <code>manifest.json</code> que transforma o site em app instalável no
+celular — sem loja de aplicativos, sem taxa, sem revisão da Apple.</p>
+
+<p>Isso não é gambiarra de iniciante. É a stack certa para o problema: um app usado por
+seis pessoas do estoque não tem os problemas de um app usado por seis milhões.</p>
+
+<h3>O filtro de dependências</h3>
+<p>Toda biblioteca nova passa por quatro perguntas:</p>
+<ol>
+<li>Quanto código eu escreveria sem ela? Se a resposta for "umas 30 linhas", escreva as 30.</li>
+<li>Ela exige um passo de build?</li>
+<li>Ela quebra sozinha se ficar seis meses sem atualizar?</li>
+<li>Se ela sumir amanhã, o app para?</li>
+</ol>
+
+<h3>Diga o número</h3>
+<p>A skill fecha com custo mensal estimado em reais, incluindo o cenário de dobrar o uso —
+e liga o alerta de gasto em qualquer serviço cobrado por uso <em>antes</em> de publicar.
+Conta inesperada de nuvem é a forma mais rápida de um projeto interno perder patrocínio.</p>
+
+<div class="caixa armadilha">
+<span class="rotulo">Armadilhas</span>
+<ul>
+<li><strong>Escolher pela lista de vagas.</strong> A stack que dá emprego não é a que
+resolve o problema de seis pessoas do estoque.</li>
+<li><strong>Banco de dados por reflexo.</strong> Muito app interno guarda menos de 5 mil
+registros que mudam uma vez por dia. Isso cabe num arquivo versionado no Git.</li>
+<li><strong>Docker sem servidor.</strong> Se você não vai administrar um servidor, você
+não precisa de container.</li>
+<li><strong>Login com provedor externo antes de existir app.</strong> Configurar isso leva
+mais tempo que a v1 inteira.</li>
+</ul>
+</div>
+
+<div class="caixa checklist">
+<span class="rotulo">Só avance quando</span>
+<ul>
+<li>Existe <code>DECISOES.md</code> com a stack, o porquê e o que foi recusado</li>
+<li>Você respondeu às seis perguntas — inclusive a sexta</li>
+<li>O custo mensal está escrito, com o cenário de dobrar o uso</li>
+<li>Está escrito qual gatilho concreto obriga a revisar essa decisão</li>
+</ul>
+</div>
+
+<!-- ======================= CAP 4 ======================= -->
+<section class="abertura" id="cap4">
+  <div class="faixa"><span class="num">04</span><span class="fase">Parte II · Construir</span></div>
+  <h2>Modelo de dados</h2>
+  <span class="skillname">skill: modelo-de-dados</span>
+  <p class="resumo">Tela errada se conserta numa tarde. Modelo de dados errado se conserta
+  migrando tudo, com o app no ar, com gente usando.</p>
+</section>
+
+<h3>O problema</h3>
+<p>Esta é a única decisão do material que é cara de desfazer. E quase todo app interno
+quebrado tem o mesmo defeito de origem: modelaram a <strong>tela</strong> em vez de modelar
+o <strong>fato</strong>. Guardaram "linha da planilha" em vez de guardar "o que aconteceu".</p>
+
+<h3>O princípio: guarde eventos, calcule saldos</h3>
+<p>Veja o modelo que 90% das pessoas escreve primeiro:</p>
+<pre><code>produto: { sku, nome, quantidade_em_estoque }</code></pre>
+
+<p>O campo <code>quantidade_em_estoque</code> responde <em>quanto tem agora</em> e destrói
+todo o resto. Quando o número estiver errado — e vai estar — ninguém consegue descobrir por
+quê. Não dá para responder quem tirou, quando, de qual nota, quanto entrou ontem.</p>
+
+<pre><code>produto:   { sku, nome, ean, ativo }
+movimento: { id, sku, tipo: entrada|saida|ajuste, quantidade,
+             quando, quem, origem, observacao }</code></pre>
+
+<p>Agora o saldo é uma conta: <code>soma(entradas) − soma(saídas) ± ajustes</code>. Você
+ganha histórico, auditoria e conserto de erro sem perder nada.</p>
+
+<div class="regra">Não guarde o resultado. Guarde o que aconteceu,<br>
+e calcule o resultado.</div>
+
+<p>O raciocínio vale fora do estoque. Não guarde "status do pedido": guarde as mudanças de
+status. Não guarde "horas do funcionário no mês": guarde as batidas. Não guarde "saldo do
+cliente": guarde os lançamentos. Toda vez que alguém precisar responder "por que esse
+número está assim?", você terá a resposta.</p>
+
+<h3>Como a skill conduz</h3>
+<ol>
+<li><strong>Extrai os substantivos</strong> do caminho feliz do <code>ESCOPO.md</code>.</li>
+<li><strong>Separa coisa de acontecimento.</strong> Existe por si só? É entidade. Aconteceu
+com alguma coisa? É evento.</li>
+<li><strong>Procura a chave natural</strong> — SKU, EAN, CPF, número da nota. Chave natural
+evita duplicata na origem. Mas cuidado com as que parecem estáveis e não são: nome de
+pessoa muda, e-mail muda.</li>
+<li><strong>Define os tipos com precisão</strong> (a tabela abaixo).</li>
+<li><strong>Escreve as invariantes</strong> — as regras que nunca podem ser violadas.</li>
+<li><strong>Gera dados de exemplo sujos</strong> de propósito.</li>
+</ol>
+
+<h3>Os tipos que evitam bug de segunda-feira</h3>
+<table class="rotulos">
+<thead><tr><th>Dado</th><th>Como guardar</th><th>Porque não do outro jeito</th></tr></thead>
+<tbody>
+<tr><td>Dinheiro</td><td>inteiro em centavos</td><td>decimal com ponto flutuante erra na soma</td></tr>
+<tr><td>Data</td><td>ISO 8601 com fuso</td><td><code>20/08/2026</code> não ordena e não tem hora</td></tr>
+<tr><td>Código de barras</td><td><strong>texto</strong>, nunca número</td><td>zero à esquerda some e EAN-13 estoura a precisão de inteiro</td></tr>
+<tr><td>Quantidade</td><td>inteiro, salvo se vende a granel</td><td>meia unidade que não existe vira bug silencioso</td></tr>
+<tr><td>Sim/não</td><td><code>ativo: true/false</code></td><td><code>status: "S"/"N"</code> vira três valores em seis meses</td></tr>
+</tbody>
+</table>
+
+<h3>Dados de exemplo precisam ser sujos</h3>
+<p>Crie de 10 a 20 registros que <em>pareçam os reais</em>, com a sujeira real: nome com
+acento, descrição de 90 caracteres, SKU com hífen, um produto inativo, uma quantidade
+zerada, um campo opcional vazio.</p>
+<p>Dados de exemplo limpos demais escondem exatamente os bugs que vão aparecer na segunda.</p>
+
+<div class="caixa prompt">
+<span class="rotulo">Pedido que funciona</span>
+<p>Com base no ESCOPO.md, proponha o modelo de dados. Separe entidades de eventos, escolha
+chave natural onde existir, e escreva as invariantes. Depois gere
+<strong>dados-exemplo.json</strong> com 15 registros que pareçam dados reais de uma empresa
+brasileira — com acento, com um registro inativo e com um campo opcional vazio.</p>
+</div>
+
+<div class="caixa armadilha">
+<span class="rotulo">Armadilhas</span>
+<ul>
+<li><strong>Campo "observações" como lixeira.</strong> Se três informações diferentes vão
+parar nele, são três campos.</li>
+<li><strong>Guardar o que dá para calcular.</strong> Idade, total do pedido, saldo.</li>
+<li><strong>Apagar de verdade.</strong> Em app de empresa, <code>ativo: false</code> quase
+sempre é melhor que apagar. Dado deletado por engano numa sexta não volta.</li>
+<li><strong>Traduzir metade.</strong> <code>product.nome</code> e <code>movimento.date</code>
+no mesmo projeto custa uma hora de confusão por semana.</li>
+<li><strong>Modelar para o relatório.</strong> Modele o fato; relatório é consulta.</li>
+</ul>
+</div>
+
+<div class="caixa checklist">
+<span class="rotulo">Só avance quando</span>
+<ul>
+<li>Existe <code>MODELO.md</code> com entidades, eventos, relações e invariantes</li>
+<li>Nenhum campo guarda algo que dá para calcular a partir dos eventos</li>
+<li>Código de barras e documento estão como texto</li>
+<li>Existem 10–20 registros de exemplo com sujeira real</li>
+<li>Você pegou <strong>três situações que já aconteceram</strong> na empresa — inclusive uma
+que deu errado — e escreveu como cada uma fica registrada no modelo</li>
+</ul>
+</div>
+
+<!-- ======================= CAP 5 ======================= -->
+<section class="abertura" id="cap5">
+  <div class="faixa"><span class="num">05</span><span class="fase">Parte II · Construir</span></div>
+  <h2>Primeira tela viva</h2>
+  <span class="skillname">skill: primeira-tela-viva</span>
+  <p class="resumo">Uma tela, um dado real, funcionando no celular de quem vai usar —
+  hoje, não no mês que vem.</p>
+</section>
+
+<h3>O problema</h3>
+<p>Existem dois jeitos de construir. O primeiro monta as doze telas, depois liga tudo, e no
+dia da ligação descobre que o modelo não fecha: três dias para jogar fora. O segundo faz
+<strong>uma</strong> coisa funcionar de ponta a ponta e só então cresce.</p>
+
+<p>O segundo é mais rápido, e é o único que dá para fazer sozinho. Tem também um efeito
+humano que ninguém mede e que decide projetos: quem vê o próprio dado na própria tela em
+uma hora continua. Quem passa três dias em preparação, não.</p>
+
+<h3>A definição de "viva"</h3>
+<p>Cinco condições, sem exceção:</p>
+<ol>
+<li>Abre no navegador (ou no celular) do usuário real, não só na sua máquina</li>
+<li>Mostra <strong>dado de verdade</strong> da empresa — não <em>Produto 1, Produto 2</em></li>
+<li>Aceita <strong>uma</strong> ação do usuário, e a ação tem efeito visível</li>
+<li>O efeito <strong>sobrevive</strong> a fechar e reabrir a página</li>
+<li>Está commitada e publicada</li>
+</ol>
+<p>Faltou uma? Não está viva — está bonita.</p>
+
+<h3>Escolha o corte onde a dor mora</h3>
+<p>Volte ao caminho feliz e implemente o passo que revela a ideia — não o primeiro passo.</p>
+<table class="rotulos">
+<thead><tr><th>App</th><th><span class="errado">Não</span> comece por</th><th><span class="certo">Comece</span> por</th></tr></thead>
+<tbody>
+<tr><td>Estoque</td><td>cadastro de produtos</td><td>bipar um código e ver o nome do produto aparecer</td></tr>
+<tr><td>Ordem de serviço</td><td>cadastro de clientes</td><td>abrir um chamado e ele aparecer na lista</td></tr>
+<tr><td>Conferência de caixa</td><td>cadastro de formas de pagamento</td><td>lançar um valor e ver o total mudar</td></tr>
+</tbody>
+</table>
+<p>O cadastro é sempre a parte mais chata e menos reveladora. Faça depois.</p>
+
+<div class="caixa prompt">
+<span class="rotulo">O pedido — repare no nível de detalhe</span>
+<p>Crie uma página única <strong>index.html</strong> com um campo que recebe um código de
+barras. Ao bipar, procure o código no <strong>dados-exemplo.json</strong> e mostre em letra
+grande o nome do produto e o saldo. Se não achar, mostre "não encontrado" em vermelho.
+Registre cada leitura no localStorage e mostre as últimas 5 embaixo. Sem framework, sem
+passo de build. Português no que aparece na tela.</p>
+</div>
+
+<h3>O roteiro da sessão</h3>
+<ol>
+<li><strong>Peça o corte</strong>, não o app.</li>
+<li><strong>Rode e olhe.</strong> <code>npx http-server . -p 8080</code> e abra no navegador.
+Não aceite "deve funcionar".</li>
+<li><strong>Teste com o dado que quebra.</strong> Um código que não existe. Um com zero à
+esquerda. Letra onde espera número. Vazio e Enter. Cada um desses é um bug que ia aparecer
+na segunda-feira com um funcionário na sua frente.</li>
+<li><strong>Commit.</strong></li>
+<li><strong>Publique.</strong> GitHub Pages: Settings → Pages → <code>main</code>. Dois
+minutos e existe uma URL. Abra <strong>no celular</strong>.</li>
+<li><strong>Mostre para quem vai usar — hoje.</strong></li>
+</ol>
+
+<h3>O passo 6 é o mais valioso do material inteiro</h3>
+<p>Leve a URL para o conferente, o vendedor, a pessoa do financeiro. Fique calado e olhe.</p>
+<p>Você vai descobrir em cinco minutos coisas que não descobriria em duas semanas: que a
+letra é pequena demais para ler em pé, que o campo perde o foco depois de cada leitura, que
+ele precisa do preço e não do saldo, que o leitor manda um Enter que você não previu.</p>
+
+<div class="caixa nota">
+<span class="rotulo">O que ainda NÃO fazer</span>
+<p>Deliberadamente fora desta etapa: login, cadastro completo, menu e navegação, design além
+de "legível e com botões grandes", e tratamento de todos os erros possíveis. Tudo isso tem
+capítulo próprio. Fazer agora só atrasa a única coisa que importa nesta etapa: descobrir se
+a ideia funciona na mão de quem trabalha.</p>
+</div>
+
+<div class="caixa armadilha">
+<span class="rotulo">Armadilhas</span>
+<ul>
+<li><strong>Aceitar a tela de demonstração.</strong> Se o assistente inventar dados dentro da
+própria página, peça de novo lendo do arquivo real — dado falso esconde erro de modelo.</li>
+<li><strong>Deixar para publicar depois.</strong> "Funciona na minha máquina" não é
+entregável. Publicar na primeira sessão transforma deploy em rotina em vez de evento.</li>
+<li><strong>Crescer antes de validar.</strong> Se você já está na terceira tela e ninguém
+usou a primeira, pare e mostre.</li>
+</ul>
+</div>
+
+<div class="caixa checklist">
+<span class="rotulo">Só avance quando</span>
+<ul>
+<li>Existe uma URL que abre no celular</li>
+<li>A tela mostra dado real da empresa</li>
+<li>Uma ação funciona e o efeito sobrevive ao recarregar</li>
+<li>Pelo menos uma pessoa que não é você usou e comentou</li>
+<li>Você anotou o que ela disse — inclusive o que te incomodou ouvir</li>
+</ul>
+</div>
+
+<!-- ======================= CAP 6 ======================= -->
+<section class="abertura" id="cap6">
+  <div class="faixa"><span class="num">06</span><span class="fase">Parte II · Construir</span></div>
+  <h2>Fluxo completo</h2>
+  <span class="skillname">skill: fluxo-completo</span>
+  <p class="resumo">O caminho feliz é 20% do trabalho e 80% das demonstrações. Quem
+  trabalha em operação vive nas bordas.</p>
+</section>
+
+<h3>O problema</h3>
+<p>O que separa um protótipo de uma ferramenta usada todo dia é o comportamento nas bordas:
+lista vazia, internet caiu, o código não existe, a pessoa clicou duas vezes, a bateria do
+tablet acabou no meio da conferência.</p>
+
+<h3>Cresça por fatias verticais</h3>
+<p>Uma fatia vertical é um passo do caminho feliz funcionando <strong>inteiro</strong>: tela,
+regra, gravação e feedback. Nunca faça "todas as telas" e depois "toda a lógica".</p>
+<ol>
+<li>A ação que a pessoa mais repete (bipar, lançar, conferir)</li>
+<li>A ação que corrige a anterior (ajustar, desfazer, editar)</li>
+<li>A visão do que já foi feito (lista, resumo do dia, saldo)</li>
+<li>A saída dos dados (exportar CSV, imprimir, mandar)</li>
+<li>Só então: cadastro e configuração</li>
+</ol>
+<p>Cada fatia é um commit e é testável por uma pessoa real.</p>
+
+<h3>Os sete estados obrigatórios de toda tela</h3>
+<table class="compacta">
+<thead><tr><th>Estado</th><th>Como testar</th><th>O que precisa aparecer</th></tr></thead>
+<tbody>
+<tr><td><strong>Vazio</strong></td><td>usuário novo, banco zerado</td><td>frase que ensina o próximo passo</td></tr>
+<tr><td><strong>Carregando</strong></td><td>DevTools → Network → Slow 3G</td><td>indicação visível; botão desabilitado</td></tr>
+<tr><td><strong>Erro</strong></td><td>desligue o Wi-Fi e tente</td><td>o que houve, em português, e o que fazer</td></tr>
+<tr><td><strong>Sem permissão</strong></td><td>entre com o usuário mais limitado</td><td>o botão some — não aparece e bloqueia depois</td></tr>
+<tr><td><strong>Muitos dados</strong></td><td>5.000 registros</td><td>ainda rola liso; busca antes de lista</td></tr>
+<tr><td><strong>Duplo clique</strong></td><td>clique 3× rápido em Salvar</td><td>grava <strong>uma</strong> vez</td></tr>
+<tr><td><strong>Desfazer</strong></td><td>grave algo errado de propósito</td><td>dá para reverter sem mexer no banco</td></tr>
+</tbody>
+</table>
+
+<p>O estado vazio é o mais negligenciado e o mais barato de acertar:</p>
+<ul class="limpa">
+<li><span class="errado">✗</span> "Nenhum resultado encontrado."</li>
+<li><span class="certo">✓</span> "Nenhuma conferência hoje. Bipe o primeiro código para começar."</li>
+</ul>
+
+<h3>Regra de ouro do app de operação: o dado não pode morrer</h3>
+<p>Se o app é usado em pé, no celular, com uma caixa na outra mão, ele <em>vai</em> perder
+conexão e a aba <em>vai</em> ser fechada por engano. Portanto:</p>
+<ul>
+<li><strong>Grave a cada ação</strong>, não ao final. Um botão "Salvar" no fim da conferência
+é uma armadilha: quem esquece perde uma hora de trabalho.</li>
+<li><strong>Ao reabrir, ofereça retomar:</strong> "você tem uma conferência de 47 itens
+iniciada às 14h32. Continuar?"</li>
+<li><strong>Sincronize quando houver rede</strong>, com a pendência visível na tela.</li>
+<li><strong>Se dois aparelhos editarem a mesma coisa, detecte e avise</strong> — nunca
+sobrescreva calado.</li>
+</ul>
+<p>Esse trio — grava sempre, retoma, avisa conflito — é o que faz a operação confiar no app.
+Sem ele, basta uma perda de trabalho para a equipe voltar para o papel.</p>
+
+<h3>Feedback em ambiente barulhento</h3>
+<p>Visual não basta no depósito. Use som curto e <em>distinto</em> para sucesso e para erro
+(dois tons diferentes, não o mesmo), vibração no celular
+(<code>navigator.vibrate(50)</code>), e cor ocupando área grande em vez de um texto de 12px.
+Nunca use só <code>alert()</code>: trava a tela e exige toque.</p>
+
+<div class="caixa prompt">
+<span class="rotulo">Peça comportamento, não componente</span>
+<p>Adicione a tela de resumo da conferência: lista os itens bipados agrupados por SKU, com
+quantidade, ordenados pelo último bipado no topo. Precisa ter estado vazio com a frase
+"Nenhum item bipado ainda", botão Exportar CSV desabilitado quando a lista está vazia, e
+desfazer no último item. Precisa continuar fluida com 3.000 itens.
+<strong>Não crie framework novo, siga o padrão dos arquivos existentes.</strong></p>
+</div>
+<p>A última frase importa mais do que parece: sem ela, o assistente costuma introduzir uma
+biblioteca nova a cada pedido, e o projeto vira uma colcha de retalhos.</p>
+
+<h3>Arrumação a cada quatro fatias</h3>
+<p>Pare e peça um diagnóstico — sem deixar ele mudar nada ainda:</p>
+<div class="caixa prompt">
+<span class="rotulo">Diagnóstico</span>
+<p>Leia os arquivos do projeto e me diga: (1) que código está repetido em mais de um lugar,
+(2) que função passou de 50 linhas, (3) que nome não corresponde ao que a função faz.
+<strong>Não mude nada ainda, só me mostre a lista.</strong></p>
+</div>
+<p>Quinze minutos a cada quatro fatias. Deixar para o mês três custa uma reescrita.</p>
+
+<div class="caixa armadilha">
+<span class="rotulo">Armadilhas</span>
+<ul>
+<li><strong>Pedir "termine o app".</strong> Pedido grande gera código grande que ninguém
+revisa.</li>
+<li><strong>Confirmar tudo.</strong> "Tem certeza?" em toda ação treina a pessoa a clicar sim
+sem ler. Confirme só o irreversível — e prefira oferecer desfazer.</li>
+<li><strong>Mensagem de erro técnica.</strong> <code>TypeError: undefined</code> não ajuda
+ninguém. Traduza para o que a pessoa deve fazer.</li>
+<li><strong>Menu antes de conteúdo.</strong> App com 4 telas não precisa de menu lateral com
+ícones; precisa de 4 botões grandes.</li>
+<li><strong>Formulário de 20 campos.</strong> Se o processo real preenche 4, mostre 4.</li>
+</ul>
+</div>
+
+<div class="caixa checklist">
+<span class="rotulo">Só avance quando</span>
+<ul>
+<li>Todo passo do caminho feliz funciona no app</li>
+<li>Toda tela tem estado vazio, de carregamento e de erro</li>
+<li>O trabalho em andamento sobrevive a fechar a aba</li>
+<li>Existe desfazer para a ação mais perigosa</li>
+<li>Uma pessoa da operação fez um ciclo completo <strong>sozinha</strong>, sem você do lado</li>
+</ul>
+</div>
+
+<!-- ======================= CAP 7 ======================= -->
+<section class="abertura" id="cap7">
+  <div class="faixa"><span class="num">07</span><span class="fase">Parte III · Confiar</span></div>
+  <h2>Quem entra e quem vê</h2>
+  <span class="skillname">skill: quem-entra-e-quem-ve</span>
+  <p class="resumo">Segurança proporcional: nem projeto corporativo de dois meses,
+  nem a chave da API do ERP dentro do JavaScript.</p>
+</section>
+
+<h3>O problema</h3>
+<p>App interno tem dois erros clássicos e opostos.</p>
+<p>O primeiro é montar autenticação corporativa completa — provedor externo, dois fatores,
+recuperação por e-mail, papéis granulares — antes de existir app. Duas semanas gastas em
+algo que oito pessoas resolveriam com uma senha combinada.</p>
+<p>O segundo, muito mais grave, é publicar na internet um app que carrega a
+<strong>chave da API do ERP</strong> dentro do JavaScript. Qualquer pessoa aperta F12 e leva
+as credenciais da empresa inteira.</p>
+
+<h3>A pergunta que decide o nível</h3>
+<blockquote><p>Se a pessoa errada abrir isso, o que ela consegue fazer?</p></blockquote>
+
+<table class="rotulos">
+<thead><tr><th>Nível</th><th>Resposta</th><th>O que basta</th></tr></thead>
+<tbody>
+<tr><td><strong>1</strong></td><td>Ver dado que já está no site público</td><td>Nenhum login. Publique.</td></tr>
+<tr><td><strong>2</strong></td><td>Ver custo, margem, dado de cliente</td><td>Login simples com lista de autorizados</td></tr>
+<tr><td><strong>3</strong></td><td>Alterar estoque, preço ou pedido de verdade</td><td>Login + papéis + segredo no servidor</td></tr>
+<tr><td><strong>4</strong></td><td>Ver dado pessoal de terceiros (LGPD)</td><td>O acima + registro de acesso + retenção</td></tr>
+</tbody>
+</table>
+
+<p>Suba um nível quando doer, não antes. Mas <strong>nunca</strong> fique abaixo do nível 3
+se o app escreve em sistema de produção.</p>
+
+<h3>A regra inegociável: segredo não mora no navegador</h3>
+<p>Tudo que vai para o navegador é público. Sempre. Não existe "escondido no JavaScript",
+não existe "ofuscado", não existe "está numa variável".</p>
+
+<pre><code>// ✗ NUNCA — qualquer usuário lê isso em 5 segundos
+const API_KEY = "d11a7a789f97e0f2b8c4";
+fetch("https://api.erp.com/produtos", { headers: { "X-Key": API_KEY } });</code></pre>
+
+<p>O jeito certo tem duas formas, e as duas custam poucos minutos.</p>
+
+<h4>Forma A — um intermediário mínimo</h4>
+<p>Um arquivo de servidor guarda a chave, recebe o pedido do app, chama o ERP e devolve só
+o que interessa:</p>
+<pre><code>// worker/src/index.js — a chave vive aqui, no servidor
+export default {
+  async fetch(request, env) {
+    const r = await fetch("https://api.erp.com/produtos", {
+      headers: { "X-Key": env.ERP_API_KEY }   // variável de ambiente
+    });
+    return new Response(await r.text());
+  }
+};</code></pre>
+<pre><code>npx wrangler secret put ERP_API_KEY   # guarda o segredo fora do repositório</code></pre>
+
+<h4>Forma B — cada pessoa usa a própria credencial</h4>
+<p>O app pede a chave na primeira vez e guarda <strong>só no aparelho</strong>. Serve bem
+quando o sistema emite credencial por usuário e o app é usado por poucas pessoas.</p>
+
+<div class="caixa armadilha">
+<span class="rotulo">Se a chave já está no código</span>
+<p><strong>Troque a chave.</strong> Não basta apagar do arquivo: ela está no histórico do
+Git para sempre, e o histórico vai junto quando alguém clona o repositório. Rotacionar a
+credencial é a única correção real.</p>
+</div>
+
+<h3>Login proporcional: os três degraus</h3>
+
+<h4>Degrau 1 — lista de autorizados</h4>
+<p>Uma lista de e-mails permitidos e senha por usuário. Vale para 3 a 15 pessoas de
+confiança, em app que <em>lê</em> dado sensível mas não escreve em produção.</p>
+<p>Honestidade obrigatória aqui: se a lista está num arquivo que vai para o navegador, isso
+é uma <strong>tranca, não um cofre</strong> — impede o colega curioso, não impede quem sabe
+abrir o F12. Diga isso a quem pediu, em vez de vender segurança que não existe, e mantenha
+o dado sensível de verdade atrás do intermediário da Forma A.</p>
+
+<h4>Degrau 2 — login de verdade sem construir login</h4>
+<p>Um serviço pronto (Supabase Auth, Clerk, Auth0) entrega senha com hash, recuperação por
+e-mail, sessão e expiração sem você escrever nada disso. Uma a duas horas de integração.</p>
+
+<h4>Degrau 3 — entrar com a conta da empresa</h4>
+<p>Se a empresa usa Google Workspace ou Microsoft 365, "Entrar com Google", restrito ao
+domínio da empresa, resolve entrada e saída de funcionário de uma vez: desligou, perdeu o
+acesso. Não há senha para gerenciar.</p>
+
+<h3>Papéis: comece com dois</h3>
+<p>Não modele uma matriz de permissões. Comece com <strong>operador</strong> (faz o trabalho
+do dia) e <strong>admin</strong> (configura, corrige, vê o sensível). Adicione um terceiro
+só quando alguém for barrado de fato.</p>
+
+<div class="regra">Esconder o botão é conforto.<br>
+A checagem no servidor é a segurança.</div>
+
+<p>Esse é o buraco mais comum em app feito com IA: a tela esconde o botão, mas a rota do
+servidor aceita a chamada de qualquer um. Faça as duas coisas — sempre.</p>
+
+<div class="caixa checklist">
+<span class="rotulo">Antes de publicar</span>
+<ul>
+<li>Nenhuma chave, senha ou token em arquivo que vai para o navegador</li>
+<li><code>git log -p | grep -iE "api.?key|secret|password|token"</code> não devolve segredo vivo</li>
+<li><code>.gitignore</code> tem <code>.env</code>, e o <code>.env</code> nunca foi commitado</li>
+<li>Se algo vazou no histórico, a credencial foi <strong>rotacionada</strong></li>
+<li>O repositório está <strong>privado</strong></li>
+<li>Toda ação de escrita valida o usuário <strong>no servidor</strong></li>
+<li>Existe caminho para tirar o acesso de alguém em menos de 5 minutos</li>
+<li>Se guarda dado pessoal: você sabe dizer qual, por quê e por quanto tempo</li>
+</ul>
+</div>
+
+<div class="caixa nota">
+<span class="rotulo">Combine com</span>
+<p>Antes de publicar, rode uma revisão de segurança dedicada — no Claude Code,
+<code>/security-review</code>. Ela pega o que checklist manual esquece: injeção, CORS
+aberto, dependência vulnerável, dado sensível caindo em log.</p>
+</div>
+
+<!-- ======================= CAP 8 ======================= -->
+<section class="abertura" id="cap8">
+  <div class="faixa"><span class="num">08</span><span class="fase">Parte III · Confiar</span></div>
+  <h2>Dados que já existem</h2>
+  <span class="skillname">skill: dados-que-ja-existem</span>
+  <p class="resumo">A pior importação não é a que falha. É a que "funciona" e cria quatro
+  mil registros errados.</p>
+</section>
+
+<h3>O problema</h3>
+<p>Nenhum app interno nasce em terreno limpo. O dado já existe — numa planilha que passou
+por seis pessoas, num ERP com campo usado para outra coisa, num CSV exportado com acento
+quebrado. E ele é sujo de um jeito específico e teimoso:</p>
+<ul>
+<li>A mesma unidade escrita como <code>UN</code>, <code>Un</code>, <code>unid</code>, <code>unidade</code></li>
+<li>Preço como <code>1.234,56</code>, <code>1234.56</code>, <code>R$ 1.234,56</code> e <code>1234,56&nbsp;</code></li>
+<li>Código de barras que virou <code>7,89123E+12</code> porque alguém abriu no Excel</li>
+<li>Linhas em branco no meio, cabeçalho repetido na linha 500, um total no rodapé</li>
+<li>Duas linhas do "mesmo" produto: <code>Caixa 20L</code> e <code>CAIXA 20 L</code></li>
+</ul>
+
+<div class="regra">Importar é um processo com relatório,<br>não um botão.</div>
+
+<h3>As cinco fases</h3>
+
+<h4>1. Radiografia — antes de escrever qualquer código</h4>
+<p>Nunca importe um arquivo que você não olhou.</p>
+<div class="caixa prompt">
+<span class="rotulo">Antes de importar</span>
+<p>Leia <strong>planilha.xlsx</strong> e me diga, <strong>sem alterar nada</strong>: quantas
+linhas; quais colunas; para cada coluna o tipo predominante, quantos vazios e 3 exemplos
+reais; quais colunas têm valor duplicado; e quais linhas parecem lixo (em branco, cabeçalho
+repetido, total).</p>
+</div>
+<p>Essa saída sozinha costuma revelar duas ou três surpresas.</p>
+
+<h4>2. Mapa de-para</h4>
+<p>Um mapa explícito de coluna da planilha → campo do modelo. O que não estiver no mapa
+<strong>não entra</strong>.</p>
+<table class="compacta">
+<thead><tr><th>Coluna</th><th>Campo</th><th>Transformação</th></tr></thead>
+<tbody>
+<tr><td><code>Cód.</code></td><td><code>sku</code></td><td>trim, maiúsculas</td></tr>
+<tr><td><code>Descrição do Produto</code></td><td><code>nome</code></td><td>trim, colapsar espaços</td></tr>
+<tr><td><code>EAN</code></td><td><code>ean</code></td><td>texto; recompor zeros à esquerda; descartar notação científica</td></tr>
+<tr><td><code>Preço Venda</code></td><td><code>preco_centavos</code></td><td>remover <code>R$</code>, trocar separadores, ×100</td></tr>
+<tr><td><code>Estoque</code></td><td>—</td><td><strong>ignorado</strong>: saldo vem dos movimentos</td></tr>
+</tbody>
+</table>
+
+<h4>3. Normalização</h4>
+<pre><code>const texto = v =&gt; String(v ?? "").trim().replace(/\s+/g, " ");
+const reais = v =&gt; Math.round(parseFloat(
+  String(v).replace(/[R$\s.]/g, "").replace(",", ".")) * 100);</code></pre>
+<p>Sobre o EAN em notação científica: <strong>não tente reconstruir</strong>.
+<code>7,89123E+12</code> perdeu dígitos de verdade. Marque como pendente e peça a exportação
+de novo com a coluna em formato texto. Inventar um dígito verificador é criar um erro que
+ninguém vai achar depois.</p>
+
+<h4>4. Validação e quarentena — a fase que ninguém pula</h4>
+<p>Nada entra direto. Toda linha vai para um de três destinos: <strong>aceita</strong>,
+<strong>quarentena</strong> (precisa de decisão humana) ou <strong>rejeitada</strong>.</p>
+<p>E sempre gere um relatório com uma linha por problema, contendo <em>o número da linha
+original</em>, o valor cru e o motivo. Sem isso, corrigir é impossível:</p>
+<pre><code>linha,sku,motivo,valor_original
+147,TUT-CX-001,sku duplicado (ver linha 88),TUT-CX-001
+203,,sku vazio,
+418,TUT-PL-77,ean em notacao cientifica,7891234E+12</code></pre>
+
+<h4>5. Carga com resumo e reversão</h4>
+<pre><code>4.182 linhas lidas
+3.940 aceitas
+  198 em quarentena (147 duplicatas, 51 sem EAN)
+   44 rejeitadas
+Confirma a carga das 3.940? [s/N]</code></pre>
+<p>E grave de forma reversível: marque todos os registros com um <code>lote_id</code>. Se der
+errado, apagar o lote é um comando, não uma noite.</p>
+
+<h3>Duplicatas: decida a regra antes</h3>
+<p>Duplicata é decisão de negócio, não técnica. Mesma chave natural → mantém a primeira,
+manda as outras para quarentena. Nome parecido → <strong>nunca funda automaticamente</strong>;
+leve para quarentena com as duas linhas lado a lado.</p>
+<p>Ninguém fica bravo com duplicata na quarentena. Todo mundo fica bravo quando dois
+produtos diferentes viraram um só.</p>
+
+<h3>Quando o dado vem de API</h3>
+<ul>
+<li><strong>Pagine.</strong> Quase toda API devolve no máximo 50–100 por página; importar sem
+paginar traz a primeira página e <em>parece</em> completo.</li>
+<li><strong>Respeite o limite de chamadas</strong> — meio segundo entre requisições evita bloqueio.</li>
+<li><strong>Salve a resposta crua</strong> antes de transformar.</li>
+<li><strong>Prefira sincronização incremental</strong> — filtre por data de modificação em vez
+de baixar o catálogo inteiro toda vez.</li>
+<li><strong>Nunca chame a API do ERP direto do navegador</strong> (capítulo 7).</li>
+</ul>
+
+<div class="caixa armadilha">
+<span class="rotulo">Armadilhas</span>
+<ul>
+<li><strong>Importar direto em produção na primeira tentativa.</strong> Rode em modo seco,
+olhe o relatório, depois carregue.</li>
+<li><strong>Confiar no total.</strong> "Importou 4.000 de 4.182" quase sempre significa 182
+sumindo calado. Exija que aceitas + quarentena + rejeitadas bata com o total lido.</li>
+<li><strong>Corrigir a planilha na mão e reimportar.</strong> Corrija a <em>regra</em>: a
+planilha vai ser exportada de novo mês que vem com os mesmos defeitos.</li>
+<li><strong>Perder o arquivo original.</strong> Guarde uma cópia intocada de tudo.</li>
+</ul>
+</div>
+
+<div class="caixa checklist">
+<span class="rotulo">Só avance quando</span>
+<ul>
+<li>Existe um mapa de-para escrito e a regra de duplicata está decidida</li>
+<li>Aceitas + quarentena + rejeitadas = total de linhas lidas</li>
+<li>O relatório de importação foi revisado por quem conhece o dado</li>
+<li>Uma amostra de 10 registros foi conferida um a um contra a origem</li>
+<li>Dá para desfazer o lote com um comando</li>
+</ul>
+</div>
+
+<!-- ======================= CAP 9 ======================= -->
+<section class="abertura" id="cap9">
+  <div class="faixa"><span class="num">09</span><span class="fase">Parte III · Confiar</span></div>
+  <h2>Não quebra</h2>
+  <span class="skillname">skill: nao-quebra</span>
+  <p class="resumo">O app está no ar, funcionando. Uma mudança pequena quebra algo em
+  silêncio. Ninguém percebe por três dias. É assim que projetos morrem.</p>
+</section>
+
+<h3>O problema</h3>
+<p>Quando percebem, os dados de três dias estão errados, a confiança acabou e a equipe
+voltou para a planilha. Não adianta o app ser bom: confiança perdida em operação não
+volta com argumento, volta com meses de acerto.</p>
+
+<p>Não é preciso cobertura de teste de software crítico. São precisos <strong>três
+hábitos</strong> que custam meia hora para instalar e valem o projeto inteiro.</p>
+
+<h3>Hábito 1 — Teste de fumaça dos caminhos críticos</h3>
+<p>Não teste tudo. Teste o que, se quebrar, <em>para a operação</em>. Em quase todo app
+interno são de três a sete caminhos. Num app de conferência:</p>
+<ol>
+<li>Bipar um código existente mostra o produto certo</li>
+<li>Bipar um código inexistente oferece associar, sem travar a bipagem</li>
+<li>A conferência sobrevive a fechar e reabrir o navegador</li>
+<li>Exportar CSV sai com o total certo</li>
+<li>Usuário não autorizado não entra</li>
+</ol>
+
+<div class="caixa prompt">
+<span class="rotulo">Pedido</span>
+<p>Escreva testes de fumaça para estes 5 caminhos usando Playwright. Um arquivo, um teste
+por caminho, sem simular o que dá para usar de verdade. Cada teste precisa falhar de forma
+óbvia, com mensagem em português dizendo qual caminho quebrou.</p>
+</div>
+
+<div class="regra">O teste que importa é o que já pegou um bug.</div>
+
+<p>Toda vez que algo quebrar em produção, o conserto tem duas partes: corrigir
+<strong>e</strong> adicionar o teste daquele caso. Assim a mesma falha nunca volta duas vezes
+— e, sem esse hábito, ela volta.</p>
+
+<h3>Hábito 2 — Revisão antes de aceitar</h3>
+<p>Código gerado por IA parece pronto. É o risco principal do método inteiro.</p>
+<pre><code>git diff        # olhe você mesmo, sempre</code></pre>
+
+<div class="caixa prompt">
+<span class="rotulo">Revisão adversarial — o pedido importa mais do que parece</span>
+<p>Revise o diff atual procurando <strong>defeito</strong>, não elogio. Para cada problema:
+arquivo, linha, qual entrada concreta faz quebrar e o que acontece. Foque em: dado que não
+existe, texto onde espera número, lista vazia, dois cliques, erro de rede, e valor já gravado
+no formato antigo. <strong>Se não houver defeito, diga "nenhum" — não invente.</strong></p>
+</div>
+
+<p>No Claude Code, <code>/code-review</code> faz esse trabalho com verificação adversarial
+das descobertas, e <code>/security-review</code> cobre o lado de segurança.</p>
+
+<h4>As três perguntas antes de aceitar código que você não entendeu</h4>
+<ol>
+<li>Se isso quebrar às 7h de uma segunda-feira, eu consigo achar onde?</li>
+<li>Que dado eu tenho que <strong>não</strong> foi testado aqui?</li>
+<li>Isso apaga ou sobrescreve alguma coisa? Dá para desfazer?</li>
+</ol>
+<p>Se a resposta da primeira for "não", peça a explicação em português antes de aceitar.
+Código que ninguém entende é dívida com juros.</p>
+
+<h3>Hábito 3 — Commit pequeno, rollback barato</h3>
+<p>O Git é o desfazer do projeto, mas só funciona com commits pequenos e frequentes. Uma
+mudança por commit, mensagem que diz <em>o que mudou para o usuário</em> — não "ajustes".</p>
+<pre><code>git log --oneline                  # ache o último commit bom
+git revert &lt;hash-do-commit-ruim&gt;   # desfaz mantendo o histórico
+git push</code></pre>
+<p><code>revert</code> é melhor que <code>reset</code> em código publicado: desfaz sem apagar
+história — e a história é o que permite entender o que aconteceu.</p>
+
+<h3>O momento perigoso: mudança no formato do dado</h3>
+<p>A quebra mais cara não é de código, é de <strong>dado</strong>. Você muda
+<code>quantidade</code> de inteiro para decimal, ou renomeia um campo, e os registros já
+gravados param de ser lidos. Antes de mexer em formato de dado gravado:</p>
+<ol>
+<li>Faça o backup (capítulo 10)</li>
+<li>Escreva a migração dos dados antigos e rode nela primeiro</li>
+<li>Deixe o código ler os <strong>dois</strong> formatos por um tempo</li>
+<li>Só remova o antigo quando não sobrar registro nele</li>
+</ol>
+
+<h3>A rotina semanal de 15 minutos</h3>
+<pre><code>npx playwright test        # os caminhos críticos ainda passam?
+git log --oneline -10      # o que mudou na semana
+npm outdated               # dependência com falha conhecida?</code></pre>
+<p>E abra o app como usuário comum, no celular, e faça um ciclo completo. Leva três minutos
+e pega o que teste automático não pega: a tela que ficou feia, o botão que sumiu no iPhone,
+a lentidão que apareceu.</p>
+
+<div class="caixa armadilha">
+<span class="rotulo">Armadilhas</span>
+<ul>
+<li><strong>Teste que testa o simulador.</strong> Se o teste substitui o banco, a API e o
+relógio, ele testa a sua imaginação.</li>
+<li><strong>Cobertura como meta.</strong> 80% de cobertura em código que ninguém usa não vale
+um teste no caminho que a operação percorre 200 vezes por dia.</li>
+<li><strong>Commitar sem rodar.</strong> "É uma mudança pequena" é a frase que antecede todo
+incidente.</li>
+<li><strong>Consertar sem entender.</strong> Se a explicação do conserto não fizer sentido,
+ele provavelmente esconde o sintoma.</li>
+</ul>
+</div>
+
+<div class="caixa checklist">
+<span class="rotulo">Só avance quando</span>
+<ul>
+<li>Existem de 3 a 7 testes de fumaça nos caminhos que param a operação</li>
+<li>Os testes rodam com um comando e você sabe qual é</li>
+<li>Todo bug que apareceu em produção virou um teste</li>
+<li>Commits são pequenos, com mensagem que descreve o efeito</li>
+<li>Você já executou um <code>git revert</code> <strong>de propósito</strong>, para saber fazer</li>
+</ul>
+</div>
+
+<!-- ======================= CAP 10 ======================= -->
+<section class="abertura" id="cap10">
+  <div class="faixa"><span class="num">10</span><span class="fase">Parte IV · Entregar</span></div>
+  <h2>No ar e vivo</h2>
+  <span class="skillname">skill: no-ar-e-vivo</span>
+  <p class="resumo">Publicar é onde o app deixa de ser projeto e vira ferramenta. Também é
+  onde aparecem as perguntas que ninguém fez antes.</p>
+</section>
+
+<h3>O problema</h3>
+<p>Quem instala no celular do pessoal? O que acontece se o tablet quebrar? Quem consegue
+mexer nisso se você estiver de férias?</p>
+<p>Um app interno sem backup e sem manual não é um ativo da empresa. É um risco com a sua
+cara nele.</p>
+
+<h3>Publicar</h3>
+<p>Se o app é HTML, CSS e JS, o caminho mais barato é o GitHub Pages: Settings → Pages →
+Deploy from a branch → <code>main</code>. Em dois minutos existe uma URL, e a partir daí
+<strong>todo <code>git push</code> publica</strong>. Deploy deixa de ser evento.</p>
+
+<p>Vale ir um passo além e carimbar a versão no deploy — economiza muito suporte:</p>
+<pre><code>- name: Carimbar versao
+  run: sed -i "s#__VERSAO__#$(date +%Y.%m.%d)-${GITHUB_SHA::7}#g" index.html</code></pre>
+
+<p>Mostre essa versão num canto da tela. Quando alguém disser "não está funcionando", a
+primeira pergunta vira "qual versão aparece aí?" — e metade dos chamados morre em
+"recarregue a página".</p>
+
+<div class="caixa nota">
+<span class="rotulo">Segredos em produção</span>
+<p>Nunca no código: no painel do provedor (Environment Variables) ou por linha de comando
+(<code>npx wrangler secret put ERP_API_KEY</code>). E confira o óbvio antes de dormir:
+<code>.env</code> no <code>.gitignore</code>, repositório privado.</p>
+</div>
+
+<h3>Instalar no celular da equipe — sem loja de aplicativos</h3>
+<p>Um site vira app instalável com um arquivo na raiz:</p>
+<pre><code>{
+  "name": "Estoque Bipagem",
+  "short_name": "Estoque",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1a1a1a",
+  "icons": [{ "src": "icone-192.png", "sizes": "192x192", "type": "image/png" }]
+}</code></pre>
+
+<p>Com <code>&lt;link rel="manifest" href="manifest.json"&gt;</code> no cabeçalho, a
+instalação fica assim:</p>
+<ul>
+<li><strong>Android/Chrome:</strong> menu ⋮ → "Instalar aplicativo"</li>
+<li><strong>iPhone/Safari:</strong> botão compartilhar → "Adicionar à Tela de Início"</li>
+</ul>
+
+<p>Vira ícone na tela, abre em tela cheia, sem barra de navegador. Sem loja, sem taxa de
+30%, sem revisão da Apple — e a atualização chega sozinha no próximo acesso, o que resolve
+o pior problema de app corporativo: metade da equipe rodando a versão de três meses atrás.</p>
+
+<h3>Backup — a parte que ninguém faz</h3>
+<p>Responda por escrito às três perguntas. Se travar em alguma, o app ainda não está
+publicado de verdade:</p>
+<ol>
+<li>Se o aparelho onde o dado está sumir agora, o que se perde?</li>
+<li>Qual foi a última cópia dos dados e onde ela está?</li>
+<li>Quanto tempo leva para voltar ao ar? Você já testou?</li>
+</ol>
+
+<table class="rotulos">
+<thead><tr><th>Onde o dado vive</th><th>Backup mínimo</th></tr></thead>
+<tbody>
+<tr><td>No próprio aparelho</td><td>botão "Exportar tudo (JSON)" + rotina semanal</td></tr>
+<tr><td>Cloudflare KV</td><td>script que lista as chaves e salva em arquivo, semanal</td></tr>
+<tr><td>Supabase / Postgres</td><td>backup do plano + um dump mensal guardado fora</td></tr>
+<tr><td>Planilha na nuvem</td><td>histórico de versões — confirme que está ligado</td></tr>
+</tbody>
+</table>
+
+<div class="regra">Restauração não testada não é backup.</div>
+
+<p>Escolha um dia, apague o dado de um ambiente de teste e restaure. A primeira vez sempre
+revela algo que faltava.</p>
+
+<h3>O manual de uma página</h3>
+<p>Escreva um <code>manual.html</code> que caiba numa tela e responda: para que serve; como
+instalar no celular (com print); os 3 a 5 passos do uso diário; os três erros mais comuns e
+a solução; quem chamar.</p>
+<p>Na linguagem de quem usa — "bipe o código", não "efetue a leitura óptica do
+identificador". E acessível <strong>dentro do app</strong>, não num e-mail que se perde.</p>
+
+<h3>Manter vivo</h3>
+<p><strong>A cada pedido da equipe</strong>, decida entre três destinos: entra agora, entra
+na lista, ou não entra — e diga por quê. Lista sem "não entra" vira backlog morto.</p>
+
+<p><strong>Uma vez por mês</strong>, 30 minutos: rodar <code>npm outdated</code> e os testes,
+conferir o custo, verificar se o backup rodou, e perguntar a uma pessoa que usa o que mais
+atrapalha hoje. Essa última pergunta gera as melhores tarefas do projeto.</p>
+
+<h4>Bus factor</h4>
+<p>Escreva no <code>README.md</code>: onde está hospedado, quais contas, quem tem acesso,
+como publicar, como restaurar backup. Se só você sabe, o app é um risco para a empresa —
+e cinco parágrafos resolvem.</p>
+
+<div class="caixa checklist">
+<span class="rotulo">Está entregue quando</span>
+<ul>
+<li>Existe URL estável e a equipe instala sozinha no celular</li>
+<li>Todo push publica (ou o comando está no <code>README.md</code>)</li>
+<li>A versão aparece em algum canto da tela</li>
+<li>Nenhum segredo no repositório; repositório privado</li>
+<li>Existe backup com data — e a restauração já foi testada</li>
+<li>Custo mensal conhecido, com alerta de gasto ligado</li>
+<li>Manual de uma página acessível dentro do app</li>
+<li>O <code>README.md</code> responde: onde está, quem tem acesso, como publicar, como restaurar</li>
+</ul>
+</div>
+
+<!-- ======================= ESTUDO DE CASO ======================= -->
+<section class="abertura" id="caso">
+  <div class="faixa"><span class="num">·</span><span class="fase">Fechamento</span></div>
+  <h2>Estudo de caso</h2>
+  <p class="resumo">Um app de conferência de estoque construído por quem cuida da operação,
+  não por uma equipe de software. O que as dez etapas produziram na prática.</p>
+</section>
+
+<p class="lead">Uma distribuidora pequena vendia por e-commerce e conferia mercadoria na
+mão. Duas pessoas, planilha aberta no notebook, caixa por caixa, cruzando descrição de
+produto com o que a nota dizia. Duas horas por recebimento, erro toda semana.</p>
+
+<h3>O que o escopo decidiu</h3>
+<p>Uma frase: <em>"o conferente bipa o código de barras de cada item que chegou e o app diz
+na hora qual produto é e quanto já foi contado"</em>. Pronto era quando a conferência
+saísse em 15 minutos.</p>
+<p>Fora da v1: cadastro de produtos (vem do e-commerce), relatório gerencial, integração de
+escrita com o ERP. Três coisas pedidas com convicção na primeira conversa; nenhuma
+necessária para resolver as duas horas.</p>
+
+<h3>A stack que as seis perguntas produziram</h3>
+<p>Três pessoas, celular e tablet, <strong>depósito sem Wi-Fi confiável</strong>, e ninguém
+técnico para manter depois. As respostas eliminaram sozinhas metade das opções:</p>
+<ul>
+<li>HTML, CSS e JavaScript puro — sem framework, sem passo de build</li>
+<li>PWA instalável pelo navegador, sem loja de aplicativos</li>
+<li>Catálogo de produtos sincronizado para o próprio aparelho, para busca instantânea
+mesmo sem sinal</li>
+<li>GitHub Pages, publicando a cada push</li>
+</ul>
+
+<h3>As decisões de dado que salvaram o projeto</h3>
+<div class="grade2">
+<div class="cel"><h4>Código de barras é texto</h4><p>A busca aceita variações de zero à
+esquerda — UPC-A de 12 dígitos e EAN-13 são o mesmo produto. Guardado como número, esse
+app não funcionaria.</p></div>
+<div class="cel"><h4>Sincronização incremental</h4><p>Em vez de baixar o catálogo inteiro
+toda vez, filtra por data de modificação. Sync de minutos virou sync de segundos.</p></div>
+<div class="cel"><h4>Cache só do necessário</h4><p>Id, SKU, código e nome ficam no aparelho.
+Imagem e estoque são buscados sob demanda — o que cabe no celular é o que precisa ser
+instantâneo.</p></div>
+<div class="cel"><h4>Grava a cada bipagem</h4><p>Nunca "salvar no fim". A conferência
+sobrevive a fechar o app, cair a bateria, trocar de aparelho.</p></div>
+</div>
+
+<h3>O que só apareceu com o usuário real na frente</h3>
+<p>Nenhum dos três itens abaixo estava no plano. Todos vieram de ver alguém usando:</p>
+<ol>
+<li><strong>O leitor físico não digita num campo.</strong> Leitores USB e Bluetooth se
+comportam como teclado: "digitam" muito rápido e terminam com Enter. O app passou a escutar
+o teclado global — sequência rápida terminada em Enter é bipagem, sem precisar de campo
+focado. Ninguém mais perde leitura porque tocou fora do campo.</li>
+<li><strong>Som importa mais que tela.</strong> No depósito, com a caixa na mão, ninguém
+olha o celular a cada bipagem. Dois tons diferentes — um para achou, outro para não achou —
+resolveram mais que qualquer melhoria visual.</li>
+<li><strong>Código não encontrado não pode travar a fila.</strong> A primeira versão parava
+e pedia decisão. Virou fluxo contínuo: registra, segue bipando, e a associação é feita no
+resumo, no fim.</li>
+</ol>
+
+<h3>Quando o dado precisou sair do aparelho</h3>
+<p>Uma necessidade real apareceu depois: começar a conferência no tablet e terminar no
+celular. Isso exigia estado compartilhado — e é exatamente o gatilho previsto no capítulo 3
+para revisar a decisão de stack.</p>
+<p>A resposta foi a menor possível: um único arquivo de servidor com um banco chave-valor,
+guardando a sessão de recebimento por um código, com expiração automática em 30 dias. Três
+rotas. O resto do app continuou client-side.</p>
+<p>E, junto, a proteção que o capítulo 6 exige: ao salvar, o app manda a versão que ele
+acha que é a atual; se outro aparelho salvou por cima, o servidor recusa e devolve o
+conflito em vez de sobrescrever calado.</p>
+
+<div class="caixa caso">
+<span class="rotulo">A lição mais cara está no histórico</span>
+<p>Existe no histórico do projeto um commit que adiciona registro de devolução com leitura
+de etiqueta por IA e geração de mensagem de WhatsApp. Duas semanas depois, existe outro
+commit que <strong>remove</strong> tudo isso.</p>
+<p>Era impressionante e não era usado. Foi construído porque era interessante de construir,
+não porque alguém tinha o problema. Nada disso estava no escopo da v1 — e a única razão de
+ter entrado foi ninguém ter perguntado, na hora, se resolvia a dor descrita no capítulo 1.</p>
+<p>Remover foi a decisão certa. Não ter feito teria sido melhor.</p>
+</div>
+
+<h3>Onde as dez etapas apareceram</h3>
+<table class="compacta">
+<thead><tr><th></th><th>No projeto real</th></tr></thead>
+<tbody>
+<tr><td class="mn">01</td><td>Escopo de uma frase; três funcionalidades cortadas da v1</td></tr>
+<tr><td class="mn">02</td><td>Node, Git e o assistente na máquina de quem cuida da operação</td></tr>
+<tr><td class="mn">03</td><td>Sem framework, sem build, sem servidor — porque não havia quem mantivesse</td></tr>
+<tr><td class="mn">04</td><td>Código de barras como texto; catálogo separado do que é buscado sob demanda</td></tr>
+<tr><td class="mn">05</td><td>Bipar e ver o nome do produto — a primeira coisa que existiu</td></tr>
+<tr><td class="mn">06</td><td>Doze telas, cada uma nascida de uma fatia; retomar sessão; fluxo contínuo</td></tr>
+<tr><td class="mn">07</td><td>Lista de autorizados com senha individual; credenciais da loja só no aparelho do admin</td></tr>
+<tr><td class="mn">08</td><td>Catálogo importado da API do e-commerce, com paginação e sync incremental</td></tr>
+<tr><td class="mn">09</td><td>Commits pequenos e descritivos; a feature errada foi revertida sem trauma</td></tr>
+<tr><td class="mn">10</td><td>GitHub Actions com versionamento automático; PWA instalável; manual em HTML</td></tr>
+</tbody>
+</table>
+
+<p>Duas horas viraram quinze minutos. Nenhuma linha desse app foi escrita por um
+programador contratado.</p>
+
+<!-- ======================= APÊNDICE A ======================= -->
+<section class="abertura" id="apA">
+  <div class="faixa"><span class="num">A</span><span class="fase">Apêndice</span></div>
+  <h2>Instalar as 10 skills</h2>
+  <p class="resumo">Cinco minutos. Depois disso o assistente conduz cada etapa sozinho,
+  sem você precisar lembrar de nada deste livro.</p>
+</section>
+
+<h3>O que é uma skill, na prática</h3>
+<p>Uma skill é uma pasta com um arquivo <code>SKILL.md</code> dentro. O arquivo tem um
+cabeçalho que diz <em>quando</em> aquilo deve ser usado, e um corpo com as instruções.</p>
+<p>Quando você descreve um problema, o assistente lê os cabeçalhos, reconhece que a
+situação bate com uma das skills, e passa a seguir aquelas instruções. Você não precisa
+chamar pelo nome.</p>
+
+<div class="regra">É a diferença entre pedir ajuda a alguém muito inteligente<br>
+e pedir ajuda a alguém que já fez isso vinte vezes.</div>
+
+<h3>Claude Code</h3>
+<p>Com a pasta <code>skills/</code> deste material baixada:</p>
+<pre><code>./instalar.sh</code></pre>
+<p>Ou manualmente, para valer em todos os seus projetos:</p>
+<pre><code>mkdir -p ~/.claude/skills
+cp -r escopo-de-uma-pagina ambiente-zero stack-minima modelo-de-dados \
+      primeira-tela-viva fluxo-completo quem-entra-e-quem-ve \
+      dados-que-ja-existem nao-quebra no-ar-e-vivo ~/.claude/skills/</code></pre>
+<p>Para instalar só no projeto atual, copie para <code>.claude/skills/</code> dentro da
+pasta do projeto. Confira com <code>/skills</code> — as dez devem aparecer.</p>
+
+<h3>Codex CLI, Gemini CLI e outros</h3>
+<p>Esses assistentes ainda não carregam skills automaticamente. Use o conteúdo como
+instrução: abra o <code>SKILL.md</code> da etapa e cole o corpo no início da conversa, ou
+junte tudo num arquivo <code>AGENTS.md</code> na raiz do projeto — vários assistentes leem
+esse arquivo sozinhos.</p>
+
+<h3>Como usar no dia a dia</h3>
+<div class="caixa prompt">
+<span class="rotulo">Basta descrever o problema</span>
+<p>Quero parar de controlar o estoque na planilha e fazer um app para a equipe usar no
+celular.</p>
+</div>
+<p>Se quiser forçar uma etapa específica, chame direto: <em>"use a skill
+modelo-de-dados no meu caso"</em>.</p>
+
+<div class="caixa nota">
+<span class="rotulo">Ajuste ao seu negócio</span>
+<p>As skills são arquivos de texto — leia e edite. Se a sua empresa tem uma regra fixa
+("todo relatório sai em CSV com ponto e vírgula", "nunca guardamos CPF"), escreva dentro da
+skill correspondente. A partir daí o assistente respeita a regra em todos os projetos, sem
+você repetir. Isso é o que transforma este material no <em>seu</em> método em vez do meu.</p>
+</div>
+
+<!-- ======================= APÊNDICE B ======================= -->
+<section class="abertura" id="apB">
+  <div class="faixa"><span class="num">B</span><span class="fase">Apêndice</span></div>
+  <h2>Skills públicas que combinam</h2>
+  <p class="resumo">As dez skills deste material cuidam do método. Estas, já publicadas e
+  disponíveis, cuidam da execução — e são gratuitas.</p>
+</section>
+
+<p class="lead">Assistentes modernos vêm com skills próprias, e algumas encaixam
+exatamente nas etapas deste livro. Use as duas coisas juntas: a nossa conduz a etapa, a
+pública faz o trabalho pesado dentro dela.</p>
+
+<table class="compacta">
+<thead><tr><th>Etapa</th><th>Skill pública</th><th>Para quê</th></tr></thead>
+<tbody>
+<tr><td class="mn">01</td><td><code>skill-creator</code></td><td>Transformar o processo da sua empresa numa skill própria, depois que ele estabilizar</td></tr>
+<tr><td class="mn">02</td><td><code>init</code></td><td>Gerar o <code>CLAUDE.md</code> do projeto, que dá contexto permanente ao assistente</td></tr>
+<tr><td class="mn">02</td><td><code>session-start-hook</code></td><td>Preparar o repositório para rodar testes e verificações sozinho a cada sessão</td></tr>
+<tr><td class="mn">03</td><td><code>claude-api</code></td><td>Se o app for usar IA por dentro: modelos, preço, limites e cache</td></tr>
+<tr><td class="mn">04</td><td><code>xlsx</code></td><td>Ler a planilha atual para extrair o modelo que já existe na prática</td></tr>
+<tr><td class="mn">05</td><td><code>run</code></td><td>Subir e dirigir o app para ver a mudança funcionando de verdade</td></tr>
+<tr><td class="mn">06</td><td><code>frontend-design</code></td><td>Dar identidade visual em vez do visual genérico padrão</td></tr>
+<tr><td class="mn">06</td><td><code>dataviz</code></td><td>Quando chegar a hora dos gráficos — e só então</td></tr>
+<tr><td class="mn">07</td><td><code>security-review</code></td><td>Revisão de segurança antes de publicar. Rode sempre</td></tr>
+<tr><td class="mn">08</td><td><code>xlsx</code></td><td>Importar, limpar e reexportar <code>.xlsx</code>, <code>.csv</code> e <code>.tsv</code></td></tr>
+<tr><td class="mn">09</td><td><code>code-review</code></td><td>Revisão adversarial do diff, com verificação das descobertas</td></tr>
+<tr><td class="mn">09</td><td><code>simplify</code></td><td>Faxina de repetição e complexidade acumulada</td></tr>
+<tr><td class="mn">10</td><td><code>pdf</code> / <code>docx</code></td><td>Gerar o manual do usuário em formato que a equipe abre</td></tr>
+<tr><td class="mn">10</td><td><code>loop</code></td><td>Rotina recorrente: conferir backup, rodar testes, checar custo</td></tr>
+</tbody>
+</table>
+
+<h3>Como saber o que você já tem</h3>
+<p>No Claude Code, <code>/skills</code> lista o que está instalado. Vale olhar antes de
+pedir para construir algo do zero: muita coisa que parece trabalho de programação já é
+uma skill pronta.</p>
+
+<!-- ======================= APÊNDICE C ======================= -->
+<section class="abertura" id="apC">
+  <div class="faixa"><span class="num">C</span><span class="fase">Apêndice</span></div>
+  <h2>Os 30 dias</h2>
+  <p class="resumo">Um plano de execução em ritmo de quem tem um trabalho e faz isso nas
+  brechas. Uma hora por dia útil.</p>
+</section>
+
+<table class="rotulos">
+<thead><tr><th>Dias</th><th>O que fazer</th><th>Termina com</th></tr></thead>
+<tbody>
+<tr><td><strong>1</strong></td><td>Escopo (cap. 1). Só conversa e um arquivo de texto</td><td><code>ESCOPO.md</code> lido por quem vai usar</td></tr>
+<tr><td><strong>2</strong></td><td>Ambiente (cap. 2)</td><td>Uma página sua aberta no seu navegador</td></tr>
+<tr><td><strong>3</strong></td><td>Stack (cap. 3) e modelo (cap. 4)</td><td><code>DECISOES.md</code> e <code>MODELO.md</code></td></tr>
+<tr><td><strong>4–5</strong></td><td>Primeira tela viva (cap. 5)</td><td>URL no celular de alguém da operação</td></tr>
+<tr><td><strong>6–7</strong></td><td>Ouvir, anotar, corrigir. <em>Não construa nada novo</em></td><td>Lista do que realmente falta</td></tr>
+<tr><td><strong>8–14</strong></td><td>Fatias verticais (cap. 6), uma por dia</td><td>Caminho feliz inteiro funcionando</td></tr>
+<tr><td><strong>15–17</strong></td><td>Dados reais (cap. 8)</td><td>Dados da empresa dentro do app, validados</td></tr>
+<tr><td><strong>18–19</strong></td><td>Acesso e segredos (cap. 7)</td><td>Checklist de publicação fechado</td></tr>
+<tr><td><strong>20–21</strong></td><td>Rede de segurança (cap. 9)</td><td>Testes de fumaça rodando</td></tr>
+<tr><td><strong>22–23</strong></td><td>Publicar e instalar (cap. 10)</td><td>Equipe com o ícone no celular</td></tr>
+<tr><td><strong>24–25</strong></td><td>Backup, custo e manual</td><td>Restauração testada de verdade</td></tr>
+<tr><td><strong>26–30</strong></td><td>Uso real com você por perto. Corrigir o que aparecer</td><td>A frase de "pronto é quando" cumprida</td></tr>
+</tbody>
+</table>
+
+<h3>As três regras do plano</h3>
+<ol>
+<li><strong>Os dias 6 e 7 são inegociáveis.</strong> A vontade de pular a semana de ouvir e
+ir direto construir é forte, e é o erro mais caro do calendário inteiro.</li>
+<li><strong>Um dia perdido não é um dia a recuperar.</strong> Empurre tudo um dia. Apertar o
+cronograma sempre sai do teste ou do backup — as duas coisas que você mais vai querer ter.</li>
+<li><strong>Se atrasar, corte escopo, não etapa.</strong> Um app menor que passa por todas as
+dez etapas é infinitamente melhor que um app completo sem backup e sem teste.</li>
+</ol>
+
+<!-- ======================= APÊNDICE D ======================= -->
+<section class="abertura" id="apD">
+  <div class="faixa"><span class="num">D</span><span class="fase">Apêndice</span></div>
+  <h2>Glossário sem jargão</h2>
+  <p class="resumo">O suficiente para você entender o que o assistente está dizendo — e
+  nem uma palavra a mais.</p>
+</section>
+
+<table class="rotulos compacta">
+<tbody>
+<tr><td><strong>Repositório (repo)</strong></td><td>A pasta do seu projeto com histórico de todas as mudanças.</td></tr>
+<tr><td><strong>Commit</strong></td><td>Um ponto de restauração salvo, com uma frase dizendo o que mudou.</td></tr>
+<tr><td><strong>Push</strong></td><td>Mandar seus commits para o GitHub. É o backup do código.</td></tr>
+<tr><td><strong>Branch</strong></td><td>Uma linha paralela para experimentar sem estragar o que funciona.</td></tr>
+<tr><td><strong>Deploy</strong></td><td>Publicar: colocar a versão nova no ar para as pessoas usarem.</td></tr>
+<tr><td><strong>Front / back</strong></td><td>Front é o que roda no aparelho da pessoa; back é o que roda no servidor.</td></tr>
+<tr><td><strong>API</strong></td><td>A porta pela qual um sistema conversa com outro.</td></tr>
+<tr><td><strong>Endpoint / rota</strong></td><td>Um endereço específico dessa porta. Ex.: <code>/produtos</code>.</td></tr>
+<tr><td><strong>JSON</strong></td><td>Formato de texto em que os sistemas trocam dados.</td></tr>
+<tr><td><strong>localStorage</strong></td><td>Uma gavetinha dentro do navegador do aparelho. Some se limpar o navegador.</td></tr>
+<tr><td><strong>PWA</strong></td><td>Um site que instala como app no celular, sem passar por loja de aplicativos.</td></tr>
+<tr><td><strong>Framework</strong></td><td>Um conjunto grande de código pronto que impõe um jeito de fazer as coisas.</td></tr>
+<tr><td><strong>Build</strong></td><td>Etapa que transforma o código que você escreve no que o navegador entende.</td></tr>
+<tr><td><strong>Dependência</strong></td><td>Código de terceiros que seu app usa. Cada uma é uma promessa de manutenção.</td></tr>
+<tr><td><strong>Variável de ambiente</strong></td><td>Configuração guardada fora do código — é onde senhas e chaves devem morar.</td></tr>
+<tr><td><strong>Migração</strong></td><td>Converter dados já gravados para um formato novo.</td></tr>
+<tr><td><strong>Diff</strong></td><td>A lista exata do que mudou: linha adicionada, linha removida.</td></tr>
+<tr><td><strong>Rollback / revert</strong></td><td>Voltar para uma versão anterior que funcionava.</td></tr>
+<tr><td><strong>Teste de fumaça</strong></td><td>Verificação rápida de que o essencial ainda funciona.</td></tr>
+<tr><td><strong>Token / chave de API</strong></td><td>Uma senha que identifica seu app perante outro sistema. Nunca vai no navegador.</td></tr>
+<tr><td><strong>Cache</strong></td><td>Cópia guardada perto para não buscar de novo. Rápido — e às vezes desatualizado.</td></tr>
+<tr><td><strong>Terminal</strong></td><td>A janela preta onde você digita comandos. Errar nela é normal.</td></tr>
+</tbody>
+</table>
+
+<!-- ======================= FECHO ======================= -->
+<section class="abertura" id="fecho">
+  <div class="faixa"><span class="num">·</span><span class="fase">Última palavra</span></div>
+  <h2>O primeiro app é o mais caro</h2>
+</section>
+
+<p class="lead">Não em dinheiro — em desconforto. É o primeiro em que você vai errar o
+modelo de dados, descobrir que o escopo estava grande, ouvir de alguém da sua equipe que a
+tela está confusa.</p>
+
+<p>Todos os erros deste livro estão aqui porque alguém os cometeu. Você vai cometer alguns
+mesmo assim, e vai reconhecê-los mais rápido por ter lido.</p>
+
+<p>O segundo app leva um terço do tempo. O terceiro deixa de parecer um projeto e passa a
+parecer o que é: uma ferramenta que a sua empresa fabrica quando precisa, do tamanho que
+precisa, do jeito que o processo realmente funciona.</p>
+
+<p>É esse o ponto. Não é fazer <em>um</em> app. É a empresa deixar de esperar que alguém de
+fora resolva um problema que ninguém de fora entende.</p>
+
+<div class="regra">Comece pelo processo que mais te irrita hoje.<br>
+É quase sempre o certo.</div>
+
+</body></html>
