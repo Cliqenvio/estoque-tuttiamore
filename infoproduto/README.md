@@ -1,16 +1,16 @@
-# Do zero ao app — 10 skills
+# Do zero ao app — 13 skills
 
-Infoproduto: um PDF-guia de 48 páginas + 10 skills instaláveis que levam alguém que
-nunca programou do problema manual até um aplicativo de uso interno publicado e em uso
-pela equipe — construído com Claude Code, Codex CLI ou equivalente.
+Infoproduto: um PDF-guia + 13 skills instaláveis que levam alguém que nunca programou
+do problema manual até um aplicativo de uso interno publicado, em uso pela equipe e
+mantido vivo depois — construído com Claude Code, Codex CLI ou equivalente.
 
 ## O que tem aqui
 
 ```
 infoproduto/
 ├── dist/
-│   └── do-zero-ao-app-10-skills.pdf     ← o produto entregue ao comprador
-├── skills/                              ← as 10 skills instaláveis
+│   └── do-zero-ao-app-13-skills.pdf     ← o produto entregue ao comprador
+├── skills/                              ← as 13 skills instaláveis
 │   ├── instalar.sh                        (copia tudo para ~/.claude/skills)
 │   ├── README.md
 │   ├── escopo-de-uma-pagina/SKILL.md
@@ -22,7 +22,10 @@ infoproduto/
 │   ├── quem-entra-e-quem-ve/SKILL.md
 │   ├── dados-que-ja-existem/SKILL.md
 │   ├── nao-quebra/SKILL.md
-│   └── no-ar-e-vivo/SKILL.md
+│   ├── no-ar-e-vivo/SKILL.md
+│   ├── socorro-quebrou/SKILL.md
+│   ├── relatorios-que-respondem/SKILL.md
+│   └── ia-dentro-do-app/SKILL.md
 └── build/                               ← como o PDF é gerado
     ├── bordas.html                        capa, ficha e contracapa (sangria total)
     ├── livro.html                         o miolo inteiro
@@ -68,7 +71,11 @@ número impresso no rodapé bater exatamente com a página física do PDF.
 | 08 | Dados que já existem | `dados-que-ja-existem` | dados legados validados dentro do app |
 | 09 | Não quebra | `nao-quebra` | testes de fumaça + revisão + rollback |
 | 10 | No ar e vivo | `no-ar-e-vivo` | app publicado, backup, custo, manual |
+| 11 | Socorro, quebrou | `socorro-quebrou` | incidente resolvido sem perder a confiança |
+| 12 | Relatórios que respondem | `relatorios-que-respondem` | números com dono, CSV certo, envio automático |
+| 13 | IA dentro do app | `ia-dentro-do-app` | IA no app com teto de custo e confirmação humana |
 
+Os capítulos 11–13 formam a Parte V (Crescer): a vida do app depois do lançamento.
 Mais: introdução com a tese do app interno, as 7 regras de como falar com o assistente, o
 estudo de caso do app de bipagem deste repositório, e quatro apêndices (instalação das
 skills, skills públicas que combinam com cada etapa, plano de 30 dias e glossário).

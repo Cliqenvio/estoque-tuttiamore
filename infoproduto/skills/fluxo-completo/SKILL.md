@@ -36,7 +36,7 @@ Para cada tela do app, garanta e verifique:
 | Estado | Como testar | O que precisa aparecer |
 |---|---|---|
 | **Vazio** | usuário novo, banco zerado | frase que ensina o próximo passo, não "sem resultados" |
-| **Carregando** | rede lenta (DevTools → Network → Slow 3G) | indicação visível; botão desabilitado |
+| **Carregando** | rede lenta (DevTools → Network → Slow 4G; nas versões antigas, Slow 3G) | indicação visível; botão desabilitado |
 | **Erro** | desligue o Wi-Fi e tente | o que houve, em português, e o que fazer agora |
 | **Sem permissão** | entre com o usuário mais limitado | some com o botão; não mostre e bloqueie depois |
 | **Muitos dados** | 5.000 registros | ainda rola liso; busca antes de lista |
@@ -67,7 +67,7 @@ Esse trio (grava sempre, retoma, avisa conflito) é o que faz operação confiar
 Em ambiente barulhento, feedback visual não basta:
 
 - **Som** curto e distinto para sucesso e para erro (dois tons diferentes, não o mesmo)
-- **Vibração** no celular (`navigator.vibrate(50)`)
+- **Vibração** no celular (`navigator.vibrate(50)` — só Android; o iPhone não vibra pelo navegador, lá confie no som)
 - **Cor** ocupando área grande, não um texto de 12px
 - **Nunca** só um `alert()` — trava a tela e exige toque
 

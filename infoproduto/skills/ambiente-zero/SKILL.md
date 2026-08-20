@@ -11,6 +11,11 @@ A maior taxa de desistência não está no código — está nos primeiros 40 mi
 terminal preto que responde `command not found`. Quem nunca programou não sabe que isso
 é normal, acha que quebrou o computador, e para.
 
+(Um paradoxo honesto: para rodar esta skill é preciso já ter um assistente instalado em
+algum lugar. Ela serve para a segunda máquina, o computador do colega, ou para diagnosticar
+um ambiente que quebrou — na primeira máquina de todas, siga o capítulo 2 do guia, que é
+esta skill em forma de texto.)
+
 O trabalho aqui é chegar a um estado verificável: **a pessoa digita um comando, algo
 acontece, e ela entende o que aconteceu.**
 
@@ -60,7 +65,8 @@ node -v
 npm -v
 ```
 
-Precisa aparecer algo como `v22.x.x` e `10.x.x`. Se aparecer `command not found` mesmo
+Precisa aparecer um número de versão começando com `v` (v22, v24 — qualquer LTS serve) e
+outro para o npm. Se aparecer `command not found` mesmo
 depois de reabrir, o instalador não colocou o Node no PATH — reinstale pelo instalador
 oficial em vez de tentar consertar o PATH na mão.
 
@@ -98,6 +104,7 @@ pedir — abre o navegador, você entra na conta, volta para o terminal.
 > problemas piores depois. Resolva mudando a pasta global do npm:
 > ```bash
 > mkdir -p ~/.npm-global && npm config set prefix ~/.npm-global
+> # macOS: use ~/.zshrc  ·  Linux: use ~/.bashrc
 > echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zshrc && source ~/.zshrc
 > ```
 

@@ -51,15 +51,34 @@ o que interessa:
 
 ```js
 // worker/src/index.js — a chave vive aqui, no servidor
+const CORS = {
+  "access-control-allow-origin": "https://SEU-USUARIO.github.io", // só o seu app
+  "access-control-allow-headers": "authorization",
+};
 export default {
   async fetch(request, env) {
+    if (request.method === "OPTIONS")   // o navegador "pergunta antes de mandar"
+      return new Response(null, { status: 204, headers: CORS });
+    if (request.headers.get("authorization") !== env.APP_TOKEN)
+      return new Response("não autorizado", { status: 401, headers: CORS });
     const r = await fetch("https://api.erp.com/produtos", {
       headers: { "X-Key": env.ERP_API_KEY }   // variável de ambiente, não código
     });
-    return new Response(await r.text(), { headers: { "content-type": "application/json" } });
+    return new Response(await r.text(),
+      { headers: { "content-type": "application/json", ...CORS } });
   }
 };
 ```
+
+Três detalhes fazem o exemplo funcionar de verdade: o bloco `OPTIONS` responde à pergunta
+que o navegador faz antes de mandar a requisição (app e Worker vivem em endereços
+diferentes — sem essa resposta, tudo é bloqueado); o `access-control-allow-origin` autoriza
+só o endereço do seu app, nunca `*`; e a checagem do token barra quem chega só com a URL.
+
+E de onde o app tira o `APP_TOKEN`? Da regra de sempre: obtido no login e guardado só no
+aparelho — ou digitado uma vez por usuário, como na Forma B. Se ele estiver escrito no
+JavaScript, vale a honestidade da tranca: barra o desconhecido que achou a URL, não quem
+sabe abrir o F12.
 
 ```bash
 npx wrangler secret put ERP_API_KEY   # guarda o segredo fora do repositório
@@ -121,7 +140,7 @@ do servidor. Esconder botão é conforto; a checagem no servidor é a segurança
 ## Combine com
 
 Rode uma revisão de segurança dedicada antes de publicar (no Claude Code:
-`/security-review`). Ela pega o que checklist manual esquece: injeção, CORS aberto,
+`/security-review`). Ela pega o que o checklist manual esquece: injeção, CORS aberto,
 dependência vulnerável, dado sensível em log.
 
 ## Armadilhas

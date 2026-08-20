@@ -26,8 +26,15 @@ Se o app é HTML + CSS + JS, o caminho mais barato é o GitHub Pages:
 
 A partir daí, **todo `git push` publica**. Deploy deixa de ser evento.
 
-Se preferir publicar só quando quiser, ou precisar de um passo de build, uma GitHub Action
-resolve — e aproveite para carimbar a versão, o que economiza muito suporte:
+> **O detalhe do plano gratuito:** na conta gratuita do GitHub, o Pages só publica
+> repositório **público** — e este material manda manter o repositório privado. As saídas,
+> todas gratuitas: Cloudflare Pages, Netlify ou Vercel publicam repositório privado do
+> mesmo jeito (conecte e cada push publica). E em qualquer opção, a *URL* é acessível por
+> quem a conhece mesmo com código privado — dado sensível continua exigindo login.
+
+Se precisar de um passo a mais no deploy — como o carimbo de versão abaixo — uma GitHub
+Action resolve. **Antes**, em Settings → Pages, mude o Source para **GitHub Actions**
+(sem isso o deploy da Action falha, e o do branch continua publicando sem o carimbo):
 
 ```yaml
 # .github/workflows/deploy.yml
@@ -99,8 +106,13 @@ Com `<link rel="manifest" href="manifest.json">` no `<head>`, a instalação fic
 Vira ícone na tela, abre em tela cheia, sem barra de navegador. Sem loja, sem taxa, sem
 revisão da Apple, e a atualização chega sozinha no próximo acesso.
 
-Se o app é usado em pé, no estoque, garanta também: `user-scalable=no` no viewport para
-não dar zoom por engano, botões grandes, e `theme-color` escuro para não ofuscar.
+Se o app é usado em pé, no estoque, garanta também: `touch-action: manipulation` no CSS
+(elimina o zoom acidental do duplo toque sem impedir quem precisa ampliar), botões grandes
+e `theme-color` escuro para não ofuscar.
+
+E o detalhe que o manifest **não** resolve: ele instala o app, mas não o faz abrir sem
+internet. Quem faz isso é o *service worker* — peça ao assistente um mínimo que guarde os
+arquivos do app em cache. Sem ele, o app precisa de rede para abrir; com ele, abre sempre.
 
 ## Parte 3 — Backup: a parte que ninguém faz
 
@@ -151,13 +163,13 @@ lista, ou não entra (e diga por quê). Lista sem "não entra" vira backlog mort
 **Uma vez por mês**, 30 minutos:
 
 ```bash
-npm outdated                  # dependência com falha conhecida?
+npm audit                     # dependência com falha de segurança conhecida?
 npx playwright test           # caminhos críticos passam?
 ```
 Mais: confira o custo do mês, verifique se o backup rodou, e pergunte a uma pessoa que usa
 o que mais atrapalha hoje. Essa última pergunta gera as melhores tarefas do projeto.
 
-**Bus factor.** Escreva no `README.md`: onde está hospedado, quais contas, quem tem acesso,
+**Se só você sabe.** Escreva no `README.md`: onde está hospedado, quais contas, quem tem acesso,
 como publicar, como restaurar backup. Se só você sabe, o app é um risco. Cinco parágrafos
 resolvem.
 

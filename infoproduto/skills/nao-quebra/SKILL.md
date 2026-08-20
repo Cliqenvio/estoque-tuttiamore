@@ -23,7 +23,7 @@ de três a sete caminhos.
 Para o app de estoque do estudo de caso:
 
 1. Bipar um código existente mostra o produto certo
-2. Bipar um código inexistente oferece associar, sem travar a bipagem
+2. Bipar um código inexistente oferece a opção de associar, sem travar a bipagem
 3. A conferência sobrevive a fechar e reabrir o navegador
 4. Exportar CSV sai com o total certo
 5. Usuário não autorizado não entra
@@ -109,7 +109,7 @@ decimal, ou renomeia um campo, e os registros já gravados param de ser lidos.
 Antes de mudar formato de dado gravado:
 
 1. **Faça o backup** (exporte tudo — veja `no-ar-e-vivo`)
-2. Escreva a migração para os dados antigos e rode nela primeiro
+2. Escreva a migração dos dados antigos e rode-a primeiro numa cópia
 3. Deixe o código ler os **dois** formatos por um tempo
 4. Só remova o formato antigo quando não sobrar registro nele
 
@@ -120,7 +120,7 @@ Uma vez por semana, com o app já em uso:
 ```bash
 npx playwright test        # os caminhos críticos ainda passam?
 git log --oneline -10      # o que mudou na semana
-npm outdated               # alguma dependência com falha de segurança conhecida
+npm audit                  # alguma dependência com falha de segurança conhecida
 ```
 
 E abra o app como usuário comum, no celular, e faça um ciclo completo. Leva três minutos e

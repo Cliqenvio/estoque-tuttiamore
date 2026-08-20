@@ -15,23 +15,23 @@ body{
   font-feature-settings:"kern" 1,"liga" 1,"calt" 1;
   orphans:3; widows:3; text-rendering:optimizeLegibility;
 }
-p{margin:0 0 .78em}
+p{margin:0 0 .74em}
 strong{font-weight:650; color:var(--ink)}
 em{font-style:italic}
 a{color:var(--accent-deep); text-decoration:none; border-bottom:.5px solid var(--rule)}
 
 /* ---------- títulos ---------- */
 h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:700; color:var(--ink);
-  line-height:1.12; margin:0; letter-spacing:-.012em; break-after:avoid;}
-h2{font-size:18.5pt; margin:1.9em 0 .5em; font-weight:900; letter-spacing:-.018em;}
-h3{font-size:13pt; margin:1.5em 0 .38em; font-weight:700;}
+  line-height:1.12; margin:0; letter-spacing:-.012em; break-after:avoid; break-inside:avoid;}
+h2{font-size:18.5pt; margin:1.7em 0 .48em; font-weight:900; letter-spacing:-.018em;}
+h3{font-size:13pt; margin:1.4em 0 .36em; font-weight:700;}
 h4{font-family:'Inter',sans-serif; font-size:9.4pt; font-weight:700; letter-spacing:.09em;
   text-transform:uppercase; color:var(--accent-deep); margin:1.5em 0 .4em;}
 h2+p,h3+p,h4+p{margin-top:0}
 
 /* ---------- listas ---------- */
 ul,ol{margin:0 0 .85em; padding-left:1.15em}
-li{margin-bottom:.3em; padding-left:.12em}
+li{margin-bottom:.27em; padding-left:.12em}
 li::marker{color:var(--accent)}
 ol li::marker{font-weight:700; font-size:.92em}
 ul.limpa{list-style:none; padding-left:0}
@@ -43,9 +43,15 @@ code{font-family:'JetBrains Mono',ui-monospace,monospace; font-size:.855em;
   font-weight:500;}
 pre{font-family:'JetBrains Mono',monospace; font-size:8.3pt; line-height:1.5;
   background:var(--cream); border:.5pt solid var(--rule); border-left:2.5pt solid var(--accent);
-  border-radius:0 4px 4px 0; padding:.72em .9em; margin:.5em 0 1em; overflow:hidden;
+  border-radius:0 4px 4px 0; padding:.68em .85em; margin:.45em 0 .9em; overflow:hidden;
   white-space:pre-wrap; word-break:break-word; break-inside:avoid; color:var(--ink-soft);}
 pre code{background:none; padding:0; color:inherit; font-size:inherit; font-weight:400}
+pre,code{font-variant-ligatures:none; font-feature-settings:"liga" 0,"calt" 0;}
+code{white-space:nowrap}
+pre code,code.quebra{white-space:pre-wrap}
+tr{break-inside:avoid}
+table.glossario{break-inside:auto}
+table.glossario td{padding:.36em .55em}
 
 /* ---------- tabelas ---------- */
 table{width:100%; border-collapse:collapse; margin:.6em 0 1.15em; font-size:9.1pt;
@@ -60,7 +66,7 @@ td code{font-size:.9em}
 table.compacta{font-size:8.6pt}
 
 /* ---------- caixas ---------- */
-.caixa{break-inside:avoid; margin:1.1em 0; padding:.85em 1em .9em;
+.caixa{break-inside:avoid; margin:.95em 0; padding:.78em .95em .82em;
   border-radius:5px; font-size:9.5pt; line-height:1.52;}
 .caixa p:last-child,.caixa ul:last-child,.caixa ol:last-child{margin-bottom:0}
 .caixa .rotulo{font-family:'Inter',sans-serif; font-size:7.6pt; font-weight:700;
@@ -169,7 +175,7 @@ hr{border:0; border-top:.5pt solid var(--rule); margin:1.6em 0}
 .toc .sec:first-child{margin-top:0}
 
 /* ---------- grades ---------- */
-.grade2{display:grid; grid-template-columns:1fr 1fr; gap:.8em 1.3em; margin:1em 0}
+.grade2{display:grid; grid-template-columns:1fr 1fr; gap:.8em 1.3em; margin:1em 0; break-inside:avoid}
 .grade2 .cel{break-inside:avoid}
 .grade2 h4{margin-top:0}
 .mapa{width:100%; border-collapse:collapse; font-size:8.8pt; margin:1em 0}

@@ -63,12 +63,28 @@ As transformações que resolvem 90% dos casos brasileiros:
 
 ```js
 const texto  = v => String(v ?? "").trim().replace(/\s+/g, " ");
-const reais  = v => Math.round(parseFloat(String(v).replace(/[R$\s.]/g, "").replace(",", ".")) * 100);
+const reais  = v => {
+  let s = String(v ?? "").replace(/[R$\s]/g, "");
+  if (!s) return null;                              // vazio → quarentena, nunca zero
+  const pv = s.lastIndexOf(","), pp = s.lastIndexOf(".");
+  if (pv > pp) s = s.replace(/\./g, "").replace(",", ".");   // 1.234,56 → 1234.56
+  else {
+    s = s.replace(/,/g, "");                                  // 1,234.56 → 1234.56
+    if (/\.\d{3}$/.test(s)) s = s.replace(/\./g, "");  // 1.234 é milhar
+  }
+  const n = Math.round(parseFloat(s) * 100);
+  return Number.isFinite(n) ? n : null;             // ilegível → quarentena
+};
 const ean    = v => {
+  if (typeof v === "number" && !Number.isInteger(v)) return null;  // planilha corrompeu
   let s = String(v ?? "").trim();
   if (/e\+/i.test(s)) return null;               // notação científica: dado perdido, não chute
   s = s.replace(/\D/g, "");
-  return s ? s.padStart(13, "0") : null;
+  if (!s) return null;
+  s = s.padStart(13, "0");
+  // o EAN-13 carrega o próprio detector de erro: o 13º dígito é conferido pelos outros 12
+  const soma = [...s].slice(0, 12).reduce((t, d, i) => t + d * (i % 2 ? 3 : 1), 0);
+  return (10 - (soma % 10)) % 10 === +s[12] ? s : null;            // não bate → quarentena
 };
 const chave  = v => texto(v).toLowerCase()
   .normalize("NFD").replace(/[\u0300-\u036f]/g, "");   // para comparar duplicata
@@ -77,6 +93,11 @@ const chave  = v => texto(v).toLowerCase()
 Sobre o EAN em notação científica: **não tente reconstruir**. `7,89123E+12` perdeu dígitos
 de verdade. Marque como pendente e peça a exportação de novo com a coluna em formato texto.
 Inventar um dígito verificador é criar um erro que ninguém vai achar depois.
+
+A dupla armadilha do preço: `1.234,56` e `1234.56` são o mesmo valor em formatos
+diferentes, e a conversão ingênua (apagar todos os pontos) transforma `1234.56` em
+123.456 reais — um erro de cem vezes que entra calado. Por isso a função acima detecta o
+formato antes de converter e devolve `null` (quarentena) para o que não entende.
 
 ### 4. Validação e quarentena — a fase que ninguém pula
 

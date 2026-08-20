@@ -73,6 +73,10 @@ git push
 Ative o GitHub Pages (Settings → Pages → Deploy from branch → `main`). Em dois minutos
 existe uma URL. Abra **no celular**, não no computador.
 
+(Repositório privado? No plano gratuito do GitHub o Pages exige repositório público —
+publique pelo Cloudflare Pages, Netlify ou Vercel, que aceitam privado de graça. E lembre:
+a URL é pública para quem a conhece — nesta etapa, use dado real *não sensível*.)
+
 ### 6. Mostre para quem vai usar — hoje
 Este é o passo que quase todo mundo pula, e é o mais valioso do material inteiro.
 Leve a URL para o conferente, o vendedor, a pessoa do financeiro. Fique calado e olhe.

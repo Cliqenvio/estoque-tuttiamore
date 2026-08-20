@@ -12,7 +12,7 @@ de estoque" isso costuma significar Next.js + Postgres + Docker + autenticação
 provedor externo + fila de mensagens — uma stack que uma equipe de cinco pessoas manteria
 com esforço, entregue para uma pessoa que nunca abriu um terminal.
 
-Complexidade não é gratuita: ela é paga depois, sozinho, no dia em que quebra.
+Complexidade não é gratuita: você paga depois, sozinho, no dia em que quebra.
 
 **A regra:** escolha a coisa mais simples que aguenta o volume descrito no `ESCOPO.md` —
 e não a mais simples que existe. Simples demais também cobra: uma planilha compartilhada
@@ -24,7 +24,7 @@ Responda com base no `ESCOPO.md`. Se faltar alguma, pergunte.
 
 1. **Quantas pessoas usam ao mesmo tempo?** (1–3 / 4–20 / mais de 20)
 2. **Em que aparelho?** (celular / desktop / os dois)
-3. **Precisa funcionar sem internet?** (sim / não)
+3. **Precisa funcionar sem internet?** (sim / não — "sim" exige um service worker; veja a skill `no-ar-e-vivo`)
 4. **Os dados podem ficar só no aparelho, ou várias pessoas precisam ver o mesmo dado?**
 5. **Existe sistema que já tem esses dados?** (ERP, e-commerce, planilha na nuvem)
 6. **Quem vai mexer nisso daqui a seis meses?** (você / alguém técnico / ninguém)
@@ -44,14 +44,16 @@ sem certificado expirando, sem servidor para reiniciar.
 | Os dados já vivem numa planilha e vão continuar vivendo | **App que lê e escreve na planilha via API** | Não migre o que ninguém pediu para migrar. |
 | Só precisa transformar dado e cuspir relatório | **Script + planilha. Não faça um app.** | Nem todo problema é app. |
 
-## O default para app interno de empresa pequena
+## A escolha padrão para app interno de empresa pequena
 
 Se a resposta honesta para as 6 perguntas for "não sei ainda", comece assim:
 
 - **Front:** HTML, CSS e JavaScript sem framework, sem passo de build
 - **Guardar dado local:** `localStorage` / IndexedDB
 - **Guardar dado compartilhado:** só se o escopo exigir — e aí, Supabase ou um Worker com KV
-- **Hospedar:** GitHub Pages (gratuito, HTTPS, publica a cada `git push`)
+- **Hospedar:** GitHub Pages (gratuito, HTTPS, publica a cada `git push`) — com um porém:
+  no plano gratuito ele exige repositório público; para repositório privado, Cloudflare
+  Pages, Netlify ou Vercel fazem o mesmo de graça
 - **Instalar no celular:** um `manifest.json` transforma o site em app instalável (PWA),
   sem loja de aplicativos, sem taxa de 30%, sem revisão da Apple
 

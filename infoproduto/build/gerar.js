@@ -9,7 +9,7 @@ const RODAPE = `
 <div style="width:100%;font-family:Helvetica,Arial,sans-serif;font-size:7.5pt;
      color:#9A9089;padding:0 18mm;display:flex;justify-content:space-between;
      align-items:center;letter-spacing:.04em;">
-  <span style="text-transform:uppercase;letter-spacing:.12em;font-size:6.6pt;">Do zero ao app · 10 skills</span>
+  <span style="text-transform:uppercase;letter-spacing:.12em;font-size:6.6pt;">Do zero ao app · 13 skills</span>
   <span style="font-weight:700;color:#6E645A;"><span class="pageNumber"></span></span>
 </div>`;
 

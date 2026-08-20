@@ -63,8 +63,8 @@ Cuidado com chaves que parecem estáveis e não são: nome de pessoa muda, e-mai
 ### 4. Defina os tipos com precisão
 - Dinheiro: **inteiro em centavos**, nunca decimal com ponto flutuante
 - Data: **ISO 8601 com fuso** (`2026-08-20T14:32:00-03:00`), nunca `20/08/2026`
-- Código de barras: **texto**, nunca número — zeros à esquerda somem e EAN-13 estoura
-  a precisão de inteiro em JavaScript
+- Código de barras: **texto**, nunca número — zeros à esquerda somem, e o Excel converte
+  número longo em notação científica ao exibir e exportar, perdendo dígitos de verdade
 - Quantidade: inteiro se não existe meia unidade; decimal se vende a granel
 - Booleano: `ativo: true/false`, não `status: "S"/"N"`
 
@@ -79,7 +79,15 @@ As regras que **nunca** podem ser violadas, em uma frase cada:
 Cada invariante vira, mais tarde, uma checagem no código e um teste na skill `nao-quebra`.
 Escrevê-las agora é o que impede que virem bug depois.
 
-### 6. Gere dados de exemplo de verdade
+### 6. Modele contra a sujeira real, não contra a imaginação
+
+Se os dados já existem numa planilha ou num sistema — e quase sempre existem —, rode
+**agora** a radiografia da skill `dados-que-ja-existem` (a fase 1, que só lê e descreve).
+Dez minutos olhando as colunas reais revelam o campo com três significados, a "chave" cheia
+de espaço e acento, o preço em quatro formatos. Modelar contra dados inventados e descobrir
+a realidade na importação, quatro etapas depois, é o retrabalho mais evitável do processo.
+
+### 7. Gere dados de exemplo de verdade
 Crie de 10 a 20 registros que **pareçam os reais**, com a sujeira real: nome com acento,
 descrição de 90 caracteres, SKU com hífen, um produto inativo, uma quantidade zerada, um
 campo opcional vazio. Dados de exemplo limpos demais escondem exatamente os bugs que vão

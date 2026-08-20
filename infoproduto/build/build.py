@@ -9,13 +9,13 @@ from pypdf import PdfReader, PdfWriter
 
 AQUI = Path(__file__).resolve().parent
 DIST = AQUI.parent / "dist"
-SAIDA = DIST / "do-zero-ao-app-10-skills.pdf"
+SAIDA = DIST / "do-zero-ao-app-13-skills.pdf"
 
 # alvo do sumario -> trecho unico que so aparece na pagina de abertura daquela secao
 ALVOS = [
     ("tese",  "Por que agora"),
     ("regras","Como falar com o assistente"),
-    ("mapa",  "O mapa das 10 skills"),
+    ("mapa",  "O mapa das 13 skills"),
     ("cap1",  "skill: escopo-de-uma-pagina"),
     ("cap2",  "skill: ambiente-zero"),
     ("cap3",  "skill: stack-minima"),
@@ -26,8 +26,11 @@ ALVOS = [
     ("cap8",  "skill: dados-que-ja-existem"),
     ("cap9",  "skill: nao-quebra"),
     ("cap10", "skill: no-ar-e-vivo"),
+    ("cap11", "skill: socorro-quebrou"),
+    ("cap12", "skill: relatorios-que-respondem"),
+    ("cap13", "skill: ia-dentro-do-app"),
     ("caso",  "Estudo de caso"),
-    ("apA",   "Instalar as 10 skills"),
+    ("apA",   "Instalar as 13 skills"),
     ("apB",   "Skills publicas que combinam"),
     ("apC",   "Os 30 dias"),
     ("apD",   "Glossario sem jargao"),
@@ -75,8 +78,8 @@ def juntar():
     for p in miolo.pages[2:]: w.add_page(p)  # miolo (descarta as 2 folgas)
     w.add_page(bordas.pages[2])          # contracapa
     w.add_metadata({
-        "/Title": "Do zero ao app — 10 skills para criar o aplicativo interno da sua empresa",
-        "/Subject": "Guia pratico + 10 skills instalaveis para construir apps de uso interno com IA",
+        "/Title": "Do zero ao app — 13 skills para criar o aplicativo interno da sua empresa",
+        "/Subject": "Guia pratico + 13 skills instalaveis para construir apps de uso interno com IA",
         "/Keywords": "app interno, IA, Claude Code, Codex, skills, PWA, no-code, automacao",
         "/Creator": "Do zero ao app",
     })
