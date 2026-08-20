@@ -1,5 +1,8 @@
 # Do zero ao app — 13 skills
 
+Uma publicação **TopSkills.md** ([topskills.com.br](https://topskills.com.br)), vendida
+nas redes da marca.
+
 Infoproduto: um PDF-guia + 13 skills instaláveis que levam alguém que nunca programou
 do problema manual até um aplicativo de uso interno publicado, em uso pela equipe e
 mantido vivo depois — construído com Claude Code, Codex CLI ou equivalente.
