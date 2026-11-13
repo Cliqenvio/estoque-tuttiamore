@@ -13,15 +13,22 @@
     <!-- Tela: Setup das credenciais da Loja (admin) -->
     <section id="tela-setup" class="tela hidden">
         <h1>Configurar loja</h1>
-        <p class="hint">Cole as credenciais da Loja Integrada. Uso restrito ao administrador.</p>
+        <p class="hint">Cole o <strong>token pessoal</strong> da Loja Integrada. Uso restrito ao administrador.</p>
 
-        <label>Chave API
-            <input id="input-chave-api" type="text" autocomplete="off" placeholder="ex: d11a7a789f97...">
+        <label>Token pessoal
+            <input id="input-token-li" type="text" autocomplete="off" placeholder="ex: YjY0Njkz...">
         </label>
 
-        <label>Chave de Aplicação
-            <input id="input-chave-app" type="text" autocomplete="off" placeholder="ex: abc123xyz...">
-        </label>
+        <details class="hint">
+            <summary>Tenho as chaves no formato antigo</summary>
+            <label>Chave API
+                <input id="input-chave-api" type="text" autocomplete="off" placeholder="ex: d11a7a789f97...">
+            </label>
+
+            <label>Chave de Aplicação
+                <input id="input-chave-app" type="text" autocomplete="off" placeholder="ex: abc123xyz...">
+            </label>
+        </details>
 
         <button id="btn-salvar-credenciais" class="btn-primary">Salvar e continuar</button>
         <button id="btn-voltar-login" class="btn-link">voltar ao login</button>

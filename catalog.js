@@ -1,6 +1,8 @@
 // Cache local do catálogo de produtos (id, sku, gtin, nome).
 // Imagem e estoque são buscados sob demanda — não ficam no cache.
 
+import { getAutenticacaoLI } from './api.js';
+
 const KEY_CATALOGO = 'catalogo_local';
 const KEY_SYNC_AT = 'catalogo_sync_at';
 
@@ -82,19 +84,12 @@ export function atualizarItemCache(produtoId, alteracoes) {
     return true;
 }
 
-function getCredenciais() {
-    const chaveApi = localStorage.getItem('chave_api');
-    const chaveApp = localStorage.getItem('chave_aplicacao');
-    if (!chaveApi || !chaveApp) throw new Error('Credenciais não configuradas');
-    return { chaveApi, chaveApp };
-}
-
 function esperar(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function buscarPagina(url) {
-    const r = await fetch(url);
+async function buscarPagina(url, headers = {}) {
+    const r = await fetch(url, { headers });
     const texto = await r.text();
     let dados;
     try { dados = texto ? JSON.parse(texto) : {}; } catch { dados = { raw: texto }; }
@@ -115,7 +110,7 @@ async function buscarPagina(url) {
 //   - incremental: true → usa data_modificacao__gt=<últimaSync> e faz merge com cache
 //                  false → baixa tudo e substitui (default se não tem cache anterior)
 export async function sincronizarCatalogo(onProgress, opcoes = {}) {
-    const { chaveApi, chaveApp } = getCredenciais();
+    const auth = getAutenticacaoLI();
     const BASE = 'https://api.awsli.com.br/v1';
     const LIMIT = 100;
     const DELAY_ENTRE_REQS_MS = 700;
@@ -131,10 +126,11 @@ export async function sincronizarCatalogo(onProgress, opcoes = {}) {
         filtroData = `&data_modificacao__gt=${encodeURIComponent(desde)}`;
     }
 
+    const queryAuth = new URLSearchParams(auth.query).toString();
     const montarUrl = (offset) =>
-        `${BASE}/produto/?chave_api=${chaveApi}&chave_aplicacao=${chaveApp}${filtroData}&limit=${LIMIT}&offset=${offset}`;
+        `${BASE}/produto/?${queryAuth ? queryAuth + '&' : ''}limit=${LIMIT}&offset=${offset}${filtroData}`;
 
-    const d0 = await buscarPagina(montarUrl(0));
+    const d0 = await buscarPagina(montarUrl(0), auth.headers);
     const total = d0.meta?.total_count ?? d0.objects.length;
     let coletados = [];
 
@@ -156,7 +152,7 @@ export async function sincronizarCatalogo(onProgress, opcoes = {}) {
     let offset = LIMIT;
     while (offset < total) {
         await esperar(DELAY_ENTRE_REQS_MS);
-        const d = await buscarPagina(montarUrl(offset));
+        const d = await buscarPagina(montarUrl(offset), auth.headers);
         adicionar(d.objects || []);
         offset += LIMIT;
         if (onProgress) onProgress({ atual: coletados.length, total });

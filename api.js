@@ -1,28 +1,33 @@
 const BASE_URL = 'https://api.awsli.com.br/v1';
 
-function getCredenciais() {
+// Duas formas de acesso à Loja Integrada:
+//  - TOKEN PESSOAL (atual, desde out/2026): vai no cabeçalho "Authorization: Basic <token>".
+//  - chave_api + chave_aplicacao (formato antigo): vão na URL.
+// Se houver token salvo, ele tem prioridade.
+export function getAutenticacaoLI() {
+    const token = localStorage.getItem('li_token');
+    if (token) return { headers: { Authorization: `Basic ${token}` }, query: {} };
     const chaveApi = localStorage.getItem('chave_api');
     const chaveApp = localStorage.getItem('chave_aplicacao');
     if (!chaveApi || !chaveApp) {
         throw new Error('Credenciais não configuradas');
     }
-    return { chaveApi, chaveApp };
+    return { headers: {}, query: { chave_api: chaveApi, chave_aplicacao: chaveApp } };
 }
 
-function montarUrl(path, params = {}) {
-    const { chaveApi, chaveApp } = getCredenciais();
+function montarUrl(path, params = {}, query = {}) {
     const url = new URL(`${BASE_URL}${path}`);
-    url.searchParams.set('chave_api', chaveApi);
-    url.searchParams.set('chave_aplicacao', chaveApp);
+    for (const [k, v] of Object.entries(query)) url.searchParams.set(k, v);
     for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
     return url.toString();
 }
 
 async function requisitar(path, options = {}) {
-    const url = montarUrl(path, options.params || {});
+    const auth = getAutenticacaoLI();
+    const url = montarUrl(path, options.params || {}, auth.query);
     const res = await fetch(url, {
         method: options.method || 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...auth.headers },
         body: options.body ? JSON.stringify(options.body) : undefined,
     });
     const texto = await res.text();
@@ -38,13 +43,24 @@ async function requisitar(path, options = {}) {
 export function salvarCredenciais(chaveApi, chaveApp) {
     localStorage.setItem('chave_api', chaveApi.trim());
     localStorage.setItem('chave_aplicacao', chaveApp.trim());
+    localStorage.removeItem('li_token');
+}
+
+// Token pessoal da Loja Integrada. Aceita com ou sem o "Basic " na frente.
+export function salvarTokenPessoal(token) {
+    const limpo = token.trim().replace(/^basic\s+/i, '').replace(/\s+/g, '');
+    localStorage.setItem('li_token', limpo);
+    localStorage.removeItem('chave_api');
+    localStorage.removeItem('chave_aplicacao');
 }
 
 export function temCredenciais() {
-    return !!(localStorage.getItem('chave_api') && localStorage.getItem('chave_aplicacao'));
+    return !!(localStorage.getItem('li_token') ||
+        (localStorage.getItem('chave_api') && localStorage.getItem('chave_aplicacao')));
 }
 
 export function limparCredenciais() {
+    localStorage.removeItem('li_token');
     localStorage.removeItem('chave_api');
     localStorage.removeItem('chave_aplicacao');
 }

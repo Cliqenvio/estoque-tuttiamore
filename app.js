@@ -1,5 +1,6 @@
 import {
     salvarCredenciais,
+    salvarTokenPessoal,
     temCredenciais,
     getDetalheProduto,
     getFotoProduto,
@@ -172,10 +173,17 @@ aoBipeFisico((codigo) => {
 
 // ============ Setup credenciais ============
 document.getElementById('btn-salvar-credenciais').addEventListener('click', () => {
+    const token = document.getElementById('input-token-li').value.trim();
     const api = document.getElementById('input-chave-api').value.trim();
     const app = document.getElementById('input-chave-app').value.trim();
-    if (!api || !app) { alert('Preencha as duas chaves.'); return; }
-    salvarCredenciais(api, app);
+    if (token) {
+        salvarTokenPessoal(token);
+    } else if (api && app) {
+        salvarCredenciais(api, app);
+    } else {
+        alert('Cole o token pessoal da Loja Integrada.');
+        return;
+    }
     mostrarTela('login');
 });
 
